@@ -59,6 +59,7 @@ jQuery(document).ready(function() {
         }])
     });
 
+
     jQuery(document).on("click", ".changeStatusCondominio", function() {
         var userId = $(this).data("userid"),
             isactive = $(this).data("isactive"),
@@ -223,6 +224,64 @@ jQuery(document).ready(function() {
 
     jQuery(document).on("click", ".searchList", function() {
 
+    });
+
+
+
+    jQuery(document).on("change", "#selectCondominium", function() {
+        var id = $("#selectCondominium").val(),
+            name = $("#selectCondominium option:selected").html();
+        hitURL = baseURL + "cambio_condominio";
+
+        const data = new FormData();
+        data.append('id', id);
+        Swal.queue([{
+            title: "¿Desea cambiar su condominio actual por: " + name + "?",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'SI!',
+            cancelButtonText: 'No, cancelar!',
+            text: 'Si esta en proceso de creacion de datos, debe darle guardar antes de hacer este proceso.',
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return fetch(hitURL, {
+                        method: 'POST',
+                        body: data
+                    })
+                    .then(response => response.json())
+                    .then(data => (data.status ?
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: "Se ha realizado con exito el cambio, la proxima vez que entres estaras con este condominio",
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                window.location = baseURL
+                            }
+                        }) :
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: "Por alguna razon no podemos cambiar al condominio: " + name,
+                            showConfirmButton: false,
+                            timer: 1500
+                        })))
+                    .catch(() => {
+                        Swal.insertQueueStep({
+                            icon: 'error',
+                            title: 'acceso denegado..!'
+                        });
+                    })
+            },
+            allowOutsideClick: () => $('#selectCondominium option[value=' + c + ']').prop('selected', true),
+            allowEscapeKey: () => $('#selectCondominium option[value=' + c + ']').prop('selected', true)
+        }]).then(function() {
+            $('#selectCondominium option[value=' + c + ']').prop('selected', true);
+        }).catch(swal.noop);
     });
 
 });

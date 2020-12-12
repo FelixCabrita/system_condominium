@@ -16,10 +16,11 @@ class User_model extends CI_Model
      * @param number $segment : This is pagination limit
      * @return array $result : This is result
      */
-    function Listing($id)
+    function Listing($id,$condominium)
     { 
         $this->db->from('users as us');    
         $this->db->where('us.id !=',$id);
+        $this->db->where('us.condominium',$condominium);
         $this->db->order_by('us.id', 'DESC'); 
         $query = $this->db->get(); 
         $result = $query->result();        
@@ -32,11 +33,12 @@ class User_model extends CI_Model
      * @param {number} $userId : This is user id
      * @return {mixed} $result : This is searched result
      */
-    function checkEmailExists($email, $userId = 0)
+    function checkEmailExists($email, $userId = 0,$condominium)
     {
         $this->db->select("username");
         $this->db->from("users");
         $this->db->where("username", $email);   
+        $this->db->where('condominium',$condominium);
         if($userId != 0){
             $this->db->where("id !=", $userId);
         }
@@ -65,10 +67,11 @@ class User_model extends CI_Model
      * @param number $userId : This is user id
      * @return array $result : This is user information
      */
-    function getInfo($userId)
+    function getInfo($userId,$condominium)
     { 
         $this->db->from('users'); 
         $this->db->where('id', $userId);
+        $this->db->where('condominium',$condominium);
         $query = $this->db->get();
         
         return $query->row();
@@ -80,9 +83,10 @@ class User_model extends CI_Model
      * @param array $userInfo : This is users updated information
      * @param number $userId : This is user id
      */
-    function edit($userInfo, $userId)
+    function edit($userInfo, $userId,$condominium)
     {
         $this->db->where('id', $userId);
+        $this->db->where('condominium',$condominium);
         $this->db->update('users', $userInfo); 
         return $this->db->affected_rows();
     }
@@ -94,9 +98,10 @@ class User_model extends CI_Model
      * @param number $userId : This is user id
      * @return boolean $result : TRUE / FALSE
      */
-    function delete($userId)
+    function delete($userId,$condominium)
     {
-        $this->db->where('id', $userId);
+        $this->db->where('id', $userId); 
+        $this->db->where('condominium',$condominium);
         $this->db->delete('users'); 
         return $this->db->affected_rows();
     }
@@ -106,10 +111,11 @@ class User_model extends CI_Model
      * This function is used to match users password for change password
      * @param number $userId : This is user id
      */
-    function matchOldPassword($userId, $oldPassword)
+    function matchOldPassword($userId, $oldPassword,$condominium)
     {
         $this->db->select('id, password');
-        $this->db->where('id', $userId);     
+        $this->db->where('id', $userId);    
+        $this->db->where('condominium',$condominium); 
         $query = $this->db->get('users');
         
         $user = $query->result();
@@ -130,10 +136,11 @@ class User_model extends CI_Model
      * @param number $userId : This is user id
      * @param array $userInfo : This is user updation info
      */
-    function changePassword($userId, $userInfo)
+    function changePassword($userId, $userInfo,$condominium)
     {
         $this->db->where('id', $userId); 
         $this->db->update('users', $userInfo); 
+        $this->db->where('condominium',$condominium); 
         return $this->db->affected_rows();
     }
 

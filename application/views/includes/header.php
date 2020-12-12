@@ -11,6 +11,8 @@
     <meta name="description" content="Sistema de condominio">
     <meta name="msapplication-tap-highlight" content="no">
     <link href="<?php echo base_url(); ?>assets/main.css" rel="stylesheet"></head>
+    <script src="<?php echo base_url(); ?>assets/scripts/jquery-3.5.1.min.js"></script>  
+    <script> var baseURL = "<?php echo base_url(); ?>",c= "<?php echo  $condominium; ?>"; </script>   
 </head>
 
 <body>
@@ -47,6 +49,22 @@
                 </span>
             </div>
             <div class="app-header__content">
+                <div class="app-header-left">
+                     
+                    <ul class="header-menu nav">
+                        <li class="nav-item">
+                            <a href="javascript:void(0);" class="nav-link">
+                                <i class="nav-link-icon fa fa-database"> </i> Condominio&nbsp;&nbsp; 
+                                <select  name="selectCondominium" id="selectCondominium" class="form-control">
+                                    <?php   if(!empty($condominiumRecords))  {  foreach($condominiumRecords as $record)  { ?>
+                                    <option value ="<?php echo $record->id ?>" <?php echo $record->id==$condominium?"selected":"" ?>><?php echo $record->name ?></option>
+                                    <?php  }  }  ?>
+                                </select> 
+                            </a>
+                            
+                        </li> 
+                    </ul>
+                </div>
                 <div class="app-header-right">
                     <div class="header-btn-lg pr-0">
                         <div class="widget-content p-0">

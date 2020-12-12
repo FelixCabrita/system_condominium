@@ -65,6 +65,5 @@
             </form>
         </div>
     </div> 
-</div> 
-<script src="<?php echo base_url(); ?>assets/scripts/jquery-3.5.1.min.js"></script>  
+</div>  
 <script src="<?php echo base_url(); ?>assets/scripts/system/addUser.js" type="text/javascript"></script>  

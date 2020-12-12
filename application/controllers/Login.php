@@ -60,6 +60,8 @@ class Login extends BaseController
                     'permissions' => $UserData->permissions,
                     'name' => $UserData->name,  
                     'rol' => $UserData->type,
+                    'condominium' => $UserData->condominium,
+                    'condominium_text' => $UserData->condominium_name,
                     'isLoggedIn' => true,
                 );
 

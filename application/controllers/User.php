@@ -21,6 +21,12 @@ class User extends BaseController
         parent::__construct();
         $this->load->model('user_model');
         $this->isLoggedIn();
+        $this->setDataCondominium();
+    }
+
+    function setDataCondominium(){
+        $this->load->model('condominium_model'); 
+        $this->globalApp['condominiumRecords'] = $this->condominium_model->getListing();
     }
 
     /**
@@ -28,8 +34,9 @@ class User extends BaseController
      */
     public function index()
     {
-        $this->globalApp['pageTitle'] = NAME_SYSTEM . ' Escritorio';
-
+        $this->globalApp['pageTitle'] = NAME_SYSTEM . ' Escritorio'; 
+        
+        $this->globalApp['pageTitle'] = NAME_SYSTEM . ' Escritorio'; 
         $this->loadViews("dashboard", $this->globalApp, null, null);
     }
 
@@ -41,7 +48,7 @@ class User extends BaseController
         if (checkForPermissions('users', PERMISSION_READ) != true) {
             $this->loadThis();
         } else {
-            $data['userRecords'] = $this->user_model->Listing($this->id);
+            $data['userRecords'] = $this->user_model->Listing($this->id,$this->condominium);
             $data['permissions'] = $this->getPermissions()->{'users'};
             $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Lista de usuario';
             $this->loadViews("user/users", $this->globalApp, $data, null);
@@ -70,9 +77,9 @@ class User extends BaseController
         $email = $this->input->post("email");
 
         if (empty($userId)) {
-            $result = $this->user_model->checkEmailExists($email, 0);
+            $result = $this->user_model->checkEmailExists($email, 0,$this->condominium);
         } else {
-            $result = $this->user_model->checkEmailExists($email, $userId);
+            $result = $this->user_model->checkEmailExists($email, $userId,$this->condominium);
         }
 
         if (empty($result)) {echo ("true");} else {echo ("false");}
@@ -127,7 +134,11 @@ class User extends BaseController
                 redirect('usuarios');
             }
             $data['permissions'] = $this->getPermissions()->{'users'};
-            $data['userInfo'] = $this->user_model->getInfo($userId);
+            $data['userInfo'] = $this->user_model->getInfo($userId,$this->condominium);
+
+            if ( $data['userInfo'] == null) {
+                redirect('usuarios');
+            }
             $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Editar usuario';
 
             $this->loadViews("user/editOld", $this->globalApp, $data, null);
@@ -142,7 +153,7 @@ class User extends BaseController
             if ($userId == null) {
                 redirect('usuarios');
             }
-            $data['permissions'] = json_decode($this->user_model->getInfo($userId)->permissions);
+            $data['permissions'] = json_decode($this->user_model->getInfo($userId)->permissions,$this->condominium);
             $data['id'] = $this->user_model->getInfo($userId)->id;
             $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Editar permisos';
 
@@ -186,7 +197,7 @@ class User extends BaseController
                     $userInfo = array('username' => $email, 'mobile' => $mobile, 'type' => $type, 'password' => getHashedPassword($password), 'name' => ucwords($name));
                 }
 
-                $result = $this->user_model->edit($userInfo, $userId);
+                $result = $this->user_model->edit($userInfo, $userId,$this->condominium);
 
                 if ($result == true) {
                     $this->session->set_flashdata('success', 'Usuario actualizado');
@@ -209,7 +220,7 @@ class User extends BaseController
             $userId = $this->input->post('id');
             $permissions = '{"vendors":{"C":' .($this->input->post('VC')=="on"?1:0 ). ',"R":' .($this->input->post('VR')=="on"?1:0 ). ',"U":' .($this->input->post('VU')=="on"?1:0 ). ',"D":' .($this->input->post('VD')=="on"?1:0 ). '},"clients":{"C":' .($this->input->post('CC')=="on"?1:0 ). ',"R":' .($this->input->post('CR')=="on"?1:0 ). ',"U":' .($this->input->post('CU')=="on"?1:0 ). ',"D":' .($this->input->post('CD')=="on"?1:0 ). '},"products":{"C":' .($this->input->post('PC')=="on"?1:0 ). ',"R":' .($this->input->post('PR')=="on"?1:0 ). ',"U":' .($this->input->post('PU')=="on"?1:0 ). ',"D":' .($this->input->post('PD')=="on"?1:0 ). '},"brands":{"C":' .($this->input->post('BC')=="on"?1:0 ). ',"R":' .($this->input->post('BR')=="on"?1:0 ). ',"U":' .($this->input->post('BU')=="on"?1:0 ). ',"D":' .($this->input->post('BD')=="on"?1:0 ). '},"groups":{"C":' .($this->input->post('GC')=="on"?1:0 ). ',"R":' .($this->input->post('GR')=="on"?1:0 ). ',"U":' .($this->input->post('GU')=="on"?1:0 ). ',"D":' .($this->input->post('GD')=="on"?1:0 ). '},"routes":{"C":' .($this->input->post('RC')=="on"?1:0 ). ',"R":' .($this->input->post('RR')=="on"?1:0 ). ',"U":' .($this->input->post('RU')=="on"?1:0 ). ',"D":' .($this->input->post('RD')=="on"?1:0 ). '},"visits":{"C":' .($this->input->post('VC')=="on"?1:0 ). ',"R":' .($this->input->post('VR')=="on"?1:0 ). ',"U":' .($this->input->post('VU')=="on"?1:0 ). ',"D":' .($this->input->post('VD')=="on"?1:0 ). '},"users":{"C":' .($this->input->post('UC')=="on"?1:0 ). ',"R":' .($this->input->post('UR')=="on"?1:0 ). ',"U":' .($this->input->post('UU')=="on"?1:0 ). ',"D":' .($this->input->post('UD')=="on"?1:0 ). '},"payments":{"C":' .($this->input->post('PAC')=="on"?1:0 ). ',"R":' .($this->input->post('PAR')=="on"?1:0 ). ',"U":' .($this->input->post('PAU')=="on"?1:0 ). ',"D":' .($this->input->post('PAD')=="on"?1:0 ). '},"orders_headers":{"C":' .($this->input->post('OC')=="on"?1:0 ). ',"R":' .($this->input->post('OR')=="on"?1:0 ). ',"U":' .($this->input->post('OU')=="on"?1:0 ). ',"D":' .($this->input->post('OD')=="on"?1:0 ). '},"orders_details":{"C":' .($this->input->post('OC')=="on"?1:0 ). ',"R":' .($this->input->post('OR')=="on"?1:0 ). ',"U":' .($this->input->post('OU')=="on"?1:0 ). ',"D":' .($this->input->post('OD')=="on"?1:0 ). '},"settings":{"C":' .($this->input->post('SC')=="on"?1:0 ). ',"R":' .($this->input->post('SR')=="on"?1:0 ). ',"U":' .($this->input->post('SU')=="on"?1:0 ). ',"D":' .($this->input->post('SD')=="on"?1:0 ). '}}'; 
             $userInfo = array('permissions' => trim($permissions));
-            $result = $this->user_model->edit($userInfo, $userId);
+            $result = $this->user_model->edit($userInfo, $userId,$this->condominium);
 
             if ($result == true) {
                 $this->session->set_flashdata('success', 'Permisos de usuario actualizado');
@@ -234,7 +245,7 @@ class User extends BaseController
             $userId = $this->input->post('userId');
             $userInfo = array('isDeleted' => 1, 'updatedBy' => $this->id, 'updatedDtm' => date('Y-m-d H:i:s'));
 
-            $result = $this->user_model->delete($userId, $userInfo);
+            $result = $this->user_model->delete($userId, $userInfo,$this->condominium);
 
             if ($result) {echo (json_encode(array('status' => true)));} else {echo (json_encode(array('status' => false)));}
         }
@@ -249,7 +260,7 @@ class User extends BaseController
             $isactive = $this->input->post('isactive');
             $userInfo = array('status' => $isactive);
 
-            $result = $this->user_model->edit($userInfo, $userId);
+            $result = $this->user_model->edit($userInfo, $userId,$this->condominium);
 
             if ($result > 0) {echo (json_encode(array('status' => true)));} else {echo (json_encode(array('status' => false)));}
         }
@@ -329,7 +340,7 @@ class User extends BaseController
             $username = strtolower($this->security->xss_clean($this->input->post('username')));
 
             $userInfo = array('name' => $name, 'username' => $username);
-            $result = $this->user_model->edit($userInfo, $this->id);
+            $result = $this->user_model->edit($userInfo, $this->id,$this->condominium);
 
             if ($result>0) {
                 $this->session->set_userdata('name', $name);
@@ -360,7 +371,7 @@ class User extends BaseController
             $oldPassword = $this->input->post('oldPassword');
             $newPassword = $this->input->post('newPassword');
 
-            $resultPas = $this->user_model->matchOldPassword($this->id, $oldPassword);
+            $resultPas = $this->user_model->matchOldPassword($this->id, $oldPassword,$this->condominium);
 
             if (empty($resultPas)) {
                 $this->session->set_flashdata('nomatch', 'Your old password is not correct');
@@ -368,7 +379,7 @@ class User extends BaseController
             } else {
                 $usersData = array('password' => getHashedPassword($newPassword));
 
-                $result = $this->user_model->changePassword($this->id, $usersData);
+                $result = $this->user_model->changePassword($this->id, $usersData,$this->condominium);
 
                 if ($result > 0) {$this->session->set_flashdata('success', 'Password updation successful');} else { $this->session->set_flashdata('error', 'Password updation failed');}
 
@@ -387,9 +398,9 @@ class User extends BaseController
         $return = false;
 
         if (empty($userId)) {
-            $result = $this->user_model->checkEmailExists($email, 0);
+            $result = $this->user_model->checkEmailExists($email, 0,$this->condominium);
         } else {
-            $result = $this->user_model->checkEmailExists($email, $userId);
+            $result = $this->user_model->checkEmailExists($email, $userId,$this->condominium);
         }
 
         if (empty($result)) {$return = true;} else {

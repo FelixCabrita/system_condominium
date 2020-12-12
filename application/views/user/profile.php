@@ -90,6 +90,5 @@ $this->load->helper('form');
         </div>
     </div> 
 </div> 
- 
-<script src="<?php echo base_url(); ?>assets/scripts/jquery-3.5.1.min.js"></script>  
+  
 <script src="<?php echo base_url(); ?>assets/scripts/system/editUser.js" type="text/javascript"></script>   

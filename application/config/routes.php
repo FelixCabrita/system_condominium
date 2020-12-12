@@ -100,8 +100,8 @@ $route['editarcondominio/(:num)'] = "condominium/editOld/$1";
 $route['editando_condominio'] = 'condominium/editCondominium';
 $route['eliminar_condominio'] = 'condominium/deletecondominium';
 $route['cambio_estado'] = 'condominium/changeStatus';
- 
- 
+$route['cambio_condominio'] = 'condominium/changeCondominium';
+
  
 
 /* End of file routes.php */

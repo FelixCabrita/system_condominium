@@ -14,6 +14,8 @@ class BaseController extends CI_Controller
     protected $name = '';
     protected $username = '';
     protected $permissions = '';
+    protected $condominium_text = '';
+    protected $condominium = '';
     protected $rol = '';
     protected $globalAppApp = array();
     protected $lastLogin = '';
@@ -50,12 +52,16 @@ class BaseController extends CI_Controller
             $this->rol = $this->session->userdata('rol');
             $this->lastLogin = $this->session->userdata('lastLogin');
             $this->isLoggedIn = $this->session->userdata('isLoggedIn');
+            $this->condominium = $this->session->userdata('condominium');
+            $this->condominium_text = $this->session->userdata('condominium_text');
             $this->globalApp['id'] = $this->id;
             $this->globalApp['username'] = $this->username;
             $this->globalApp['permissions'] = $this->permissions;
             $this->globalApp['rol'] = $this->rol;
             $this->globalApp['name'] = $this->name;
             $this->globalApp['isLoggedIn'] = $this->isLoggedIn;
+            $this->globalApp['condominium'] = $this->condominium;
+            $this->globalApp['condominium_text'] = $this->condominium_text;
         }
 	}
 	

@@ -17,7 +17,9 @@
      */
     function LoginUser($email, $password)
     {  
-        $this->db->from('users'); 
+        $this->db->select("u.id,u.condominium,u.username,u.password,u.permissions,u.name,u.status,u.type, c.name as 'condominium_name'"); 
+        $this->db->join('condominium as c', 'c.id = u.condominium');
+        $this->db->from('users as u'); 
         $this->db->where('username', $email); 
         $query = $this->db->get();
         

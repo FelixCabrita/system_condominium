@@ -27,6 +27,16 @@ class Condominium_model extends CI_Model
         return $result;
     }
 
+    public function getListing()
+    {  
+        $this->db->select('id,name'); 
+        $this->db->from('condominium'); 
+        $this->db->where("status",1);
+        $query = $this->db->get();
+        $result = $query->result();
+        return $result;
+    }
+
     /**
      * This function is used to check whether email id is already exist or not
      * @param {string} $email : This is email id

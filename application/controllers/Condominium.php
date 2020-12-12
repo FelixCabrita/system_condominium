@@ -21,6 +21,12 @@ class condominium extends BaseController
         parent::__construct();
         $this->load->model('condominium_model');
         $this->isLoggedIn();
+        $this->setDataCondominium();
+    }
+
+    function setDataCondominium(){
+        $this->load->model('condominium_model'); 
+        $this->globalApp['condominiumRecords'] = $this->condominium_model->getListing();
     }
 
     /**
@@ -120,7 +126,9 @@ class condominium extends BaseController
             $data['permissions'] = $this->getPermissions()->{'condominium'};  
  
             $data['condominiumInfo'] = $this->condominium_model->gettInfo($id);
-
+            if ( $data['condominiumInfo'] == null) {
+                redirect('condominios');
+            }
             $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Editar condominio';
 
             $this->loadViews("condominium/editOld", $this->globalApp, $data, null);
@@ -186,6 +194,25 @@ class condominium extends BaseController
 
             $result = $this->condominium_model->edit($userInfo, $condominiumId);
 
+            if ($result > 0) {echo (json_encode(array('status' => true)));} else {echo (json_encode(array('status' => false)));}
+        }
+    }
+
+
+    public function changeCondominium()
+    {
+        if (checkForPermissions('condominium', PERMISSION_UPDATE) != true) {
+            echo (json_encode(array('status' => 'access')));
+        } else {
+            $id = $this->input->post('id');  
+            $userInfo = array('condominium' => $id);
+            $this->load->model('user_model');
+            $result = $this->user_model->edit($userInfo,$this->id,$this->condominium);
+
+            $this->load->model('condominium_model');
+            $data = $this->condominium_model->gettInfo($id);
+            $this->session->set_userdata('condominium_text', $data->name);
+            $this->session->set_userdata('condominium', $id); 
             if ($result > 0) {echo (json_encode(array('status' => true)));} else {echo (json_encode(array('status' => false)));}
         }
     }

@@ -48,7 +48,7 @@
                         } ?></td>
                         <td class="text-center" style="vertical-align: middle;">
                             <?php if($permissions->U==1){ ?><a class="btn btn-sm btn-primary activ"  href="#" data-titulo="<?php echo $record->name; ?>" data-isactive="<?php echo $record->status; ?>" data-userid="<?php echo $record->id; ?>" title="Cambio de estado"><i class="fa fa-eye"></i></a>
-                            <a class="btn btn-sm btn-info" href="<?php echo base_url().'editarcondominio/'.$record->id; ?>" title="Editar"><i class="fa fa-paint-brush"></i></a> <?php }else { ?> <a class="btn btn-sm btn-info" href="<?php echo base_url().'editarcondominio/'.$record->id; ?>" title="VER INFORMACION"><i class="fa fa-info"></i></a>  <?php } ?>
+                            <a class="btn btn-sm btn-info" href="<?php echo base_url().'editSelectedUser/'.$record->id; ?>" title="Editar"><i class="fa fa-paint-brush"></i></a> <?php }else { ?> <a class="btn btn-sm btn-info" href="<?php echo base_url().'editarcondominio/'.$record->id; ?>" title="VER INFORMACION"><i class="fa fa-info"></i></a>  <?php } ?>
                             <?php if($permissions->D==1){ ?> <a class="btn btn-sm btn-danger deleteUser" href="#" data-userid="<?php echo $record->id; ?>" data-name="<?php echo $record->name ?>" title="Eliminar"><i class="fa fa-trash"></i></a>  <?php } ?>
                         </td>
                     </tr>
@@ -72,11 +72,7 @@
         </div>
     </div>
     
-</div>  
-
-<script>var baseURL = "<?php echo base_url();?>" </script>  
-<script src="<?php echo base_url(); ?>assets/scripts/jquery-3.5.1.min.js"></script>  
-<script src="<?php echo base_url() ?>assets/scripts/sweetalert2@10.js"></script>
+</div>    
 <script src="<?php echo base_url() ?>assets/scripts/bootstrap4-notify/bootstrap-notify.min.js"></script>
 <script src="<?php echo base_url() ?>assets/scripts/bootstrap-notify-init.js"></script>
 <script src="<?php echo base_url() ?>assets/scripts/datatables/js/jquery.dataTables.min.js"></script>

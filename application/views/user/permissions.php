@@ -263,6 +263,4 @@ $orders_headers = $permissions->{"orders_headers"};
             </form>
         </div>
     </div> 
-</div> 
-<script src="<?php echo base_url(); ?>assets/js/jquery-3.5.1.min.js"></script>  
-<script src="<?php echo base_url(); ?>assets/js/system/addUser.js" type="text/javascript"></script>  
+</div>  
