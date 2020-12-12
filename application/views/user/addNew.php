@@ -23,7 +23,7 @@
                 <div class="row">
                     <div class="form-group col-sm-6">
                         <label for="fname">Nombre completo</label>
-                        <input type="text"  class="form-control mb-2 mr-sm-5" id="fname" placeholder="Ejemplo: Felix Cabrita" name="fname" value="<?php echo set_value('fname'); ?>"   maxlength="128" > 
+                        <input type="text"  class="form-control mb-2 mr-sm-5" id="fname"  name="fname" value="<?php echo set_value('fname'); ?>"   maxlength="128" > 
                         <?php echo validation_error('fname');?> 
                     </div> 
                     <div class="form-group col-sm-6">
@@ -37,12 +37,12 @@
                 <div class="row">
                     <div class="form-group col-sm-6">
                         <label for="email">Correo Electronico</label>
-                        <input type="email"   class="form-control mb-2 mr-sm-5" id="email"  value="<?php echo set_value('email'); ?>" placeholder="Ejemplo: soporte@gmail.com" name="email"   maxlength="100">
+                        <input type="email"   class="form-control mb-2 mr-sm-5" id="email"  value="<?php echo set_value('email'); ?>"  name="email"   maxlength="100">
                         <?php echo validation_error('email');?> 
                     </div> 
                     <div class="form-group col-sm-6">
                         <label for="email">Telefono movil</label>
-                        <input type="tel"   class="form-control mb-2 mr-sm-5" id="mobile" value="<?php echo set_value('mobile'); ?>" placeholder="Ejemplo: soporte@gmail.com" name="mobile"   maxlength="30">
+                        <input type="tel"   class="form-control mb-2 mr-sm-5" id="mobile" value="<?php echo set_value('mobile'); ?>"  name="mobile"   maxlength="30">
                         <?php echo validation_error('mobile');?> 
                     </div> 
                 </div>  

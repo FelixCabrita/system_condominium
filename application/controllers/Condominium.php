@@ -41,7 +41,7 @@ class condominium extends BaseController
     /**
      * This function is used to load the condominium list
      */
-    public function condominiumListing()
+    public function listing()
     {
         if ($this->getPermissions('condominium',PERMISSION_READ) != true) {
             $this->loadThis();
@@ -79,7 +79,7 @@ class condominium extends BaseController
     /**
      * This function is used to add new condominium to the system
      */
-    public function newCondominium()
+    public function addNewData()
     {
         if ($this->getPermissions('condominium',PERMISSION_CREATE) != true) {
             $this->loadThis();
@@ -138,7 +138,7 @@ class condominium extends BaseController
     /**
      * This function is used to edit the condominium information
      */
-    public function editCondominium()
+    public function edit()
     {
         if ($this->getPermissions('condominium',PERMISSION_UPDATE) != true) {
             $this->loadThis();
@@ -171,7 +171,7 @@ class condominium extends BaseController
      * This function is used to delete the condominium using condominiumId
      * @return boolean $result : TRUE / FALSE
      */
-    public function deletecondominium()
+    public function delete()
     {
         if ($this->getPermissions('condominium', PERMISSION_DELETE) != true) {
             echo (json_encode(array('status' => 'access')));

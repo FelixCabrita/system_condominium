@@ -35,7 +35,7 @@ if($permissions->U==1){
                 <div class="row">
                     <div class="form-group col-sm-6">
                         <label for="fname">Nombre completo</label>
-                        <input type="text"  class="form-control mb-2 mr-sm-5" id="fname" placeholder="Ejemplo: Felix Cabrita" name="fname" value="<?php echo $name; ?>" <?php echo $readonly; ?> maxlength="128" >
+                        <input type="text"  class="form-control mb-2 mr-sm-5" id="fname"  name="fname" value="<?php echo $name; ?>" <?php echo $readonly; ?> maxlength="128" >
                         <input type="hidden" value="<?php echo $userId; ?>" name="userId" id="userId" />    
                         <?php echo validation_error('fname');?> 
                     </div>
@@ -50,12 +50,12 @@ if($permissions->U==1){
                 <div class="row">
                     <div class="form-group col-sm-6">
                         <label for="email">Correo Electronico</label>
-                        <input type="email"   class="form-control mb-2 mr-sm-5" id="email" placeholder="Ejemplo: soporte@gmail.com" name="email" value="<?php echo $email; ?>" <?php echo $readonly; ?> maxlength="100">
+                        <input type="email"   class="form-control mb-2 mr-sm-5" id="email"  name="email" value="<?php echo $email; ?>" <?php echo $readonly; ?> maxlength="100">
                         <?php echo validation_error('email');?> 
                     </div> 
                     <div class="form-group col-sm-6">
                         <label for="email">Telefono movil</label>
-                        <input type="tel"   class="form-control mb-2 mr-sm-5" id="mobile" placeholder="Ejemplo: soporte@gmail.com" name="mobile" value="<?php echo $mobile; ?>" <?php echo $readonly; ?> maxlength="30">
+                        <input type="tel"   class="form-control mb-2 mr-sm-5" id="mobile"  name="mobile" value="<?php echo $mobile; ?>" <?php echo $readonly; ?> maxlength="30">
                         <?php echo validation_error('mobile');?> 
                     </div> 
                 </div> 

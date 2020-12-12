@@ -24,7 +24,7 @@
                         <th class="text-center">DIRECCION</th> 
                         <th class="text-center">FECHA CREACION</th>
                         <th class="text-center">ESTADO</th>
-                        <th class="text-center">Acciones</th>
+                        <th class="text-center">ACCIONES</th>
                     </tr>
                 </thead>
                 <tbody> 
@@ -61,7 +61,7 @@
                         <th class="text-center">DIRECCION</th> 
                         <th class="text-center">FECHA CREACION</th>
                         <th class="text-center">ESTADO</th>
-                        <th class="text-center">Acciones</th>
+                        <th class="text-center">ACCIONES</th>
                     </tr>
                 </tfoot>
             </table>

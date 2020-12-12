@@ -23,7 +23,7 @@
                 
                 <div class="form-group ">
                     <label for="fname">Nombre</label>
-                    <input type="text"  class="form-control mb-2 mr-sm-5" id="fname" placeholder="Ejemplo: Felix Cabrita" name="fname" value="<?php echo set_value('fname'); ?>"   maxlength="100" > 
+                    <input type="text"  class="form-control mb-2 mr-sm-5" id="fname"  name="fname" value="<?php echo set_value('fname'); ?>"   maxlength="100" > 
                     <?php echo validation_error('fname');?> 
                 </div> 
                     

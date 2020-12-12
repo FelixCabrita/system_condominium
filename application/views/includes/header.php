@@ -49,8 +49,9 @@
                 </span>
             </div>
             <div class="app-header__content">
+                <?php  if($rol==ROLE_ADMIN) { ?>
                 <div class="app-header-left">
-                     
+               
                     <ul class="header-menu nav">
                         <li class="nav-item">
                             <a href="javascript:void(0);" class="nav-link">
@@ -65,6 +66,7 @@
                         </li> 
                     </ul>
                 </div>
+                <?php } ?>
                 <div class="app-header-right">
                     <div class="header-btn-lg pr-0">
                         <div class="widget-content p-0">
@@ -178,7 +180,7 @@
                                 </a>
                             </li>
                             <li> 
-                                <a href="<?php echo base_url(); ?>usuarios">
+                                <a href="<?php echo base_url(); ?>periodos">
                                     <i class="metismenu-icon pe-7s-user"></i> PERIODOS 
                                 </a>
                             </li>

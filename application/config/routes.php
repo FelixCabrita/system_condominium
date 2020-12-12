@@ -93,16 +93,32 @@ $route['createPasswordUser'] = "login/createPasswordUser";
  
 
 /*CONDOMINIUM*/
-$route['condominios'] = 'condominium/condominiumListing';
+$route['condominios'] = 'condominium/listing';
 $route['agregarcondominio'] = 'condominium/addNew';
-$route['nuevo_condominio'] = 'condominium/newCondominium';
+$route['nuevo_condominio'] = 'condominium/addNewData';
 $route['editarcondominio/(:num)'] = "condominium/editOld/$1";
-$route['editando_condominio'] = 'condominium/editCondominium';
-$route['eliminar_condominio'] = 'condominium/deletecondominium';
+$route['editando_condominio'] = 'condominium/edit';
+$route['eliminar_condominio'] = 'condominium/delete';
 $route['cambio_estado'] = 'condominium/changeStatus';
 $route['cambio_condominio'] = 'condominium/changeCondominium';
 
+/*EDIFICE*/
+$route['edificios'] = 'edifice/listing';
+$route['agregaredificio'] = 'edifice/addNew';
+$route['chequeo_edificio'] = 'edifice/checkExists';
+$route['nuevo_edificio'] = 'edifice/addNewData';
+$route['editaredificio/(:num)'] = "edifice/editOld/$1";
+$route['editando_edificio'] = 'edifice/edit'; 
+$route['eliminar_edificio'] = 'edifice/delete';
+$route['cambio_estado_edificio'] = 'edifice/changeStatus'; 
  
-
+/*PERIODS*/
+$route['periodos'] = 'period/listing';
+$route['agregareperiodos'] = 'period/addNew'; 
+$route['nuevo_periodo'] = 'period/addNewData';
+$route['editarperiodos/(:num)'] = "period/editOld/$1";
+$route['editando_periodos'] = 'period/edit'; 
+$route['eliminar_periodos'] = 'period/delete'; 
+$route['cambio_estado_periodo'] = 'period/changeStatus'; 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

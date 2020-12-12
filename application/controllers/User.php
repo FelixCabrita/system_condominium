@@ -34,9 +34,7 @@ class User extends BaseController
      */
     public function index()
     {
-        $this->globalApp['pageTitle'] = NAME_SYSTEM . ' Escritorio'; 
-        
-        $this->globalApp['pageTitle'] = NAME_SYSTEM . ' Escritorio'; 
+        $this->globalApp['pageTitle'] = NAME_SYSTEM . ' Escritorio';  
         $this->loadViews("dashboard", $this->globalApp, null, null);
     }
 
@@ -107,7 +105,7 @@ class User extends BaseController
                 $mobile = strtolower($this->security->xss_clean($this->input->post('mobile')));
                 $type = strtolower($this->security->xss_clean($this->input->post('type')));
                 $password = $this->input->post('password');
-                $userInfo = array('username' => $email, 'mobile' => $mobile,  'type' => $type,'password' => getHashedPassword($password), 'name' => ucwords($name),'permissions'=>PERMISSION_DEFAULT);
+                $userInfo = array('username' => $email, 'mobile' => $mobile,'condominium'=>$this->condominium,  'type' => $type,'password' => getHashedPassword($password), 'name' => ucwords($name),'permissions'=>PERMISSION_DEFAULT);
                 $result = $this->user_model->addNew($userInfo);
 
                 if ($result > 0) {
@@ -242,10 +240,8 @@ class User extends BaseController
         if (checkForPermissions('users', PERMISSION_DELETE) != true) {
             echo (json_encode(array('status' => 'access')));
         } else {
-            $userId = $this->input->post('userId');
-            $userInfo = array('isDeleted' => 1, 'updatedBy' => $this->id, 'updatedDtm' => date('Y-m-d H:i:s'));
-
-            $result = $this->user_model->delete($userId, $userInfo,$this->condominium);
+            $userId = $this->input->post('userId');  
+            $result = $this->user_model->delete($userId,$this->condominium);
 
             if ($result) {echo (json_encode(array('status' => true)));} else {echo (json_encode(array('status' => false)));}
         }
