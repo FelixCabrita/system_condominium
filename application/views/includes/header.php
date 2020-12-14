@@ -165,17 +165,22 @@
                                 </a>
                             </li>
                             <li> 
-                                <a href="<?php echo base_url(); ?>usuarios">
+                                <a href="<?php echo base_url(); ?>apartamentos">
                                     <i class="metismenu-icon pe-7s-user"></i> APARTAMENTOS 
+                                </a>
+                            </li> 
+                            <li> 
+                                <a href="<?php echo base_url(); ?>areascomunes">
+                                    <i class="metismenu-icon pe-7s-user"></i> AREAS COMUNES 
                                 </a>
                             </li>
                             <li> 
-                                <a href="<?php echo base_url(); ?>usuarios">
+                                <a href="<?php echo base_url(); ?>inquilinos">
                                     <i class="metismenu-icon pe-7s-user"></i> INQUILINOS 
                                 </a>
                             </li>
                             <li> 
-                                <a href="<?php echo base_url(); ?>usuarios">
+                                <a href="<?php echo base_url(); ?>servicios">
                                     <i class="metismenu-icon pe-7s-user"></i> SERVICIOS 
                                 </a>
                             </li>
@@ -185,7 +190,7 @@
                                 </a>
                             </li>
                             <li> 
-                                <a href="<?php echo base_url(); ?>usuarios">
+                                <a href="<?php echo base_url(); ?>juntadirectiva">
                                     <i class="metismenu-icon pe-7s-user"></i> JUNTA DIRECTIVA 
                                 </a>
                             </li>

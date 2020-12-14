@@ -392,6 +392,113 @@ jQuery(document).ready(function() {
         data.append('isactive', (isactive == 1 ? 0 : 1));
 
         Swal.queue([{
+            title: "¿Desea " + (isactive == 1 ? "desactivar" : "activar") + " este apartamento?",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'SI!',
+            cancelButtonText: 'No, cancelar!',
+            text: 'Cambiara el estado de este apartamento, podras reversar esta accion.',
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return fetch(hitURL, {
+                        method: 'POST',
+                        body: data
+                    })
+                    .then(response => response.json())
+                    .then(data => (data.status ?
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: "Apartamento " + (isactive == 1 ? "desactivado" : "activado") + "  con exito",
+                            showConfirmButton: false,
+                            timer: 2000
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                window.location = baseURL + "periodos"
+                            }
+                        }) :
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: "Por alguna razon no podemos " + (isactive == 1 ? "desactivar" : "activar") + " este apartamento",
+                            showConfirmButton: false,
+                            timer: 2000
+                        })))
+                    .catch(() => {
+                        Swal.insertQueueStep({
+                            icon: 'error',
+                            title: 'acceso denegado..!'
+                        })
+                    })
+            }
+        }])
+    });
+
+    jQuery(document).on("click", ".deleteApartment", function() {
+        var userId = $(this).data("userid"),
+            name = $(this).data("name"),
+            hitURL = baseURL + "eliminar_apartamento",
+            currentRow = $(this);
+
+        const data = new FormData();
+        data.append('id', userId);
+
+        Swal.queue([{
+            title: '¿Desea eliminar el apartamento "' + name + '?',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'SI!',
+            cancelButtonText: 'No, cancelar!',
+            text: 'Si este apartamento tiene datos enlazados no podra eliminarlo.',
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return fetch(hitURL, {
+                        method: 'POST',
+                        body: data
+                    })
+                    .then(response => response.json())
+                    .then(data => (data.status ?
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Apartamento eliminado exitosamente!',
+                            showConfirmButton: false,
+                            timer: 2000
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                currentRow.parents('tr').remove();
+                            }
+                        }) :
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: "Es posible que este apartamento tenga datos enlazados, por favor verifique y vuelva a intentarlo",
+                            showConfirmButton: false,
+                            timer: 2000
+                        })))
+                    .catch(() => {
+                        Swal.insertQueueStep({
+                            icon: 'error',
+                            title: 'acceso denegado..!'
+                        })
+                    })
+            }
+        }])
+    });
+    jQuery(document).on("click", ".changeStatusApartment", function() {
+        var userId = $(this).data("userid"),
+            isactive = $(this).data("isactive"),
+            hitURL = baseURL + "cambio_estado_apartamento";
+
+        const data = new FormData();
+        data.append('id', userId);
+        data.append('isactive', (isactive == 1 ? 0 : 1));
+
+        Swal.queue([{
             title: "¿Desea " + (isactive == 1 ? "desactivar" : "activar") + " este periodo?",
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -416,13 +523,388 @@ jQuery(document).ready(function() {
                         }).then((result) => {
                             /* Read more about handling dismissals below */
                             if (result.dismiss === Swal.DismissReason.timer) {
-                                window.location = baseURL + "periodos"
+                                window.location = baseURL + "apartamentos"
                             }
                         }) :
                         Swal.fire({
                             position: 'top-end',
                             icon: 'error',
                             title: "Por alguna razon no podemos " + (isactive == 1 ? "desactivar" : "activar") + " este Periodo",
+                            showConfirmButton: false,
+                            timer: 2000
+                        })))
+                    .catch(() => {
+                        Swal.insertQueueStep({
+                            icon: 'error',
+                            title: 'acceso denegado..!'
+                        })
+                    })
+            }
+        }])
+    });
+
+    jQuery(document).on("click", ".deleteDirective", function() {
+        var userId = $(this).data("userid"),
+            name = $(this).data("name"),
+            hitURL = baseURL + "eliminar_miembro",
+            currentRow = $(this);
+
+        const data = new FormData();
+        data.append('id', userId);
+
+        Swal.queue([{
+            title: '¿Desea eliminar el miembro "' + name + '?',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'SI!',
+            cancelButtonText: 'No, cancelar!',
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return fetch(hitURL, {
+                        method: 'POST',
+                        body: data
+                    })
+                    .then(response => response.json())
+                    .then(data => (data.status ?
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Miembro eliminado exitosamente!',
+                            showConfirmButton: false,
+                            timer: 2000
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                currentRow.parents('tr').remove();
+                            }
+                        }) :
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: "Por alguna razon este miembro no se ha podido eliminar",
+                            showConfirmButton: false,
+                            timer: 2000
+                        })))
+                    .catch(() => {
+                        Swal.insertQueueStep({
+                            icon: 'error',
+                            title: 'acceso denegado..!'
+                        })
+                    })
+            }
+        }])
+    });
+    jQuery(document).on("click", ".changeStatusDirective", function() {
+        var userId = $(this).data("userid"),
+            isactive = $(this).data("isactive"),
+            hitURL = baseURL + "cambio_estado_miembro";
+
+        const data = new FormData();
+        data.append('id', userId);
+        data.append('isactive', (isactive == 1 ? 0 : 1));
+
+        Swal.queue([{
+            title: "¿Desea " + (isactive == 1 ? "desactivar" : "activar") + " este miembro?",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'SI!',
+            cancelButtonText: 'No, cancelar!',
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return fetch(hitURL, {
+                        method: 'POST',
+                        body: data
+                    })
+                    .then(response => response.json())
+                    .then(data => (data.status ?
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: "Miembro " + (isactive == 1 ? "desactivado" : "activado") + "  con exito",
+                            showConfirmButton: false,
+                            timer: 2000
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                window.location = baseURL + "juntadirectiva"
+                            }
+                        }) :
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: "Por alguna razon no podemos " + (isactive == 1 ? "desactivar" : "activar") + " este Periodo",
+                            showConfirmButton: false,
+                            timer: 2000
+                        })))
+                    .catch(() => {
+                        Swal.insertQueueStep({
+                            icon: 'error',
+                            title: 'acceso denegado..!'
+                        })
+                    })
+            }
+        }])
+    });
+
+
+    jQuery(document).on("click", ".deleteService", function() {
+        var userId = $(this).data("userid"),
+            name = $(this).data("name"),
+            hitURL = baseURL + "eliminar_servicio",
+            currentRow = $(this);
+
+        const data = new FormData();
+        data.append('id', userId);
+
+        Swal.queue([{
+            title: '¿Desea eliminar el servicio "' + name + '?',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'SI!',
+            cancelButtonText: 'No, cancelar!',
+            text: 'Si este servicio tiene datos enlazados no podra eliminarlo.',
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return fetch(hitURL, {
+                        method: 'POST',
+                        body: data
+                    })
+                    .then(response => response.json())
+                    .then(data => (data.status ?
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Servicio eliminado exitosamente!',
+                            showConfirmButton: false,
+                            timer: 2000
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                currentRow.parents('tr').remove();
+                            }
+                        }) :
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: "Es posible que este servicio tenga datos enlazados, por favor verifique y vuelva a intentarlo",
+                            showConfirmButton: false,
+                            timer: 2000
+                        })))
+                    .catch(() => {
+                        Swal.insertQueueStep({
+                            icon: 'error',
+                            title: 'acceso denegado..!'
+                        })
+                    })
+            }
+        }])
+    });
+    jQuery(document).on("click", ".changeStatusService", function() {
+        var userId = $(this).data("userid"),
+            isactive = $(this).data("isactive"),
+            hitURL = baseURL + "cambio_estado_servicio";
+
+        const data = new FormData();
+        data.append('id', userId);
+        data.append('isactive', (isactive == 1 ? 0 : 1));
+
+        Swal.queue([{
+            title: "¿Desea " + (isactive == 1 ? "desactivar" : "activar") + " este servicio?",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'SI!',
+            cancelButtonText: 'No, cancelar!',
+            text: 'Cambiara el estado de este servicio, podras reversar esta accion.',
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return fetch(hitURL, {
+                        method: 'POST',
+                        body: data
+                    })
+                    .then(response => response.json())
+                    .then(data => (data.status ?
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: "Servicio " + (isactive == 1 ? "desactivado" : "activado") + "  con exito",
+                            showConfirmButton: false,
+                            timer: 2000
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                window.location = baseURL + "servicios"
+                            }
+                        }) :
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: "Por alguna razon no podemos " + (isactive == 1 ? "desactivar" : "activar") + " este servicio",
+                            showConfirmButton: false,
+                            timer: 2000
+                        })))
+                    .catch(() => {
+                        Swal.insertQueueStep({
+                            icon: 'error',
+                            title: 'acceso denegado..!'
+                        })
+                    })
+            }
+        }])
+    });
+
+
+    jQuery(document).on("click", ".deleteCommonarea", function() {
+        var userId = $(this).data("userid"),
+            name = $(this).data("name"),
+            hitURL = baseURL + "eliminar_areascomunes",
+            currentRow = $(this);
+
+        const data = new FormData();
+        data.append('id', userId);
+
+        Swal.queue([{
+            title: '¿Desea eliminar el area comun "' + name + '?',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'SI!',
+            cancelButtonText: 'No, cancelar!',
+            text: 'Si esta area comun tiene datos enlazados no podra eliminarlo.',
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return fetch(hitURL, {
+                        method: 'POST',
+                        body: data
+                    })
+                    .then(response => response.json())
+                    .then(data => (data.status ?
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Area comun eliminado exitosamente!',
+                            showConfirmButton: false,
+                            timer: 2000
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                currentRow.parents('tr').remove();
+                            }
+                        }) :
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: "Es posible que esta area comun tenga datos enlazados, por favor verifique y vuelva a intentarlo",
+                            showConfirmButton: false,
+                            timer: 2000
+                        })))
+                    .catch(() => {
+                        Swal.insertQueueStep({
+                            icon: 'error',
+                            title: 'acceso denegado..!'
+                        })
+                    })
+            }
+        }])
+    });
+    jQuery(document).on("click", ".changeStatusCommonarea", function() {
+        var userId = $(this).data("userid"),
+            isactive = $(this).data("isactive"),
+            hitURL = baseURL + "cambio_estado_areascomunes";
+
+        const data = new FormData();
+        data.append('id', userId);
+        data.append('isactive', (isactive == 1 ? 0 : 1));
+
+        Swal.queue([{
+            title: "¿Desea " + (isactive == 1 ? "desactivar" : "activar") + " esta area comun?",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'SI!',
+            cancelButtonText: 'No, cancelar!',
+            text: 'Cambiara el estado de esta area comun , podras reversar esta accion.',
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return fetch(hitURL, {
+                        method: 'POST',
+                        body: data
+                    })
+                    .then(response => response.json())
+                    .then(data => (data.status ?
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: "Area comun " + (isactive == 1 ? "desactivado" : "activado") + "  con exito",
+                            showConfirmButton: false,
+                            timer: 2000
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                window.location = baseURL + "areascomunes"
+                            }
+                        }) :
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: "Por alguna razon no podemos " + (isactive == 1 ? "desactivar" : "activar") + " est area comun",
+                            showConfirmButton: false,
+                            timer: 2000
+                        })))
+                    .catch(() => {
+                        Swal.insertQueueStep({
+                            icon: 'error',
+                            title: 'acceso denegado..!'
+                        })
+                    })
+            }
+        }])
+    });
+
+    jQuery(document).on("click", ".deleteTenant", function() {
+        var userId = $(this).data("userid"),
+            name = $(this).data("name"),
+            hitURL = baseURL + "eliminar_inquilinos",
+            currentRow = $(this);
+
+        const data = new FormData();
+        data.append('id', userId);
+
+        Swal.queue([{
+            title: '¿Desea eliminar el inquilino "' + name + '?',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'SI!',
+            cancelButtonText: 'No, cancelar!',
+            text: 'Si este inquilino tiene datos enlazados no podra eliminarlo.',
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return fetch(hitURL, {
+                        method: 'POST',
+                        body: data
+                    })
+                    .then(response => response.json())
+                    .then(data => (data.status ?
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Inquilino eliminado exitosamente!',
+                            showConfirmButton: false,
+                            timer: 2000
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                currentRow.parents('tr').remove();
+                            }
+                        }) :
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: "Es posible que este inquilino tenga datos enlazados, por favor verifique y vuelva a intentarlo",
                             showConfirmButton: false,
                             timer: 2000
                         })))

@@ -35,7 +35,7 @@
         "U": 1,
         "D": 1
     },
-    "Board_Directors": {
+    "directive": {
         "C": 1,
         "R": 1,
         "U": 1,
@@ -54,6 +54,12 @@
         "D": 1
     },
     "vigilant": {
+        "C": 1,
+        "R": 1,
+        "U": 1,
+        "D": 1
+    },
+    "commonarea": {
         "C": 1,
         "R": 1,
         "U": 1,

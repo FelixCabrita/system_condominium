@@ -12,7 +12,7 @@ if($permissions->U==1){
 <div class="app-main__inner">  
     <div class="card form-card">
         <div class="card-body"> 
-            <h4 class="card-title mb-4"> <i class="fa fa-users"></i> Periodo <br>
+            <h4 class="card-title mb-4"> <i class="fa fa-users"></i> Periodos <br>
             <?php if($permissions->U==1){ ?> <small> Agregar / <b>Editar</b></small></h4><?php } ?> 
             <?php
                 $error = $this->session->flashdata('error');   

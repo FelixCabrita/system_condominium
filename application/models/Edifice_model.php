@@ -1,8 +1,8 @@
 <?php if(!defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- * Class : Edifice_model (User Model)
- * User model class to get to handle user related data 
+ * Class : Edifice_model (Edifice Model)
+ * Edifice model class to get to handle Edifice related data 
  * @author : OCTONOVE
  * @version : 1.0
  * @since : 23 Diciembre 2020
@@ -10,7 +10,7 @@
 class Edifice_model extends CI_Model
 { 
     /**
-     * This function is used to get the user listing count
+     * This function is used to get the Edifice listing count
      * @param string $searchText : This is optional search text
      * @param number $page : This is pagination offset
      * @param number $segment : This is pagination limit
@@ -25,11 +25,13 @@ class Edifice_model extends CI_Model
         $result = $query->result();        
         return $result;
     }
+
+    
  
     /**
      * This function is used to check whether email id is already exist or not
      * @param {string} $email : This is email id
-     * @param {number} $userId : This is user id
+     * @param {number} $EdificeId : This is Edifice id
      * @return {mixed} $result : This is searched result
      */
     function checkExists($code, $id = 0,$condominium)
@@ -46,13 +48,13 @@ class Edifice_model extends CI_Model
         return $query->result();
     } 
     /**
-     * This function is used to add new user to system
+     * This function is used to add new Edifice to system
      * @return number $insert_id : This is last inserted id
      */
-    function addNew($userInfo)
+    function addNew($EdificeInfo)
     {
         $this->db->trans_start();
-        $this->db->insert('edifice', $userInfo);
+        $this->db->insert('edifice', $EdificeInfo);
         
         $insert_id = $this->db->insert_id();
         
@@ -60,16 +62,37 @@ class Edifice_model extends CI_Model
         
         return $insert_id;
     }
+
+    public function getListing($condominium)
+    {  
+        $this->db->select('id,code,manager'); 
+        $this->db->from('edifice'); 
+        $this->db->where('condominium',$condominium);
+        $this->db->where("status",1);
+        $query = $this->db->get();
+        $result = $query->result();
+        return $result;
+    }
     
     /**
-     * This function used to get user information by id
-     * @param number $userId : This is user id
-     * @return array $result : This is user information
+     * This function used to get Edifice information by id
+     * @param number $EdificeId : This is Edifice id
+     * @return array $result : This is Edifice information
      */
-    function getInfo($userId,$condominium)
+    function getInfo($id,$condominium)
     { 
         $this->db->from('edifice'); 
-        $this->db->where('id', $userId);
+        $this->db->where('id', $id);
+        $this->db->where('condominium',$condominium);
+        $query = $this->db->get();
+        
+        return $query->row();
+    }
+
+    function getInfoCode($code,$condominium)
+    { 
+        $this->db->from('edifice'); 
+        $this->db->where('code', $code);
         $this->db->where('condominium',$condominium);
         $query = $this->db->get();
         
@@ -77,27 +100,28 @@ class Edifice_model extends CI_Model
     }
     
     
+    
     /**
-     * This function is used to update the user information
-     * @param array $userInfo : This is users updated information
-     * @param number $userId : This is user id
+     * This function is used to update the Edifice information
+     * @param array $EdificeInfo : This is Edifices updated information
+     * @param number $EdificeId : This is Edifice id
      */
-    function edit($userInfo, $userId,$condominium)
+    function edit($EdificeInfo, $EdificeId,$condominium)
     {
-        $this->db->where('id', $userId);
+        $this->db->where('id', $EdificeId);
         $this->db->where('condominium',$condominium);
-        $this->db->update('edifice', $userInfo); 
+        $this->db->update('edifice', $EdificeInfo); 
         return $this->db->affected_rows();
     }
      
     /**
-     * This function is used to delete the user information
-     * @param number $userId : This is user id
+     * This function is used to delete the Edifice information
+     * @param number $EdificeId : This is Edifice id
      * @return boolean $result : TRUE / FALSE
      */
-    function delete($userId,$condominium)
+    function delete($EdificeId,$condominium)
     {
-        $this->db->where('id', $userId); 
+        $this->db->where('id', $EdificeId); 
         $this->db->where('condominium',$condominium);
         $this->db->delete('edifice'); 
         return $this->db->affected_rows();

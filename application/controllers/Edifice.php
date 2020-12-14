@@ -21,15 +21,15 @@ class Edifice extends BaseController
         parent::__construct();
         $this->load->model('edifice_model');
         $this->isLoggedIn();
-        $this->setDataCondominium();
+        $this->getDataCondominium();
     }
 
-    public function setDataCondominium()
+    public function getDataCondominium()
     {
         $this->load->model('condominium_model');
         $this->globalApp['condominiumRecords'] = $this->condominium_model->getListing();
     }
-
+     
     /**
      * This function used to load the first screen of the Edifice
      */

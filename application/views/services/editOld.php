@@ -1,0 +1,69 @@
+<?php
+$id = $ServiceInfo->id;
+$name = $ServiceInfo->name;
+$code = $ServiceInfo->code;   
+$amount = $ServiceInfo->amount;   
+$date_load = $ServiceInfo->date_load=='1970-01-01'?"":$ServiceInfo->date_load;
+$this->load->helper('form');
+$readonly = "readonly";
+if($permissions->U==1){
+    $readonly = "";
+}
+?>
+<div class="app-main__inner">  
+    <div class="card form-card">
+        <div class="card-body"> 
+            <h4 class="card-title mb-4"> <i class="fa fa-users"></i> Servicios <br>
+            <?php if($permissions->U==1){ ?> <small> Agregar / <b>Editar</b></small></h4><?php } ?> 
+            <?php
+                $error = $this->session->flashdata('error');   
+                if($error) { ?>
+                    <div class="alert alert-danger alert-dismissible fade show">
+                        <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span> </button> 
+                        <?php echo $error; ?>          
+                    </div> 
+                <?php }
+                $success = $this->session->flashdata('success');
+                if($success)  { ?> 
+                    <div class="alert alert-success alert-dismissible fade show">
+                        <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span> </button> 
+                        <?php echo $success; ?>              
+                    </div>  
+            <?php } ?>
+            <?php if($permissions->U==1){ ?>
+            <form class="form-inlne"  action="<?php echo base_url() ?>editando_servicio" method="post" id="edit" role="form"><?php } ?>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label for="code">Codigo</label>
+                        <input type="text"  class="form-control mb-2 mr-sm-5" readonly value="<?php echo $code; ?>"    maxlength="20" > 
+                        <input type="hidden" value="<?php echo $id; ?>" name="id" id="id" />    
+                    </div> 
+                    <div class="form-group col-sm-6">
+                        <label for="name">Nombre</label>
+                        <input type="text"  class="form-control mb-2 mr-sm-5" id="name"  name="name" value="<?php echo $name; ?>" <?php echo $readonly; ?>   maxlength="250" > 
+                        <?php echo validation_error('name');?> 
+                    </div>   
+                </div>  
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label for="amount">Monto</label>
+                        <input type="number"  class="form-control mb-2 mr-sm-5" id="amount" min= "0"  name="amount" value="<?php echo $amount; ?>" <?php echo $readonly; ?>> 
+                        <?php echo validation_error('amount');?> 
+                    </div>  
+                    <div class="form-group col-sm-6">
+                        <label for="date_load">Fecha de carga</label>
+                        <input type="date"  class="form-control mb-2 mr-sm-5" id="date_load"  name="date_load"  value="<?php echo $date_load; ?>" <?php echo $readonly; ?>> 
+                        <?php echo validation_error('date_load');?> 
+                    </div>  
+                </div>   
+                 
+                <?php if($permissions->U==1){ ?> 
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-form">ACTUALIZAR</button>
+                </div>
+                
+            </form> <?php } ?> 
+        </div>
+    </div>
+</div> 
+<script src="<?php echo base_url(); ?>assets/scripts/system/editService.js" type="text/javascript"></script>    

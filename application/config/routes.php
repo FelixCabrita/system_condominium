@@ -96,6 +96,7 @@ $route['createPasswordUser'] = "login/createPasswordUser";
 $route['condominios'] = 'condominium/listing';
 $route['agregarcondominio'] = 'condominium/addNew';
 $route['nuevo_condominio'] = 'condominium/addNewData';
+$route['editarcondominio'] = "condominium/editOld";
 $route['editarcondominio/(:num)'] = "condominium/editOld/$1";
 $route['editando_condominio'] = 'condominium/edit';
 $route['eliminar_condominio'] = 'condominium/delete';
@@ -107,6 +108,7 @@ $route['edificios'] = 'edifice/listing';
 $route['agregaredificio'] = 'edifice/addNew';
 $route['chequeo_edificio'] = 'edifice/checkExists';
 $route['nuevo_edificio'] = 'edifice/addNewData';
+$route['editaredificio'] = "edifice/editOld";
 $route['editaredificio/(:num)'] = "edifice/editOld/$1";
 $route['editando_edificio'] = 'edifice/edit'; 
 $route['eliminar_edificio'] = 'edifice/delete';
@@ -116,9 +118,66 @@ $route['cambio_estado_edificio'] = 'edifice/changeStatus';
 $route['periodos'] = 'period/listing';
 $route['agregareperiodos'] = 'period/addNew'; 
 $route['nuevo_periodo'] = 'period/addNewData';
+$route['editarperiodos'] = "period/editOld";
 $route['editarperiodos/(:num)'] = "period/editOld/$1";
 $route['editando_periodos'] = 'period/edit'; 
 $route['eliminar_periodos'] = 'period/delete'; 
 $route['cambio_estado_periodo'] = 'period/changeStatus'; 
+
+/*APARTMENTS*/
+$route['apartamentos'] = 'apartment/listing';
+$route['agregareapartamento'] = 'apartment/addNew'; 
+$route['chequeo_apartamento'] = 'apartment/checkExists';
+$route['nuevo_apartamento'] = 'apartment/addNewData'; 
+$route['editarapartamento'] = "apartment/editOld";
+$route['editarapartamento/(:num)'] = "apartment/editOld/$1";
+$route['editando_apartamento'] = 'apartment/edit'; 
+$route['eliminar_apartamento'] = 'apartment/delete'; 
+$route['cambio_estado_apartamento'] = 'apartment/changeStatus'; 
+$route['obtener_apartemantos/(:num)'] = 'apartment/getDataApartments/$1'; 
+
+/*DIRECTIVE*/
+$route['juntadirectiva'] = 'directive/listing';
+$route['agregarmiembro'] = 'directive/addNew'; 
+$route['chequeo_miembro'] = 'directive/checkExists';
+$route['nuevo_miembro'] = 'directive/addNewData';  
+$route['editarmiembro'] = "directive/editOld";
+$route['editarmiembro/(:num)'] = "directive/editOld/$1";
+$route['editando_miembro'] = 'directive/edit'; 
+$route['eliminar_miembro'] = 'directive/delete'; 
+$route['cambio_estado_miembro'] = 'directive/changeStatus';  
+
+/*SERVICE*/
+$route['servicios'] = 'service/listing';
+$route['agregarservicio'] = 'service/addNew'; 
+$route['chequeo_servicio'] = 'service/checkExists';
+$route['nuevo_servicio'] = 'service/addNewData'; 
+$route['editarservicio'] = "service/editOld";
+$route['editarservicio/(:num)'] = "service/editOld/$1";
+$route['editando_servicio'] = 'service/edit'; 
+$route['eliminar_servicio'] = 'service/delete'; 
+$route['cambio_estado_servicio'] = 'service/changeStatus';  
+
+/*COMMONAREA*/
+$route['areascomunes'] = 'commonarea/listing';
+$route['agregarareascomunes'] = 'commonarea/addNew'; 
+$route['chequeo_areascomunes'] = 'commonarea/checkExists';
+$route['nuevo_areascomunes'] = 'commonarea/addNewData'; 
+$route['editarareascomunes'] = "commonarea/editOld";
+$route['editarareascomunes/(:num)'] = "commonarea/editOld/$1";
+$route['editando_areascomunes'] = 'commonarea/edit'; 
+$route['eliminar_areascomunes'] = 'commonarea/delete'; 
+$route['cambio_estado_areascomunes'] = 'commonarea/changeStatus';  
+
+/*TENANT*/
+$route['inquilinos'] = 'tenant/listing';
+$route['agregarinquilinos'] = 'tenant/addNew'; 
+$route['chequeo_inquilinos'] = 'tenant/checkExists';
+$route['nuevo_inquilinos'] = 'tenant/addNewData'; 
+$route['editarinquilinos'] = "tenant/editOld";
+$route['editarinquilinos/(:num)'] = "tenant/editOld/$1";
+$route['editando_inquilinos'] = 'tenant/edit'; 
+$route['eliminar_inquilinos'] = 'tenant/delete'; 
+$route['cambio_estado_inquilinos'] = 'tenant/changeStatus';  
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

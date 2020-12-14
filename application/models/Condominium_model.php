@@ -3,8 +3,8 @@
 }
 
 /**
- * Class : Condominium_model (client Model)
- * client model class to get to handle client related data
+ * Class : Condominium_model (Condominium Model)
+ * Condominium model class to get to handle Condominium related data
  * @author : Felix Cabrita
  * @version : 1.1
  * @since : 01 Octubre 2020
@@ -12,7 +12,7 @@
 class Condominium_model extends CI_Model
 {
     /**
-     * This function is used to get the client listing count
+     * This function is used to get the Condominium listing count
      * @param string $searchText : This is optional search text
      * @param number $page : This is pagination offset
      * @param number $segment : This is pagination limit
@@ -40,7 +40,7 @@ class Condominium_model extends CI_Model
     /**
      * This function is used to check whether email id is already exist or not
      * @param {string} $email : This is email id
-     * @param {number} $id : This is client id
+     * @param {number} $id : This is Condominium id
      * @return {mixed} $result : This is searched result
      */
     public function checkCodeExists($name)
@@ -54,7 +54,7 @@ class Condominium_model extends CI_Model
     }
 
     /**
-     * This function is used to add new client to system
+     * This function is used to add new Condominium to system
      * @return number $insert_id : This is last inserted id
      */
     public function addNew($Info)
@@ -68,9 +68,9 @@ class Condominium_model extends CI_Model
     }
 
     /**
-     * This function used to get client information by id
-     * @param number $id : This is client id
-     * @return array $result : This is client information
+     * This function used to get Condominium information by id
+     * @param number $id : This is Condominium id
+     * @return array $result : This is Condominium information
      */
     public function gettInfo($id)
     {  
@@ -81,9 +81,9 @@ class Condominium_model extends CI_Model
     }
 
     /**
-     * This function is used to update the client information
+     * This function is used to update the Condominium information
      * @param array $Info : This is condominium updated information
-     * @param number $id : This is client id
+     * @param number $id : This is Condominium id
      */
     public function edit($Info, $id)
     { 
@@ -93,8 +93,8 @@ class Condominium_model extends CI_Model
     }
 
     /**
-     * This function is used to delete the client information
-     * @param number $id : This is client id
+     * This function is used to delete the Condominium information
+     * @param number $id : This is Condominium id
      * @return boolean $result : TRUE / FALSE
      */
     public function delete($id)
