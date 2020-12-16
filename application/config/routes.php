@@ -179,5 +179,16 @@ $route['editarinquilinos/(:num)'] = "tenant/editOld/$1";
 $route['editando_inquilinos'] = 'tenant/edit'; 
 $route['eliminar_inquilinos'] = 'tenant/delete'; 
 $route['cambio_estado_inquilinos'] = 'tenant/changeStatus';  
+
+/*TAG*/
+$route['etiquetas'] = 'tag/listing';
+$route['agregaretiquetas'] = 'tag/addNew'; 
+$route['chequeo_etiquetas'] = 'tag/checkExists';
+$route['nuevo_etiquetas'] = 'tag/addNewData'; 
+$route['editaretiquetas'] = "tag/editOld";
+$route['editaretiquetas/(:num)'] = "tag/editOld/$1";
+$route['editando_etiquetas'] = 'tag/edit'; 
+$route['eliminar_etiquetas'] = 'tag/delete'; 
+$route['cambio_estado_etiquetas'] = 'tag/changeStatus';  
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

@@ -36,7 +36,7 @@ class tenant_model extends CI_Model
      */
     function checkExists($document, $id = 0,$condominium)
     {
-        $this->db->select("document");
+        $this->db->select("document,password");
         $this->db->from("tenant");
         $this->db->where("document", $document);   
         $this->db->where('condominium',$condominium);

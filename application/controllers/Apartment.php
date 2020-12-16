@@ -43,7 +43,7 @@ class Apartment extends BaseController
     public function getDataApartments($edifice)
     {
         $this->load->model('apartment_model'); 
-          echo json_encode($this->apartment_model->getListing($edifice,$this->condominium)); 
+        echo json_encode($this->apartment_model->getListing($edifice,$this->condominium)); 
     }
     
 

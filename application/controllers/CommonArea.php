@@ -11,7 +11,7 @@ require APPPATH . '/libraries/BaseController.php';
  * @version : 1.1
  * @since : 01 Octubre 2020
  */
-class CommonArea extends BaseController
+class Commonarea extends BaseController
 {
     /**
      * This is default constructor of the class

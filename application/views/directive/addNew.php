@@ -65,8 +65,7 @@
                         </select> 
                         <?php echo validation_error('period');?> 
                     </div>  
-                </div>  
-                 
+                </div> 
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary btn-form">AGREGAR</button>
                 </div>

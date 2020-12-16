@@ -59,7 +59,6 @@ jQuery(document).ready(function() {
         }])
     });
 
-
     jQuery(document).on("click", ".changeStatusCondominio", function() {
         var userId = $(this).data("userid"),
             isactive = $(this).data("isactive"),
@@ -113,7 +112,6 @@ jQuery(document).ready(function() {
             }
         }])
     });
-
     jQuery(document).on("click", ".deleteCondominium", function() {
         var userId = $(this).data("userid"),
             name = $(this).data("name"),
@@ -392,13 +390,13 @@ jQuery(document).ready(function() {
         data.append('isactive', (isactive == 1 ? 0 : 1));
 
         Swal.queue([{
-            title: "¿Desea " + (isactive == 1 ? "desactivar" : "activar") + " este apartamento?",
+            title: "¿Desea " + (isactive == 1 ? "desactivar" : "activar") + " este periodo?",
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: 'SI!',
             cancelButtonText: 'No, cancelar!',
-            text: 'Cambiara el estado de este apartamento, podras reversar esta accion.',
+            text: 'Cambiara el estado de este periodo, podras reversar esta accion.',
             showLoaderOnConfirm: true,
             preConfirm: () => {
                 return fetch(hitURL, {
@@ -410,7 +408,7 @@ jQuery(document).ready(function() {
                         Swal.fire({
                             position: 'top-end',
                             icon: 'success',
-                            title: "Apartamento " + (isactive == 1 ? "desactivado" : "activado") + "  con exito",
+                            title: "Periodo " + (isactive == 1 ? "desactivado" : "activado") + "  con exito",
                             showConfirmButton: false,
                             timer: 2000
                         }).then((result) => {
@@ -422,7 +420,7 @@ jQuery(document).ready(function() {
                         Swal.fire({
                             position: 'top-end',
                             icon: 'error',
-                            title: "Por alguna razon no podemos " + (isactive == 1 ? "desactivar" : "activar") + " este apartamento",
+                            title: "Por alguna razon no podemos " + (isactive == 1 ? "desactivar" : "activar") + " este periodo",
                             showConfirmButton: false,
                             timer: 2000
                         })))
@@ -648,7 +646,6 @@ jQuery(document).ready(function() {
         }])
     });
 
-
     jQuery(document).on("click", ".deleteService", function() {
         var userId = $(this).data("userid"),
             name = $(this).data("name"),
@@ -755,7 +752,6 @@ jQuery(document).ready(function() {
             }
         }])
     });
-
 
     jQuery(document).on("click", ".deleteCommonarea", function() {
         var userId = $(this).data("userid"),
@@ -916,6 +912,189 @@ jQuery(document).ready(function() {
                     })
             }
         }])
+    });
+
+    jQuery(document).on("click", ".changeStatusTenant", function() {
+        var userId = $(this).data("userid"),
+            isactive = $(this).data("isactive"),
+            hitURL = baseURL + "cambio_estado_inquilinos";
+
+        const data = new FormData();
+        data.append('id', userId);
+        data.append('isactive', (isactive == 1 ? 0 : 1));
+
+        Swal.queue([{
+            title: '¿Desea deshabilitar el usuario de este inquilino?',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'SI!',
+            cancelButtonText: 'No, cancelar!',
+            text: 'Podras reversar esta accion editando del registro.',
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return fetch(hitURL, {
+                        method: 'POST',
+                        body: data
+                    })
+                    .then(response => response.json())
+                    .then(data => (data.status ?
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: "Inquilino deshabilitado con exito",
+                            showConfirmButton: false,
+                            timer: 2000
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                window.location = baseURL + "inquilinos"
+                            }
+                        }) :
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: "Por alguna razon no podemos deshabilitar este inquilino",
+                            showConfirmButton: false,
+                            timer: 2000
+                        })))
+                    .catch(() => {
+                        Swal.insertQueueStep({
+                            icon: 'error',
+                            title: 'acceso denegado..!'
+                        })
+                    })
+            }
+        }])
+    });
+
+    jQuery(document).on("click", ".deleteTag", function() {
+        var userId = $(this).data("userid"),
+            name = $(this).data("name"),
+            hitURL = baseURL + "eliminar_etiquetas",
+            currentRow = $(this);
+
+        const data = new FormData();
+        data.append('id', userId);
+
+        Swal.queue([{
+            title: '¿Desea eliminar la etiqueta "' + name + '?',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'SI!',
+            cancelButtonText: 'No, cancelar!',
+            text: 'Si esta etiqueta tiene datos enlazados no podra eliminarla.',
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return fetch(hitURL, {
+                        method: 'POST',
+                        body: data
+                    })
+                    .then(response => response.json())
+                    .then(data => (data.status ?
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Etiqueta eliminada exitosamente!',
+                            showConfirmButton: false,
+                            timer: 2000
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                currentRow.parents('tr').remove();
+                            }
+                        }) :
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: "Es posible que esta etiqueta tenga datos enlazados, por favor verifique y vuelva a intentarlo",
+                            showConfirmButton: false,
+                            timer: 2000
+                        })))
+                    .catch(() => {
+                        Swal.insertQueueStep({
+                            icon: 'error',
+                            title: 'acceso denegado..!'
+                        })
+                    })
+            }
+        }])
+    });
+    jQuery(document).on("click", ".changeStatusTag", function() {
+        var userId = $(this).data("userid"),
+            isactive = $(this).data("isactive"),
+            hitURL = baseURL + "cambio_estado_etiquetas";
+
+        const data = new FormData();
+        data.append('id', userId);
+        data.append('isactive', (isactive == 1 ? 0 : 1));
+        console.log(data.append('id', userId));
+        Swal.queue([{
+            title: "¿Desea " + (isactive == 1 ? "desactivar" : "activar") + " esta etiqueta?",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'SI!',
+            cancelButtonText: 'No, cancelar!',
+            input: 'text',
+            inputPlaceholder: 'Ingresa una observacion',
+            text: 'Cambiara el estado de esta etiqueta , podras reversar esta accion.',
+            showLoaderOnConfirm: true,
+            inputValidator: (value) => {
+                if (!value) {
+                    return 'Debes colocar una observacion!'
+                }
+            },
+            preConfirm: () => {
+                console.log($('.swal2-input').val());
+                data.append('observation', (isactive == 1 ? "desactivado" : "activado") + ": " + $('.swal2-input').val());
+
+                return fetch(hitURL, {
+                        method: 'POST',
+                        body: data
+                    })
+                    .then(response => response.json())
+                    .then(data => (data.status ?
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: "etiqueta " + (isactive == 1 ? "desactivado" : "activado") + "  con exito",
+                            showConfirmButton: false,
+                            timer: 2000
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                window.location = baseURL + "etiquetas"
+                            }
+                        }) :
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: "Por alguna razon no podemos " + (isactive == 1 ? "desactivar" : "activar") + " esta etiqueta",
+                            showConfirmButton: false,
+                            timer: 2000
+                        })))
+                    .catch(() => {
+                        Swal.insertQueueStep({
+                            icon: 'error',
+                            title: 'acceso denegado..!'
+                        })
+                    })
+            }
+        }])
+    });
+
+    jQuery(document).on("click", ".observationTag", function() {
+        var name = $(this).data("name"),
+            observations = $(this).data("observations").replace("|", "<br>");
+
+        Swal.fire({
+            position: 'top-end',
+            icon: 'info',
+            title: "Observaciones {" + name + "}",
+            html: observations
+        })
     });
 
     jQuery(document).on("click", ".searchList", function() {

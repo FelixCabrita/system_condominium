@@ -95,3 +95,24 @@ $db['local'] = array(
     'save_queries' => true,
 );
 
+$db['production'] = array(
+    'dsn' => '',
+    'hostname' => 'localhost',
+    'username' => 'u550229772_s_condominium',
+    'password' => 'Gt?FHX0a!1',
+    'database' => 'u550229772_s_condominium',
+    'dbdriver' => 'mysqli',
+    'dbprefix' => '',
+    'pconnect' => false,
+    'db_debug' => (ENVIRONMENT !== 'production'),
+    'cache_on' => false,
+    'cachedir' => '',
+    'char_set' => 'utf8',
+    'dbcollat' => 'utf8_general_ci',
+    'swap_pre' => '',
+    'encrypt' => false,
+    'compress' => false,
+    'stricton' => false,
+    'failover' => array(),
+    'save_queries' => true,
+);

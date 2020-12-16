@@ -88,7 +88,13 @@ defined('EXIT__AUTO_MAX') or define('EXIT__AUTO_MAX', 125); // highest automatic
 defined('ROLE_ADMIN') or define('ROLE_ADMIN', '1');
 defined('ROLE_MANAGER') or define('ROLE_MANAGER', '2');
 defined('ROLE_VENDOR') or define('ROLE_VENDOR', '3');
-defined('ROLE_EMPLOYEE') or define('ROLE_EMPLOYEE', '4');
+defined('ROLE_EMPLOYEE') or define('ROLE_ACCOUNTING', '4');
+defined('ROLE_EMPLOYEE') or define('ROLE_VIGILANT', '5');
+
+/**** TENANT DEFINED CONSTANTS **********/
+
+defined('ROLE_OWNER') or define('ROLE_OWNER', '1');
+defined('ROLE_TENANT') or define('ROLE_TENANT', '2');
 
 defined('STATUS_ACTIVE') or define('STATUS_ACTIVE', '1');
 defined('STATUS_INACTIVE') or define('STATUS_INACTIVE', '0');
@@ -103,7 +109,8 @@ defined('PERMISSION_DELETE') or define('PERMISSION_UPDATE', 2);
 defined('PERMISSION_DELETE') or define('PERMISSION_DELETE', 3);
 
 defined('CONDITIONS') or define('CONDITIONS', ["OCUPADO","DESOCUPADO","ALQUILADO","EN VENTA"]);
-defined('PERMISSION_DEFAULT') or define('PERMISSION_DEFAULT', '{ "users": { "C": 0, "R": 0, "U": 0, "D": 0 },"commonarea": {  "C": 1, "R": 1, "U": 1, "D": 1 }, "apartments": { "C": 0, "R": 0, "U": 0, "D": 0 }, "edifices": { "C": 0, "R": 0, "U": 0, "D": 0 }, "tenants": { "C": 0, "R": 0, "U": 0, "D": 0 }, "services": { "C": 0, "R": 0, "U": 0, "D": 0 }, "period": { "C": 0, "R": 0, "U": 0, "D": 0 }, "directive": { "C": 0, "R": 0, "U": 0, "D": 0 }, "setting": { "C": 0, "R": 0, "U": 0, "D": 0 }, "incidence": { "C": 0, "R": 0, "U": 0, "D": 0 }, "vigilant": { "C": 0, "R": 0, "U": 0, "D": 0 }, "Payments": { "C": 0, "R": 0, "U": 0, "D": 0 }, "bills": { "C": 0, "R": 0, "U": 0, "D": 0 }, "vehicles": { "C": 0, "R": 0, "U": 0, "D": 0 }, "employees": { "C": 0, "R": 0, "U": 0, "D": 0 }, "shopping": { "C": 0, "R": 0, "U": 0, "D": 0 }, "condominium_items": { "C": 0, "R": 0, "U": 0, "D": 0 }, "condominium": { "C": 0, "R": 0, "U": 0, "D": 0 }, "pay": { "C": 0, "R": 0, "U": 0, "D": 0 } }');
+defined('USER_TYPE') or define('USER_TYPE', ["ADMINISTRADOR","CAJA","CONTABILIDAD","VIGILANTE"]);
+defined('PERMISSION_DEFAULT') or define('PERMISSION_DEFAULT', '{ "users": { "C": 0, "R": 0, "U": 0, "D": 0 },"commonarea": {  "C": 1, "R": 1, "U": 1, "D": 1 }, "apartments": { "C": 0, "R": 0, "U": 0, "D": 0 }, "edifices": { "C": 0, "R": 0, "U": 0, "D": 0 }, "tenants": { "C": 0, "R": 0, "U": 0, "D": 0 },"tags": { "C": 0, "R": 0, "U": 0, "D": 0 }, "services": { "C": 0, "R": 0, "U": 0, "D": 0 }, "period": { "C": 0, "R": 0, "U": 0, "D": 0 }, "directive": { "C": 0, "R": 0, "U": 0, "D": 0 }, "setting": { "C": 0, "R": 0, "U": 0, "D": 0 }, "incidence": { "C": 0, "R": 0, "U": 0, "D": 0 }, "vigilant": { "C": 0, "R": 0, "U": 0, "D": 0 }, "Payments": { "C": 0, "R": 0, "U": 0, "D": 0 }, "bills": { "C": 0, "R": 0, "U": 0, "D": 0 }, "vehicles": { "C": 0, "R": 0, "U": 0, "D": 0 }, "employees": { "C": 0, "R": 0, "U": 0, "D": 0 }, "shopping": { "C": 0, "R": 0, "U": 0, "D": 0 }, "condominium_items": { "C": 0, "R": 0, "U": 0, "D": 0 }, "condominium": { "C": 0, "R": 0, "U": 0, "D": 0 }, "pay": { "C": 0, "R": 0, "U": 0, "D": 0 } }');
 
 /************************** EMAIL CONSTANTS *****************************/
 define('EMAIL_FROM', 'no-reply@buskato.com.ar'); // e.g. email@example.com

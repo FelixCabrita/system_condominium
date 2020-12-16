@@ -21,16 +21,23 @@
             <?php } ?>
             <form class="form-inlne" id="add"  action="<?php echo base_url() ?>nuevo_inquilinos" method="post" role="form">
                 <div class="row">
-                    <div class="form-group col-sm-6">
+                    <div class="form-group col-sm-4">
                         <label for="document">Documento de identidad</label>
                         <input type="text"  class="form-control mb-2 mr-sm-5"  autocomplete="nope" autocomplete="off"  id="edifice"  name="document" value="<?php echo set_value('edifice'); ?>"   maxlength="20" > 
                         <?php echo validation_error('edifice');?> 
                     </div> 
-                    <div class="form-group col-sm-6">
+                    <div class="form-group col-sm-4">
                         <label for="name">Nombre Completo</label>
                         <input type="text"  class="form-control mb-2 mr-sm-5" id="name"  name="name" value="<?php echo set_value('name'); ?>"   maxlength="250" > 
                         <?php echo validation_error('name');?> 
                     </div>   
+                    <div class="form-group col-sm-4">
+                        <label for="type" >Tipo de usuario</label>
+                        <select name="type" id="type" class="form-control">
+                            <option value ="<?php echo ROLE_OWNER ?>" <?php echo set_value('type')==ROLE_OWNER?"selected":"" ?>>PROPIETARIO</option>
+                            <option value ="<?php echo ROLE_TENANT ?>"  <?php echo set_value('type')==ROLE_TENANT?"selected":"" ?>>INQUILINO</option>   
+                        </select>
+                    </div> 
                 </div>  
                 <div class="row">
                     <div class="form-group col-sm-4">
@@ -50,6 +57,11 @@
                     </div>  
                 </div>  
                 <div class="form-group">
+              
+                    <div class="position-relative form-check"><label class="form-check-label"><input type="checkbox"  id="user"  name="user" class="form-check-input"> Generarle usuario para el sistema de inquilino </label></div>
+                </div>  
+                <label><b>NOTA: Para el acceso del sistema del inquilinios sera: Documento de identidad y una clave generada enviada al correo electronico.</b></label>
+                <div class="form-group"> 
                     <button type="submit" class="btn btn-primary btn-form">AGREGAR</button>
                 </div>
                     

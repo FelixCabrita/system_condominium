@@ -43,7 +43,9 @@ if($permissions->U==1){
                         <label for="type" >Tipo de usuario</label>
                         <select name="type" id="type" class="form-control">
                             <option value ="<?php echo ROLE_MANAGER ?>" <?php echo $type==ROLE_MANAGER?"selected":"" ?>>ADMINISTRADOR</option>
-                            <option value ="<?php echo ROLE_VENDOR ?>"  <?php echo $type==ROLE_VENDOR?"selected":"" ?>>CAJA</option>  
+                            <option value ="<?php echo ROLE_VENDOR ?>"  <?php echo $type==ROLE_VENDOR?"selected":"" ?>>CAJA</option>   
+                            <option value ="<?php echo ROLE_ACCOUNTING ?>" <?php echo $type==ROLE_ACCOUNTING?"selected":"" ?>>CONTABILIDAD</option>
+                            <option value ="<?php echo ROLE_VIGILANT ?>"  <?php echo $type==ROLE_VIGILANT?"selected":"" ?>>VIGILANTE</option>  
                         </select>
                     </div> 
                 </div>  

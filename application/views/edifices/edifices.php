@@ -41,7 +41,7 @@
                         <td class="text-center" style="vertical-align: middle;"><?php echo  $record->created_at  ?></td>
                          
                         <td class="text-center" style="vertical-align: middle;">
-                           <!-- <?php if($permissions->U==1){ ?><a class="btn btn-sm btn-primary changeStatusEdifice"  href="#" data-titulo="<?php echo $record->code; ?>" data-isactive="<?php echo $record->status; ?>" data-userid="<?php echo $record->id; ?>" title="Cambio de estado"><i class="fa fa-eye"></i></a>-->
+                          <?php if($permissions->U==1){ ?> <!-- <a class="btn btn-sm btn-primary changeStatusEdifice"  href="#" data-titulo="<?php echo $record->code; ?>" data-isactive="<?php echo $record->status; ?>" data-userid="<?php echo $record->id; ?>" title="Cambio de estado"><i class="fa fa-eye"></i></a>-->
                             <a class="btn btn-sm btn-info" href="<?php echo base_url().'editaredificio/'.$record->id; ?>" title="Editar"><i class="fa fa-paint-brush"></i></a> <?php }else { ?> <a class="btn btn-sm btn-info" href="<?php echo base_url().'editaredificio/'.$record->id; ?>" title="VER INFORMACION"><i class="fa fa-info"></i></a>  <?php } ?>
                             <?php if($permissions->D==1){ ?> <a class="btn btn-sm btn-danger deleteEdifice" href="#" data-userid="<?php echo $record->id; ?>" data-name="<?php echo $record->code ?>" title="Eliminar"><i class="fa fa-trash"></i></a>  <?php } ?>
                         </td>

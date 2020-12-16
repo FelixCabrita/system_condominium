@@ -29,8 +29,10 @@
                     <div class="form-group col-sm-6">
                         <label for="type" >Tipo de usuario</label>
                         <select name="type" id="type" class="form-control">
-                            <option value ="<?php echo ROLE_MANAGER ?>" <?php echo set_value('fname')==ROLE_MANAGER?"selected":"" ?>>ADMINISTRADOR</option>
-                            <option value ="<?php echo ROLE_VENDOR ?>"  <?php echo set_value('fname')==ROLE_VENDOR?"selected":"" ?>>CAJA</option>  
+                            <option value ="<?php echo ROLE_MANAGER ?>" <?php echo set_value('type')==ROLE_MANAGER?"selected":"" ?>>ADMINISTRADOR</option>
+                            <option value ="<?php echo ROLE_VENDOR ?>"  <?php echo set_value('type')==ROLE_VENDOR?"selected":"" ?>>CAJA</option>  
+                            <option value ="<?php echo ROLE_ACCOUNTING ?>" <?php echo set_value('type')==ROLE_ACCOUNTING?"selected":"" ?>>CONTABILIDAD</option>
+                            <option value ="<?php echo ROLE_VIGILANT ?>"  <?php echo set_value('type')==ROLE_VIGILANT?"selected":"" ?>>VIGILANTE</option>  
                         </select>
                     </div> 
                 </div>  

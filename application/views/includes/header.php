@@ -170,6 +170,11 @@
                                 </a>
                             </li> 
                             <li> 
+                                <a href="<?php echo base_url(); ?>etiquetas">
+                                    <i class="metismenu-icon pe-7s-user"></i> ETIQUETAS
+                                </a>
+                            </li> 
+                            <li> 
                                 <a href="<?php echo base_url(); ?>areascomunes">
                                     <i class="metismenu-icon pe-7s-user"></i> AREAS COMUNES 
                                 </a>
@@ -193,12 +198,7 @@
                                 <a href="<?php echo base_url(); ?>juntadirectiva">
                                     <i class="metismenu-icon pe-7s-user"></i> JUNTA DIRECTIVA 
                                 </a>
-                            </li>
-                            <li> 
-                                <a href="<?php echo base_url(); ?>usuarios">
-                                    <i class="metismenu-icon pe-7s-user"></i> CONFIGURACION 
-                                </a>
-                            </li>
+                            </li> 
                         </ul>
                     </div>
                 </div>

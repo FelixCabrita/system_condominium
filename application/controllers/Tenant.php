@@ -50,7 +50,7 @@ class Tenant extends BaseController
             $data['TenantRecords'] = $this->tenant_model->Listing($this->id, $this->condominium);
             $data['permissions'] = $this->getPermissions()->{'tenants'};
             $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Lista de inquilino';
-            $this->loadViews("tenant/Tenant", $this->globalApp, $data, null);
+            $this->loadViews("tenant/tenant", $this->globalApp, $data, null);
         }
     }
 
@@ -107,9 +107,14 @@ class Tenant extends BaseController
                 $landline_phone = strtoupper($this->security->xss_clean($this->input->post('landline_phone')));
                 $email = (strtolower($this->security->xss_clean($this->input->post('email'))));
 
+                $type = (strtolower($this->security->xss_clean($this->input->post('type')))); 
+               
+                
                 $check = $this->tenant_model->checkExists($document, 0, $this->condominium);
-                if (empty($result)) {
-                    $info = array('document' => $document, 'name' => $name, 'mobile' => $mobile, 'condominium' => $this->condominium,
+
+                if (empty($check)) { 
+                    $password = $this->input->post('user')=='on'? getHashedPassword($document):""; 
+                    $info = array('document' => $document, 'name' => $name,  'type' => $type, 'password' => $password, 'mobile' => $mobile, 'condominium' => $this->condominium,
                         'landline_phone' => $landline_phone, 'email' => $email);
                     $result = $this->tenant_model->addNew($info);
 
@@ -174,11 +179,15 @@ class Tenant extends BaseController
                 $mobile = (strtoupper($this->security->xss_clean($this->input->post('mobile'))));
                 $landline_phone = strtoupper($this->security->xss_clean($this->input->post('landline_phone')));
                 $email = (strtolower($this->security->xss_clean($this->input->post('email'))));
-
-                $check = $this->tenant_model->checkExists($document, $id, $this->condominium);
-                if (empty($result)) {
-                    $info = array('document' => $document, 'name' => $name, 'mobile' => $mobile, 'condominium' => $this->condominium,
-                        'landline_phone' => $landline_phone, 'email' => $email);
+                $type = ( ($this->security->xss_clean($this->input->post('type'))));  
+                $check = $this->tenant_model->checkExists($document, $id, $this->condominium); 
+                if (empty($check)) {
+                    $password = $this->tenant_model->getInfo($id, $this->condominium)->password;
+                    if($this->input->post('user')=='on' &&  empty($password)){
+                        $password = getHashedPassword($document);
+                    }
+                    $info = array('document' => $document, 'name' => $name, 'mobile' => $mobile, 'type' => $type, 'condominium' => $this->condominium,
+                        'landline_phone' => $landline_phone, 'password' =>  ($password), 'email' => $email);
                     $result = $this->tenant_model->edit($info,$id,$this->condominium);
 
                     if ($result > 0) {
@@ -222,7 +231,7 @@ class Tenant extends BaseController
         } else {
             $TenantId = $this->input->post('id');
             $isactive = $this->input->post('isactive');
-            $TenantInfo = array('status' => $isactive);
+            $TenantInfo = array('password' => "");
 
             $result = $this->tenant_model->edit($TenantInfo, $TenantId, $this->condominium);
 
