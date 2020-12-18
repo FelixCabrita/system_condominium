@@ -1,6 +1,4 @@
-<link href="<?php echo base_url() ?>assets/scripts/datatables/css/jquery.dataTables.min.css" rel="stylesheet">
-<link href="<?php echo base_url() ?>assets/scripts/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet">
-
+<link href="<?php echo base_url() ?>assets/scripts/datatables/css/jquery.dataTables.min.css" rel="stylesheet"> 
 <div class="app-main__inner"> 
     <div class="card">
         <div class="card-body">
@@ -42,8 +40,11 @@
                             <?php if(!empty($record->password)){ ?>
                             <a class="btn btn-sm btn-warning changeStatusTenant" href="#" data-userid="<?php echo $record->id; ?>" data-name="<?php echo $record->name ?>" title="DESHABILTAR EL USUARIO"><i class="fa fa-user-times"></i></a>
                             <?php } ?>
-                            <a class="btn btn-sm btn-info" href="<?php echo base_url().'editarinquilinos/'.$record->id; ?>" title="Editar"><i class="fa fa-paint-brush"></i></a>
-                             <?php }else { ?> <a class="btn btn-sm btn-info" href="<?php echo base_url().'editarinquilinos/'.$record->id; ?>" title="VER INFORMACION"><i class="fa fa-info"></i></a>  <?php } ?>
+                            <a class="btn btn-sm btn-info" href="<?php echo base_url().'editarinquilinos/'.$record->id; ?>" title="Editar"><i class="fa fa-paint-brush"></i></a> 
+                             <?php }else { ?>  
+                                <a class="btn btn-sm btn-info" href="<?php echo base_url().'editarinquilinos/'.$record->id; ?>" title="VER INFORMACION"><i class="fa fa-info"></i></a>  
+                            <?php } ?>
+                            <a class="btn btn-sm btn-success" href="<?php echo base_url().'asignaciones/'.$record->id; ?>" title="Apartamentos asignados"><i class="fa fa-home"></i></a>
                             <?php if($permissions->D==1){ ?> <a class="btn btn-sm btn-danger deleteTenant" href="#" data-userid="<?php echo $record->id; ?>" data-name="<?php echo $record->name ?>" title="Eliminar"><i class="fa fa-trash"></i></a>  <?php } ?>
                         </td>
                     </tr>

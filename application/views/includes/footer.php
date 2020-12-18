@@ -32,6 +32,7 @@
     <script src="<?php echo base_url() ?>assets/scripts/sweetalert2@10.js"></script>
     <script type="text/javascript" src="<?php echo base_url() ?>assets/scripts/system/common.js"></script>  
     <script src="<?php echo base_url() ?>assets/scripts/system/jquery.validate.js" type="text/javascript"></script>
+    <div class="jvectormap-tip"></div>
 </body>
 
 </html>

@@ -167,7 +167,7 @@ class Service extends BaseController
                 $date_load = date("Y-m-d", strtotime($this->security->xss_clean($this->input->post('date_load'))));
 
                 $check = $this->service_model->checkExists($code, $id, $this->condominium);
-                if (empty($result)) {
+                if (empty($check)) {
                     $info = array(  'name' => $name, 'amount' => $amount, 'condominium' => $this->condominium, 'date_load' => $date_load);
                     $result = $this->service_model->edit($info, $id, $this->condominium);
 

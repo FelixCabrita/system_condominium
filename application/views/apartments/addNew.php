@@ -20,7 +20,7 @@
                     </div>  
             <?php } ?>
             <form class="form-inlne" id="add"  action="<?php echo base_url() ?>nuevo_apartamento" method="post" role="form">
-            <div class="row">
+                <div class="row">
                     <div class="form-group col-sm-4">
                         <label for="apartment">Codigo Apartamento</label>
                         <input type="text"  class="form-control mb-2 mr-sm-5"  autocomplete="nope" autocomplete="off"  id="apartment"  name="apartment" value="<?php echo set_value('apartment'); ?>"   maxlength="10" > 

@@ -130,7 +130,7 @@ class Directive extends BaseController
 
                 $check = $this->directive_model->checkExists($document, 0, $this->condominium);
 
-                if (empty($result)) {
+                if (empty($check)) {
 
                     $info = array('document' => $document, 'name' => $name, 'chargue' => $chargue, 'condominium' => $this->condominium,
                         'period' => $period, 'edifice' => $edifice, 'apartment' => $apartment);

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 16-12-2020 a las 03:35:58
+-- Tiempo de generación: 17-12-2020 a las 02:25:42
 -- Versión del servidor: 10.1.30-MariaDB
 -- Versión de PHP: 7.1.14
 
@@ -49,6 +49,25 @@ CREATE TABLE `apartment` (
 INSERT INTO `apartment` (`id`, `condominium`, `apartment`, `code`, `edifice`, `conditions`, `number_parking`, `created_at`, `updated_at`, `status`) VALUES
 (1, 2, '10', '101210', 1, 'DESOCUPADO', 'AV', '2020-12-13 11:57:47', '2020-12-13 12:54:29', 1),
 (2, 2, '10', '101110', 3, 'OCUPADO', '1D', '2020-12-13 12:09:57', '2020-12-13 12:09:57', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `assigning_apartment`
+--
+
+DROP TABLE IF EXISTS `assigning_apartment`;
+CREATE TABLE `assigning_apartment` (
+  `id` int(11) NOT NULL,
+  `condominium` int(11) NOT NULL,
+  `edifice` int(11) NOT NULL,
+  `apartment` int(11) NOT NULL,
+  `tenant` int(11) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT '1',
+  `observation` text COLLATE utf8_spanish_ci NOT NULL,
+  `created_at` date NOT NULL,
+  `updated_at` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 -- --------------------------------------------------------
 
@@ -340,6 +359,12 @@ ALTER TABLE `apartment`
   ADD UNIQUE KEY `code` (`code`);
 
 --
+-- Indices de la tabla `assigning_apartment`
+--
+ALTER TABLE `assigning_apartment`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `commonarea`
 --
 ALTER TABLE `commonarea`
@@ -416,6 +441,12 @@ ALTER TABLE `users`
 --
 ALTER TABLE `apartment`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `assigning_apartment`
+--
+ALTER TABLE `assigning_apartment`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `commonarea`

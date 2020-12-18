@@ -1,5 +1,5 @@
 <div class="app-main__inner"> 
-    <div class="row">
+    <div class="row">   
         <div class="col-md-6 col-xl-4">
             <div class="card mb-3 widget-content bg-midnight-bloom">
                 <div class="widget-content-wrapper text-white">
@@ -52,121 +52,7 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row">
-         
-        <div class="col-md-12 col-lg-12">
-            <div class="mb-3 card">
-                <div class="card-header-tab card-header">
-                    <div class="card-header-title">
-                        <i class="header-icon lnr-rocket icon-gradient bg-tempting-azure"> </i> Bandwidth Reports
-                    </div>
-                    <div class="btn-actions-pane-right">
-                        <div class="nav">
-                            <a href="javascript:void(0);" class="border-0 btn-pill btn-wide btn-transition active btn btn-outline-alternate">Tab 1</a>
-                            <a href="javascript:void(0);" class="ml-1 btn-pill btn-wide border-0 btn-transition  btn btn-outline-alternate second-tab-toggle-alt">Tab 2</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-content">
-                    <div class="tab-pane fade active show" id="tab-eg-55">
-                        <div class="widget-chart p-3">
-                            <div style="height: 350px">
-                                <canvas id="line-chart"></canvas>
-                            </div>
-                            <div class="widget-chart-content text-center mt-5">
-                                <div class="widget-description mt-0 text-warning">
-                                    <i class="fa fa-arrow-left"></i>
-                                    <span class="pl-1">175.5%</span>
-                                    <span class="text-muted opacity-8 pl-1">increased server resources</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="pt-2 card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="widget-content">
-                                        <div class="widget-content-outer">
-                                            <div class="widget-content-wrapper">
-                                                <div class="widget-content-left">
-                                                    <div class="widget-numbers fsize-3 text-muted">63%</div>
-                                                </div>
-                                                <div class="widget-content-right">
-                                                    <div class="text-muted opacity-6">Generated Leads</div>
-                                                </div>
-                                            </div>
-                                            <div class="widget-progress-wrapper mt-1">
-                                                <div class="progress-bar-sm progress-bar-animated-alt progress">
-                                                    <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="63" aria-valuemin="0" aria-valuemax="100" style="width: 63%;"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="widget-content">
-                                        <div class="widget-content-outer">
-                                            <div class="widget-content-wrapper">
-                                                <div class="widget-content-left">
-                                                    <div class="widget-numbers fsize-3 text-muted">32%</div>
-                                                </div>
-                                                <div class="widget-content-right">
-                                                    <div class="text-muted opacity-6">Submitted Tickers</div>
-                                                </div>
-                                            </div>
-                                            <div class="widget-progress-wrapper mt-1">
-                                                <div class="progress-bar-sm progress-bar-animated-alt progress">
-                                                    <div class="progress-bar bg-success" role="progressbar" aria-valuenow="32" aria-valuemin="0" aria-valuemax="100" style="width: 32%;"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="widget-content">
-                                        <div class="widget-content-outer">
-                                            <div class="widget-content-wrapper">
-                                                <div class="widget-content-left">
-                                                    <div class="widget-numbers fsize-3 text-muted">71%</div>
-                                                </div>
-                                                <div class="widget-content-right">
-                                                    <div class="text-muted opacity-6">Server Allocation</div>
-                                                </div>
-                                            </div>
-                                            <div class="widget-progress-wrapper mt-1">
-                                                <div class="progress-bar-sm progress-bar-animated-alt progress">
-                                                    <div class="progress-bar bg-primary" role="progressbar" aria-valuenow="71" aria-valuemin="0" aria-valuemax="100" style="width: 71%;"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="widget-content">
-                                        <div class="widget-content-outer">
-                                            <div class="widget-content-wrapper">
-                                                <div class="widget-content-left">
-                                                    <div class="widget-numbers fsize-3 text-muted">41%</div>
-                                                </div>
-                                                <div class="widget-content-right">
-                                                    <div class="text-muted opacity-6">Generated Leads</div>
-                                                </div>
-                                            </div>
-                                            <div class="widget-progress-wrapper mt-1">
-                                                <div class="progress-bar-sm progress-bar-animated-alt progress">
-                                                    <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="41" aria-valuemin="0" aria-valuemax="100" style="width: 41%;"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    </div> 
     <div class="row">
         <div class="col-md-6 col-xl-4">
             <div class="card mb-3 widget-content">
@@ -268,7 +154,7 @@
                                         <div class="widget-content-wrapper">
                                             <div class="widget-content-left mr-3">
                                                 <div class="widget-content-left">
-                                                    <img width="40" class="rounded-circle" src="<?php echo base_url(); ?>assets/images/avatars/profile.png" alt="">
+                                                    <img width="40" class="rounded-circle" src="assets/images/avatars/4.jpg" alt="">
                                                 </div>
                                             </div>
                                             <div class="widget-content-left flex2">
@@ -293,7 +179,7 @@
                                         <div class="widget-content-wrapper">
                                             <div class="widget-content-left mr-3">
                                                 <div class="widget-content-left">
-                                                    <img width="40" class="rounded-circle" src="<?php echo base_url(); ?>assets/images/avatars/profile.png" alt="">
+                                                    <img width="40" class="rounded-circle" src="assets/images/avatars/3.jpg" alt="">
                                                 </div>
                                             </div>
                                             <div class="widget-content-left flex2">
@@ -318,7 +204,7 @@
                                         <div class="widget-content-wrapper">
                                             <div class="widget-content-left mr-3">
                                                 <div class="widget-content-left">
-                                                    <img width="40" class="rounded-circle" src="<?php echo base_url(); ?>assets/images/avatars/profile.png" alt="">
+                                                    <img width="40" class="rounded-circle" src="assets/images/avatars/2.jpg" alt="">
                                                 </div>
                                             </div>
                                             <div class="widget-content-left flex2">
@@ -343,7 +229,7 @@
                                         <div class="widget-content-wrapper">
                                             <div class="widget-content-left mr-3">
                                                 <div class="widget-content-left">
-                                                    <img width="40" class="rounded-circle" src="<?php echo base_url(); ?>assets/images/avatars/profile.png" alt=""></div>
+                                                    <img width="40" class="rounded-circle" src="assets/images/avatars/1.jpg" alt=""></div>
                                             </div>
                                             <div class="widget-content-left flex2">
                                                 <div class="widget-heading">Vinnie Wagstaff</div>

@@ -170,7 +170,7 @@ $route['eliminar_areascomunes'] = 'commonarea/delete';
 $route['cambio_estado_areascomunes'] = 'commonarea/changeStatus';  
 
 /*TENANT*/
-$route['inquilinos'] = 'tenant/listing';
+$route['inquilinos'] = 'tenant/listing'; 
 $route['agregarinquilinos'] = 'tenant/addNew'; 
 $route['chequeo_inquilinos'] = 'tenant/checkExists';
 $route['nuevo_inquilinos'] = 'tenant/addNewData'; 
@@ -179,6 +179,10 @@ $route['editarinquilinos/(:num)'] = "tenant/editOld/$1";
 $route['editando_inquilinos'] = 'tenant/edit'; 
 $route['eliminar_inquilinos'] = 'tenant/delete'; 
 $route['cambio_estado_inquilinos'] = 'tenant/changeStatus';  
+$route['asignaciones'] = 'tenant/assignments';
+$route['asignaciones/(:num)'] = 'tenant/assignments/$1';
+$route['asignar_apartamento'] = 'tenant/set_asignation'; 
+$route['desvincular_apartamento'] = 'tenant/delete_asignation'; 
 
 /*TAG*/
 $route['etiquetas'] = 'tag/listing';
@@ -190,5 +194,16 @@ $route['editaretiquetas/(:num)'] = "tag/editOld/$1";
 $route['editando_etiquetas'] = 'tag/edit'; 
 $route['eliminar_etiquetas'] = 'tag/delete'; 
 $route['cambio_estado_etiquetas'] = 'tag/changeStatus';  
+
+/*RESERVATIONS*/
+$route['reservaciones'] = 'reservation/listing';
+$route['agregarreservaciones'] = 'reservation/addNew';  
+$route['reservar_areacomun'] = 'reservation/addNewData'; 
+$route['editarreservaciones'] = "reservation/editOld";
+$route['editarreservaciones/(:num)'] = "reservation/editOld/$1";
+$route['editando_reservaciones'] = 'reservation/edit'; 
+$route['eliminar_reservaciones'] = 'reservation/delete'; 
+$route['cambio_estado_reservaciones'] = 'reservation/changeStatus';  
+
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

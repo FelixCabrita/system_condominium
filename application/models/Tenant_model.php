@@ -26,12 +26,36 @@ class tenant_model extends CI_Model
         return $result;
     }
 
+
+    function Assignment($id,$condominium,$_id ='')
+    { 
+        $this->db->select("asi.id, asi.edifice, asi.apartment, asi.tenant, asi.status, asi.created_at, asi.updated_at, asi.observation
+                          ,e.code as 'edifice_code',a.apartment as 'apartment_code'");
+        $this->db->from('assigning_apartment as asi');     
+        $this->db->join('edifice as e', 'e.id = asi.edifice');
+        $this->db->join('apartment as a', 'a.id = asi.apartment');
+        $this->db->where('asi.condominium',$condominium);
+        $this->db->where('asi.tenant',$id);
+        if(!empty($_id)){
+            $this->db->where('asi.id',$_id);
+            $query = $this->db->get(); 
+            return $query->row();
+        }else{
+            $this->db->order_by(' asi.status,asi.id', 'DESC'); 
+            $query = $this->db->get(); 
+            $result = $query->result();        
+            return $result;
+        }
+    
+    }
+
+
     
  
     /**
      * This function is used to check whether email id is already exist or not
      * @param {string} $email : This is email id
-     * @param {number} $tenantId : This is tenant id
+     * @param {number} $Id : This is tenant id
      * @return {mixed} $result : This is searched result
      */
     function checkExists($document, $id = 0,$condominium)
@@ -51,10 +75,10 @@ class tenant_model extends CI_Model
      * This function is used to add new tenant to system
      * @return number $insert_id : This is last inserted id
      */
-    function addNew($tenantInfo)
+    function addNew($Info)
     {
         $this->db->trans_start();
-        $this->db->insert('tenant', $tenantInfo);
+        $this->db->insert('tenant', $Info);
         
         $insert_id = $this->db->insert_id();
         
@@ -65,7 +89,7 @@ class tenant_model extends CI_Model
   
     /**
      * This function used to get tenant information by id
-     * @param number $tenantId : This is tenant id
+     * @param number $Id : This is tenant id
      * @return array $result : This is tenant information
      */
     function getInfo($id,$condominium)
@@ -92,28 +116,69 @@ class tenant_model extends CI_Model
     
     /**
      * This function is used to update the tenant information
-     * @param array $tenantInfo : This is tenants updated information
-     * @param number $tenantId : This is tenant id
+     * @param array $Info : This is tenants updated information
+     * @param number $Id : This is tenant id
      */
-    function edit($tenantInfo, $tenantId,$condominium)
+    function edit($Info, $Id,$condominium)
     {
-        $this->db->where('id', $tenantId);
+        $this->db->where('id', $Id);
         $this->db->where('condominium',$condominium);
-        $this->db->update('tenant', $tenantInfo); 
+        $this->db->update('tenant', $Info); 
         return $this->db->affected_rows();
     }
      
     /**
      * This function is used to delete the tenant information
-     * @param number $tenantId : This is tenant id
+     * @param number $Id : This is tenant id
      * @return boolean $result : TRUE / FALSE
      */
-    function delete($tenantId,$condominium)
+    function delete($Id,$condominium)
     {
-        $this->db->where('id', $tenantId); 
+        $this->db->where('id', $Id); 
         $this->db->where('condominium',$condominium);
         $this->db->delete('tenant'); 
         return $this->db->affected_rows();
+    } 
+      /**
+     * This function is used to add new tenant to system
+     * @return number $insert_id : This is last inserted id
+     */
+    function set_asignation($Info)
+    {
+        $this->db->trans_start();
+        $this->db->insert('assigning_apartment', $Info);
+        
+        $insert_id = $this->db->insert_id();
+        
+        $this->db->trans_complete();
+        
+        return $insert_id;
+    }
+    function edit_asingnation($Info, $Id,$condominium)
+    {
+        $this->db->where('id', $Id);
+        $this->db->where('condominium',$condominium);
+        $this->db->update('assigning_apartment', $Info); 
+        return $this->db->affected_rows();
+    }
+
+    /**
+     * This function is used to check whether email id is already exist or not
+     * @param {string} $email : This is email id
+     * @param {number} $Id : This is tenant id
+     * @return {mixed} $result : This is searched result
+     */
+    function checkExistsAsignation($edifice, $apartment , $tenant ,$condominium)
+    {
+        $this->db->select("id");
+        $this->db->from("assigning_apartment");
+        $this->db->where("edifice", $edifice);   
+        $this->db->where("apartment", $apartment);  
+        $this->db->where("tenant", $tenant);  
+        $this->db->where('condominium',$condominium);
+        $this->db->where('status',1);
+        $query = $this->db->get(); 
+        return $query->result();
     } 
 }
 

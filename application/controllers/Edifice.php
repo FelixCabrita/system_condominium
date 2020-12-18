@@ -106,7 +106,7 @@ class Edifice extends BaseController
                 $code = $edifice.$block;
 
                 $check = $this->edifice_model->checkExists($code, 0, $this->condominium);
-                if (empty($result)) { 
+                if (empty($check)) { 
                     $info = array('edifice' => $edifice,'code' => $code,'block' => $block,'condominium'=>$this->condominium, 'manager' => $manager, 'observation' => $observation);
                     $result = $this->edifice_model->addNew($info);
 

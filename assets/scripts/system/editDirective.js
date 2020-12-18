@@ -73,7 +73,7 @@ $(document).ready(function() {
                 dataType: "json",
                 success: function(data) {
 
-                    console.log(data);
+
                     $('select[name="apartment"]').empty();
                     $('select[name="apartment"]').append('<option value="">SELECCIONE UN APARTAMENTO</option>');
                     $.each(data, function(key, value) {
@@ -95,7 +95,7 @@ $(document).ready(function() {
         dataType: "json",
         success: function(data) {
 
-            console.log(data);
+
             $('select[name="apartment"]').empty();
             $('select[name="apartment"]').append('<option value="">SELECCIONE UN APARTAMENTO</option>');
             $.each(data, function(key, value) {

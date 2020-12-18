@@ -67,7 +67,6 @@ jQuery(document).ready(function() {
         const data = new FormData();
         data.append('userId', userId);
         data.append('isactive', (isactive == 1 ? 0 : 1));
-
         Swal.queue([{
             title: "¿Desea " + (isactive == 1 ? "desactivar" : "activar") + " este condominio?",
             showCancelButton: true,
@@ -968,6 +967,150 @@ jQuery(document).ready(function() {
         }])
     });
 
+    jQuery(document).on("click", ".set_asignation", function() {
+        var userId = $(this).data("userid"),
+            name = $(this).data("name"),
+            edifice = $("#edifice").val(),
+            date_start = $("#date_start").val(),
+            apartment = $("#apartment").val(),
+            apartment_name = $("#apartment  option:selected").html(),
+            hitURL = baseURL + "asignar_apartamento";
+
+        if (edifice === '' || apartment === '' || date_start === '') {
+            Swal.fire({
+                position: 'top-end',
+                icon: 'error',
+                title: "Debe asignar un edificio, un apartamento y la fecha desde que empezo a vivir en el .",
+                showConfirmButton: false,
+                timer: 3000
+            })
+        } else {
+            const data = new FormData();
+            data.append('id', userId);
+            data.append('edifice', edifice);
+            data.append('date_start', date_start);
+            data.append('apartment', apartment);
+            Swal.queue([{
+                title: "¿Desea asignar el apartamento (" + apartment_name + ") a este inquilino?",
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'SI!',
+                cancelButtonText: 'No, cancelar!',
+                text: 'Esta accion solo se puede reversar desvinculando el apartamento con una observacion.',
+                showLoaderOnConfirm: true,
+                preConfirm: () => {
+                    return fetch(hitURL, {
+                            method: 'POST',
+                            body: data
+                        })
+                        .then(response => response.json())
+                        .then(data => (data.status ?
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'success',
+                                title: 'Apartamento asignado exitosamente!',
+                                showConfirmButton: false,
+                                timer: 2000
+                            }).then((result) => {
+                                if (result.dismiss === Swal.DismissReason.timer) {
+                                    window.location = baseURL + "asignaciones/" + userId;
+                                }
+                            }) :
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'error',
+                                title: data.error === '' ? "Por alguna razon no podemos asignar el apartamento (" + apartment_name + ") a este inquilino" : data.error,
+                                showConfirmButton: false,
+                                timer: 3000
+                            })))
+                        .catch(() => {
+                            Swal.insertQueueStep({
+                                icon: 'error',
+                                title: 'acceso denegado..!'
+                            })
+                        })
+                }
+            }])
+        }
+    });
+
+    jQuery(document).on("click", ".delete_asignation", function() {
+        var userId = $(this).data("userid"),
+            apartment = $(this).data("name"),
+            hitURL = baseURL + "desvincular_apartamento";
+
+        const data = new FormData();
+        data.append('id', userId);
+        console.log(data.append('id', userId));
+        Swal.queue([{
+            title: "¿Desea desvincular el apartamento (" + apartment + ") de este inquilino?",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'SI!',
+            cancelButtonText: 'No, cancelar!',
+            input: 'text',
+            inputPlaceholder: 'Ingresa una observacion',
+            text: 'No podras reversar esta accion y tendras que asignarlo de nuevo.',
+            showLoaderOnConfirm: true,
+            inputValidator: (value) => {
+                if (!value) {
+                    return 'Debes colocar una observacion!'
+                }
+            },
+            preConfirm: () => {
+                console.log($('.swal2-input').val());
+                data.append('observation', $('.swal2-input').val());
+
+                return fetch(hitURL, {
+                        method: 'POST',
+                        body: data
+                    })
+                    .then(response => response.json())
+                    .then(data => (data.status ?
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: "Apartamento desvinculado con exito",
+                            showConfirmButton: false,
+                            timer: 2000
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                window.location = baseURL + "asignaciones/" + userId;
+                            }
+                        }) :
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: "Por alguna razon no podemos desvincular el apartamento (" + apartment + ") a este inquilino",
+                            showConfirmButton: false,
+                            timer: 2000
+                        })))
+                    .catch(() => {
+                        Swal.insertQueueStep({
+                            icon: 'error',
+                            title: 'acceso denegado..!'
+                        })
+                    })
+            }
+        }])
+    });
+
+    jQuery(document).on("click", ".view_asignation", function() {
+        var name = $(this).data("name"),
+            date = $(this).data("date"),
+            observations = "Fecha de desvinculacion: " + $(this).data("date") + "<br>" +
+            "Observacion: " + $(this).data("observation");
+        Swal.fire({
+            position: 'top-end',
+            icon: 'info',
+            title: "Observaciones {" + name + "}",
+            html: observations
+        })
+    });
+
     jQuery(document).on("click", ".deleteTag", function() {
         var userId = $(this).data("userid"),
             name = $(this).data("name"),
@@ -1021,6 +1164,7 @@ jQuery(document).ready(function() {
             }
         }])
     });
+
     jQuery(document).on("click", ".changeStatusTag", function() {
         var userId = $(this).data("userid"),
             isactive = $(this).data("isactive"),
@@ -1156,5 +1300,6 @@ jQuery(document).ready(function() {
             $('#selectCondominium option[value=' + c + ']').prop('selected', true);
         }).catch(swal.noop);
     });
+
 
 });

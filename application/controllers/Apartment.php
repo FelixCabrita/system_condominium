@@ -126,7 +126,7 @@ class Apartment extends BaseController
                 $conditions = (empty($conditions)?CONDITIONS[0]:$conditions); 
                 $check = $this->apartment_model->checkExists($code, 0, $this->condominium);
                
-                if (empty($result)) {
+                if (empty($check)) {
                     $dataEdifice = $this->getDataEdifices($edifice);
                     $info = array('apartment' => $apartment, 'edifice' => $dataEdifice->id, 'number_parking' => $number_parking, 'condominium' => $this->condominium,
                      'conditions' => $conditions, 'code' => $code);

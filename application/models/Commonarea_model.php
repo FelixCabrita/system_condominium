@@ -26,7 +26,16 @@ class Commonarea_model extends CI_Model
         return $result;
     }
 
-    
+    public function getListing($condominium)
+    {  
+        $this->db->select('id,name,max_person'); 
+        $this->db->from('commonarea'); 
+        $this->db->where('condominium',$condominium);
+        $this->db->where("status",1);
+        $query = $this->db->get();
+        $result = $query->result();
+        return $result;
+    }
  
     /**
      * This function is used to check whether email id is already exist or not

@@ -39,6 +39,16 @@ class Tenant extends BaseController
         $this->loadViews("dashboard", $this->globalApp, null, null);
     }
 
+    public function getDataEdifices($code = '')
+    {
+        $this->load->model('edifice_model');
+        if (empty($code)) {
+            return $this->edifice_model->getListing($this->condominium);
+        } else {
+            return $this->edifice_model->getInfoCode($code, $this->condominium);
+        }
+    }
+
     /**
      * This function is used to load the Tenant list
      */
@@ -51,6 +61,23 @@ class Tenant extends BaseController
             $data['permissions'] = $this->getPermissions()->{'tenants'};
             $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Lista de inquilino';
             $this->loadViews("tenant/tenant", $this->globalApp, $data, null);
+        }
+    }
+
+    /**
+     * This function is used to load the Tenant list
+     */
+    public function assignments($id)
+    {
+        if (checkForPermissions('tenants', PERMISSION_READ) != true) {
+            $this->loadThis();
+        } else {
+            $data['AssignmentRecords'] = $this->tenant_model->Assignment($id, $this->condominium);
+            $data['edificeRecords'] = $this->getDataEdifices();
+            $data['TenantInfo'] = $this->tenant_model->getInfo($id, $this->condominium);
+            $data['permissions'] = $this->getPermissions()->{'tenants'};
+            $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Lista de asignaciones';
+            $this->loadViews("tenant/assigning_apartment", $this->globalApp, $data, null);
         }
     }
 
@@ -107,14 +134,13 @@ class Tenant extends BaseController
                 $landline_phone = strtoupper($this->security->xss_clean($this->input->post('landline_phone')));
                 $email = (strtolower($this->security->xss_clean($this->input->post('email'))));
 
-                $type = (strtolower($this->security->xss_clean($this->input->post('type')))); 
-               
-                
+                $type = (strtolower($this->security->xss_clean($this->input->post('type'))));
+
                 $check = $this->tenant_model->checkExists($document, 0, $this->condominium);
 
-                if (empty($check)) { 
-                    $password = $this->input->post('user')=='on'? getHashedPassword($document):""; 
-                    $info = array('document' => $document, 'name' => $name,  'type' => $type, 'password' => $password, 'mobile' => $mobile, 'condominium' => $this->condominium,
+                if (empty($check)) {
+                    $password = $this->input->post('user') == 'on' ? getHashedPassword($document) : "";
+                    $info = array('document' => $document, 'name' => $name, 'type' => $type, 'password' => $password, 'mobile' => $mobile, 'condominium' => $this->condominium,
                         'landline_phone' => $landline_phone, 'email' => $email);
                     $result = $this->tenant_model->addNew($info);
 
@@ -179,16 +205,16 @@ class Tenant extends BaseController
                 $mobile = (strtoupper($this->security->xss_clean($this->input->post('mobile'))));
                 $landline_phone = strtoupper($this->security->xss_clean($this->input->post('landline_phone')));
                 $email = (strtolower($this->security->xss_clean($this->input->post('email'))));
-                $type = ( ($this->security->xss_clean($this->input->post('type'))));  
-                $check = $this->tenant_model->checkExists($document, $id, $this->condominium); 
+                $type = (($this->security->xss_clean($this->input->post('type'))));
+                $check = $this->tenant_model->checkExists($document, $id, $this->condominium);
                 if (empty($check)) {
                     $password = $this->tenant_model->getInfo($id, $this->condominium)->password;
-                    if($this->input->post('user')=='on' &&  empty($password)){
+                    if ($this->input->post('user') == 'on' && empty($password)) {
                         $password = getHashedPassword($document);
                     }
                     $info = array('document' => $document, 'name' => $name, 'mobile' => $mobile, 'type' => $type, 'condominium' => $this->condominium,
-                        'landline_phone' => $landline_phone, 'password' =>  ($password), 'email' => $email);
-                    $result = $this->tenant_model->edit($info,$id,$this->condominium);
+                        'landline_phone' => $landline_phone, 'password' => ($password), 'email' => $email);
+                    $result = $this->tenant_model->edit($info, $id, $this->condominium);
 
                     if ($result > 0) {
                         $this->session->set_flashdata('success', 'inquilino creado exitosamente');
@@ -223,7 +249,6 @@ class Tenant extends BaseController
             if ($result) {echo (json_encode(array('status' => true)));} else {echo (json_encode(array('status' => false)));}
         }
     }
-
     public function changeStatus()
     {
         if (checkForPermissions('tenants', PERMISSION_UPDATE) != true) {
@@ -238,4 +263,41 @@ class Tenant extends BaseController
             if ($result > 0) {echo (json_encode(array('status' => true)));} else {echo (json_encode(array('status' => false)));}
         }
     }
+
+    public function set_asignation()
+    {
+        if (checkForPermissions('tenants', PERMISSION_CREATE) != true) {
+            echo (json_encode(array('status' => 'access')));
+        } else {
+            $tenant = $this->input->post('id');
+            $edifice = $this->input->post('edifice');
+            $date_start = $this->input->post('date_start');
+            $apartment = $this->input->post('apartment');
+            $check = $this->tenant_model->checkExistsAsignation($edifice, $apartment, $tenant, $this->condominium);
+            if (empty($check)) {
+                $info = array('tenant' => $tenant, 'edifice' => $edifice, 'apartment' => $apartment, 'created_at' => $date_start, 'condominium' => $this->condominium);
+                $result = $this->tenant_model->set_asignation($info);
+                if ($result) {
+                    echo (json_encode(array('status' => true)));
+                } else {echo (json_encode(array('status' => false, "error" => "")));}
+            }else{
+                echo (json_encode(array('status' => false, "error" => "Hay una asignacion similar activa en estos momentos, por favor verifiquela")));
+            }
+        }
+    }
+
+    public function delete_asignation()
+    {
+        if (checkForPermissions('tenants', PERMISSION_UPDATE) != true) {
+            echo (json_encode(array('status' => 'access')));
+        } else {
+            $Id = $this->input->post('id');
+            $observation = $this->input->post('observation');
+            $info = array('observation' => $observation, 'status' => 0, 'updated_at' => date('Y-m-d'));
+            $result = $this->tenant_model->edit_asingnation($info, $Id, $this->condominium);
+
+            if ($result > 0) {echo (json_encode(array('status' => true)));} else {echo (json_encode(array('status' => false)));}
+        }
+    }
+
 }

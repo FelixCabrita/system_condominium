@@ -46,7 +46,8 @@ let dataSet = [
     $('.example-style').DataTable();
     //example 1
     var table = $('#example').DataTable({
-        stateSave: true
+        stateSave: true,
+        "ordering": false
     });
 
     table.on('click', 'tbody tr', function() {
