@@ -19,7 +19,7 @@ class Reservation_model extends CI_Model
     function Listing($id,$condominium)
     { 
         $this->db->select("r.id, r.apartment, r.commonarea, r.quantity_persons, r.start_time, r.ending_time, r.reservation_date, r.status, r.created_at
-                         , a.code as 'apartment_code',t.name as 'tenant_name', t.document as  'tenant_document',c.name as 'area_name',c.max_person");
+                         , a.code as 'apartment_code',t.name as 'tenant_name', t.document as  'tenant_document',c.name as 'area_name',c.max_person,r.observations");
         $this->db->from('reservation r');       
         $this->db->join('commonarea as c', 'c.id = r.commonarea');
         $this->db->join('apartment as a', 'a.id = r.apartment');
@@ -81,6 +81,19 @@ class Reservation_model extends CI_Model
         return $insert_id;
     }
     
+     /**
+     * This function used to get reservation information by id
+     * @param number $reservationId : This is reservation id
+     * @return array $result : This is reservation information
+     */
+    function getInfo($id,$condominium)
+    { 
+        $this->db->from('reservation'); 
+        $this->db->where('id', $id);
+        $this->db->where('condominium',$condominium);
+        $query = $this->db->get(); 
+        return $query->row();
+    }
  
     /**
      * This function is used to update the Apartment information

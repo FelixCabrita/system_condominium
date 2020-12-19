@@ -67,7 +67,8 @@ $this->load->helper('form');
                         } ?></td> 
                         <td class="text-center" style="vertical-align: middle;"> 
                             <?php if($record->status==0){ ?> <a class="btn btn-sm btn-info view_asignation" href="#" data-date="<?php echo $record->updated_at ?>"  data-observation="<?php echo $record->observation ?>" data-name="<?php echo $record->apartment_code ?>" title="Eliminar"><i class="fa fa-info"></i></a>  <?php }  ?>
-                            <?php if($permissions->D==1){ ?> <a class="btn btn-sm btn-danger delete_asignation" href="#" data-userid="<?php echo $record->id; ?>" data-name="<?php echo $record->apartment_code ?>" title="Eliminar"><i class="fa fa-trash"></i></a>  <?php } ?>
+                            
+                            <?php if($permissions->D==1 && $record->status==1){ ?> <a class="btn btn-sm btn-danger delete_asignation" href="#" data-userid="<?php echo $record->id; ?>" data-name="<?php echo $record->apartment_code ?>" title="Eliminar"><i class="fa fa-trash"></i></a>  <?php } ?>
                         </td>
                     </tr>
                     <?php } } ?>

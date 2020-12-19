@@ -1042,7 +1042,7 @@ jQuery(document).ready(function() {
 
         const data = new FormData();
         data.append('id', userId);
-        console.log(data.append('id', userId));
+
         Swal.queue([{
             title: "¿Desea desvincular el apartamento (" + apartment + ") de este inquilino?",
             showCancelButton: true,
@@ -1060,7 +1060,7 @@ jQuery(document).ready(function() {
                 }
             },
             preConfirm: () => {
-                console.log($('.swal2-input').val());
+
                 data.append('observation', $('.swal2-input').val());
 
                 return fetch(hitURL, {
@@ -1173,7 +1173,7 @@ jQuery(document).ready(function() {
         const data = new FormData();
         data.append('id', userId);
         data.append('isactive', (isactive == 1 ? 0 : 1));
-        console.log(data.append('id', userId));
+
         Swal.queue([{
             title: "¿Desea " + (isactive == 1 ? "desactivar" : "activar") + " esta etiqueta?",
             showCancelButton: true,
@@ -1191,7 +1191,7 @@ jQuery(document).ready(function() {
                 }
             },
             preConfirm: () => {
-                console.log($('.swal2-input').val());
+
                 data.append('observation', (isactive == 1 ? "desactivado" : "activado") + ": " + $('.swal2-input').val());
 
                 return fetch(hitURL, {
@@ -1241,6 +1241,72 @@ jQuery(document).ready(function() {
         })
     });
 
+    jQuery(document).on("click", ".changeStatusReservation", function() {
+        var userId = $(this).data("userid"),
+            isactive = $(this).data("isactive"),
+            hitURL = baseURL + "cambio_estado_reservaciones";
+
+        const data = new FormData();
+        data.append('id', userId);
+        data.append('isactive', isactive);
+
+        Swal.queue([{
+            title: "¿Desea " + (isactive === -1 ? "declinar" : "aprobar") + " esta reservacion?",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'SI!',
+            cancelButtonText: 'No, cancelar!',
+            input: 'text',
+            inputPlaceholder: 'Ingresa una observacion',
+            text: 'Esta accion no se podra reversar.',
+            showLoaderOnConfirm: true,
+            inputValidator: (value) => {
+                if (isactive === -1) {
+                    if (!value) {
+                        return 'Debes colocar una observacion!'
+                    }
+                }
+
+            },
+            preConfirm: () => {
+                var observation = $('.swal2-input').val();
+                data.append('observation', (isactive === -1 ? "Declinado" : "Aprobado") + " el setfecha() : " + (observation === '' ? "SIN OBSERVACION" : observation));
+
+                return fetch(hitURL, {
+                        method: 'POST',
+                        body: data
+                    })
+                    .then(response => response.json())
+                    .then(data => (data.status ?
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: "Reservacion " + (isactive == -1 ? "declinada" : "aprobada") + "  con exito",
+                            showConfirmButton: false,
+                            timer: 2000
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                window.location = baseURL + "reservaciones"
+                            }
+                        }) :
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: "Por alguna razon no podemos " + (isactive === -1 ? "declinar" : "aprobar") + " esta etiqueta",
+                            showConfirmButton: false,
+                            timer: 2000
+                        })))
+                    .catch(() => {
+                        Swal.insertQueueStep({
+                            icon: 'error',
+                            title: 'acceso denegado..!'
+                        })
+                    })
+            }
+        }])
+    });
     jQuery(document).on("click", ".searchList", function() {
 
     });
@@ -1300,6 +1366,4 @@ jQuery(document).ready(function() {
             $('#selectCondominium option[value=' + c + ']').prop('selected', true);
         }).catch(swal.noop);
     });
-
-
 });

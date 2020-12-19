@@ -224,11 +224,14 @@ class Reservation extends BaseController
         if (checkForPermissions('reservations', PERMISSION_UPDATE) != true) {
             echo (json_encode(array('status' => 'access')));
         } else {
-            $ReservationId = $this->input->post('id');
+            $id = $this->input->post('id');
             $isactive = $this->input->post('isactive');
-            $ReservationInfo = array('status' => $isactive);
+            $observation = str_replace("setfecha()" ,date('Y-m-d H:i:s'),$this->input->post('observation'));  
+            $reservation = $this->reservation_model->getInfo($id, $this->condominium); 
+            $observation = (empty($reservation->observations)?"":$reservation->observations." | ").$observation; 
 
-            $result = $this->reservation_model->edit($ReservationInfo, $ReservationId, $this->condominium);
+            $reservationInfo = array('status' => $isactive,'observations' => $observation); 
+            $result = $this->reservation_model->edit($reservationInfo, $id, $this->condominium);
 
             if ($result > 0) {echo (json_encode(array('status' => true)));} else {echo (json_encode(array('status' => false)));}
         }

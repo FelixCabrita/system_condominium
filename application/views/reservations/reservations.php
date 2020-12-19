@@ -28,27 +28,35 @@
                 </thead>
                 <tbody> 
                     <?php
-                    if(!empty($PeriodRecords))
+                    if(!empty($ReservationRecords))
                     {
-                        foreach($PeriodRecords as $record)
+                        foreach($ReservationRecords as $record)
                         {
                     ?>
                     <tr>  
-                        <td class="text-center"style="vertical-align: middle;"><?php echo $record->name ?></td>
-                        <td class="text-center" style="vertical-align: middle;"><?php echo $record->start ?></td>
-                        <td class="text-center" style="vertical-align: middle;"><?php echo  $record->end ?></td>
+                        <td class="text-center"style="vertical-align: middle;"><?php echo $record->apartment_code ?></td>
+                        <td class="text-center" style="vertical-align: middle;"><?php echo $record->reservation_date ?></td>
+                        <td class="text-center" style="vertical-align: middle;"><?php echo  $record->start_time . " - " . $record->ending_time ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php echo  $record->created_at  ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php 
-                        if($record->status==1){
-                            echo '<span class="badge badge-success">ACTIVO</span>';
-                        }else if($record->status==0){
-                            echo '<span class="badge badge-danger">INACTIVO</span>';
+                        if($record->status== RESERVE_APPROVED){
+                            echo '<span class="badge badge-success">APROBADO</span>';
+                        }else if($record->status== RESERVE_PENDING){
+                            echo '<span class="badge badge-warning">PENDIENTE</span>';
+                        }else if($record->status== RESERVE_DECLINED){
+                            echo '<span class="badge badge-danger">DECLINADA</span>';
                         } ?></td>
                         <td class="text-center" style="vertical-align: middle;">
-                             <?php if($permissions->U==1){ ?><a class="btn btn-sm btn-primary changeStatusPeriod"  href="#" data-titulo="<?php echo $record->name; ?>" data-isactive="<?php echo $record->status; ?>" data-userid="<?php echo $record->id; ?>" title="Cambio de estado"><i class="fa fa-eye"></i></a> 
-                            <a class="btn btn-sm btn-info" href="<?php echo base_url().'editarreservaciones/'.$record->id; ?>" title="Editar"><i class="fa fa-paint-brush"></i></a> <?php }else { ?> <a class="btn btn-sm btn-info" href="<?php echo base_url().'editarreservaciones/'.$record->id; ?>" title="VER INFORMACION"><i class="fa fa-info"></i></a>  <?php } ?>
-                            <?php if($permissions->D==1){ ?> <a class="btn btn-sm btn-danger deletePeriod" href="#" data-userid="<?php echo $record->id; ?>" data-name="<?php echo $record->name ?>" title="Eliminar"><i class="fa fa-trash"></i></a>  <?php } ?>
-                        </td>
+                             <?php if($permissions->U==1){ ?>
+                                <?php if($rol!=ROLE_TENANT && $record->status == RESERVE_PENDING){ ?>
+                                    <a class="btn btn-sm btn-success changeStatusReservation"  href="#" data-titulo="<?php echo $record->apartment_code; ?>" data-isactive="1" data-userid="<?php echo $record->id; ?>" title="APROBAR"><i class="fa fa-check"></i></a> 
+                                <?php } ?> 
+                                <?php if($rol!=ROLE_TENANT && $record->status > RESERVE_DECLINED){ ?>
+                                    <a class="btn btn-sm btn-danger changeStatusReservation"  href="#" data-titulo="<?php echo $record->apartment_code; ?>" data-isactive="-1" data-userid="<?php echo $record->id; ?>" title="DECLINAR"><i class="fa fa-trash"></i></a>
+                                <?php } ?>  
+                            <?php } ?> 
+                            <?php if(empty(!$record->observations)){ ?> <a class="btn btn-sm btn-info observationTag"  href="#" data-name="<?php echo $record->apartment_code; ?>" data-observations="<?php echo $record->observations; ?>" data-userid="<?php echo $record->id; ?>" title="OBSERVACION"><i class="fa fa-info"></i></a>   <?php } ?> 
+                       </td>
                     </tr>
                     <?php
                         }

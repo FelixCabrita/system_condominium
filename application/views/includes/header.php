@@ -217,12 +217,7 @@
                                 <a href="<?php echo base_url(); ?>reservaciones">
                                     <i class="metismenu-icon pe-7s-user"></i> VER RESERVACIONES
                                 </a>
-                            </li> 
-                             <li> 
-                                <a href="<?php echo base_url(); ?>reservaciones">
-                                    <i class="metismenu-icon pe-7s-user"></i> VER RESERVACIONES
-                                </a>
-                            </li> 
+                            </li>  
                         </ul>
                     </div>
                      
