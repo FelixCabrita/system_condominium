@@ -217,5 +217,18 @@ $route['ver_informacion_insidencias'] = 'incidents/viewInformation';
 $route['ver_informacion_insidencias/(:num)'] = "incidents/viewInformation/$1";
 $route['cambio_estado_insidencias'] = 'incidents/changeStatus';  
 
+/*VIGILANT*/
+$route['casillavigilante'] = 'vigilant/listing';
+$route['entrada_salida'] = 'vigilant/addNew';  
+$route['chequeo_visitante'] = 'vigilant/checkExists';
+$route['nuevo_visitante'] = 'vigilant/addNewData'; 
+$route['historial_visitante'] = "vigilant/log";
+$route['historial_visitante/(:any)'] = "vigilant/log/$1";
+$route['editarvisitante/(:num)'] = "vigilant/editOld/$1";
+$route['editando_visitante'] = 'vigilant/edit'; 
+$route['eliminar_visitante'] = 'vigilant/delete'; 
+$route['ver_informacion_visitante'] = 'vigilant/viewInformation';  
+$route['ver_informacion_visitante/(:num)'] = "vigilant/viewInformation/$1";
+$route['cambio_estado_visitante'] = 'vigilant/changeStatus';  
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

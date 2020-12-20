@@ -22,6 +22,10 @@ if($status == INCIDENTS_IN_REVIEW){
     $status_tag = "EN REVISION";
 } 
 
+if($status == INCIDENTS_SOLVED){
+    $status_tag = "SOLUCIONADO";
+} 
+
 $this->load->helper('form');  
 ?>
 <div class="app-main__inner">  

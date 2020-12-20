@@ -1319,6 +1319,20 @@ jQuery(document).ready(function() {
             }
         }])
     });
+
+    jQuery(document).on("click", ".observationVigilant", function() {
+        var name = $(this).data("name"),
+            status = $(this).data("status"),
+            observation = $(this).data("observation");
+
+        Swal.fire({
+            position: 'top-end',
+            icon: 'info',
+            title: status === 1 ? "ENTRADA DE " + name : "SALIDA DE " + name,
+            html: observation
+        })
+    });
+
     jQuery(document).on("click", ".searchList", function() {
 
     });
@@ -1363,7 +1377,7 @@ jQuery(document).ready(function() {
                             icon: 'error',
                             title: "Por alguna razon no podemos cambiar al condominio: " + name,
                             showConfirmButton: false,
-                            timer: 2000
+                            timer: 1000
                         })))
                     .catch(() => {
                         Swal.insertQueueStep({

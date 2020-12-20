@@ -40,11 +40,11 @@
                         <td class="text-center" style="vertical-align: middle;"><?php echo  $record->created_at  ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php 
                         if($record->status== INCIDENTS_IN_REVIEW){
-                            echo '<span class="badge badge-success">EN REVISION</span>';
+                            echo '<span class="badge badge-warning">EN REVISION</span>';
                         }else if($record->status== INCIDENTS_PENDING){
-                            echo '<span class="badge badge-warning">PENDIENTE</span>';
+                            echo '<span class="badge badge-danger">PENDIENTE</span>';
                         }else if($record->status== INCIDENTS_SOLVED){
-                            echo '<span class="badge badge-danger">SOLUCIONADO</span>';
+                            echo '<span class="badge badge-success">SOLUCIONADO</span>';
                         } ?></td>
                         <td class="text-center" style="vertical-align: middle;">
                             <?php if( $id == $record->user){ ?>
@@ -52,7 +52,7 @@
                             <?php }  if($rol < ROLE_VIGILANT && $permissions->U==1){   ?>     
                                     <a class="btn btn-sm btn-primary" href="<?php echo base_url().'editarinsidencias/'.$record->id; ?>" title="EDITAR INFORMACION"><i class="fa fa-paint-brush"></i></a>  
                             <?php }   ?>
-                            <?php if(empty(!$record->observations)){ ?> <a class="btn btn-sm btn-info observationIncidents"  href="#" data-name="<?php echo str_pad($record->id, 4, '0', STR_PAD_LEFT); ?>" data-observations="<?php echo $record->observations; ?>" data-userid="<?php echo $record->id; ?>" title="OBSERVACION"><i class="fa fa-info"></i></a>   <?php } ?> 
+                            <?php if(empty(!$record->observations)){ ?> <a class="btn btn-sm btn-success observationIncidents"  href="#" data-name="<?php echo str_pad($record->id, 4, '0', STR_PAD_LEFT); ?>" data-observations="<?php echo $record->observations; ?>" data-userid="<?php echo $record->id; ?>" title="COMENTARIOS"><i class="fa fa-comment"></i></a>   <?php } ?> 
                        </td>
                     </tr>
                     <?php }  } ?>

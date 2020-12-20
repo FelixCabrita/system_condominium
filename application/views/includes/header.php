@@ -224,6 +224,12 @@
                                     <i class="metismenu-icon pe-7s-user"></i> VER INSIDENCIAS
                                 </a>
                             </li> 
+                            <li class="app-sidebar__heading">VIGILANCIA</li>
+                             <li> 
+                                <a href="<?php echo base_url(); ?>casillavigilante">
+                                    <i class="metismenu-icon pe-7s-user"></i> ENTRADAS Y SALIDAS
+                                </a> 
+                            </li>  
                         </ul>
                     </div>
                      

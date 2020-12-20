@@ -299,7 +299,7 @@ class Incidents extends BaseController
                 $incidents = $this->incidents_model->getInfo($id, $this->condominium);
                 $observation = (empty($incidents->observations) ? "" : $incidents->observations . " <br> ") . $observation;
 
-                $incidentsInfo = array('status' => $isactive, 'observations' => $observation);
+                $incidentsInfo = array('status' => $status, 'observations' => $observation);
                 $result = $this->incidents_model->edit($incidentsInfo, $id, $this->condominium);
 
                 if ($result > 0) {echo (json_encode(array('status' => true)));} else {echo (json_encode(array('status' => false)));}

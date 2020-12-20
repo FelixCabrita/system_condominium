@@ -50,6 +50,19 @@ let dataSet = [
         "ordering": false
     });
 
+
+    var table = $('#visitante').DataTable({
+        createdRow: function(row, data, index) {
+            $(row).addClass('selected')
+        },
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ]
+    });
+
+
+
     table.on('click', 'tbody tr', function() {
         var $row = table.row(this).nodes().to$();
         var hasClass = $row.hasClass('selected');

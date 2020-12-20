@@ -116,6 +116,9 @@ defined('INCIDENTS_PENDING') or define('INCIDENTS_PENDING', 0);
 defined('INCIDENTS_IN_REVIEW') or define('INCIDENTS_IN_REVIEW', 1);
 defined('INCIDENTS_SOLVED') or define('INCIDENTS_SOLVED', 2);
 
+defined('VIGILANT_INPUT') or define('VIGILANT_INPUT', 1);
+defined('VIGILANT_EXIT') or define('VIGILANT_EXIT', 2);
+
 define('PHOTO_PATH', './assets/images/incidents');
 define('PHOTO_W', '1000');
 define('PHOTO_H', '1000');
