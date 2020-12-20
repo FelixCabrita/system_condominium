@@ -1241,6 +1241,18 @@ jQuery(document).ready(function() {
         })
     });
 
+    jQuery(document).on("click", ".observationIncidents", function() {
+        var name = $(this).data("name"),
+            observations = $(this).data("observations");
+
+        Swal.fire({
+            position: 'top-end',
+            icon: 'info',
+            title: "Observaciones {" + name + "}",
+            html: observations
+        })
+    });
+
     jQuery(document).on("click", ".changeStatusReservation", function() {
         var userId = $(this).data("userid"),
             isactive = $(this).data("isactive"),

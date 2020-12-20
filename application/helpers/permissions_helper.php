@@ -30,7 +30,7 @@ if (!function_exists('checkForPermissions'))
 }
 
 if (!function_exists('checkRole'))
-{ 
+{  
     function checkRole($rol){ 
         $CI =& get_instance();   
         $role_text =$rol;
@@ -44,8 +44,17 @@ if (!function_exists('checkRole'))
             case ROLE_VENDOR:
                 $role_text = "CAJA";
             break;
-            case ROLE_EMPLOYEE:
-                $role_text = "INQUILINO";
+            case ROLE_ACCOUNTING:
+                $role_text = "CONTABILIDAD";
+            break;
+            case ROLE_VIGILANT:
+                $role_text = "VIGILANTE";
+            break;
+            case ROLE_OWNER:
+                $role_text = "PROPIETARIO APTO.";
+            break; 
+            case ROLE_TENANT:
+                $role_text = "INQUILINO APTO.";
             break;
         } 
         return $role_text;

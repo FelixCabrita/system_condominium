@@ -218,6 +218,12 @@
                                     <i class="metismenu-icon pe-7s-user"></i> VER RESERVACIONES
                                 </a>
                             </li>  
+                            <li class="app-sidebar__heading">INSIDENCIAS</li>
+                             <li> 
+                                <a href="<?php echo base_url(); ?>insidencias">
+                                    <i class="metismenu-icon pe-7s-user"></i> VER INSIDENCIAS
+                                </a>
+                            </li> 
                         </ul>
                     </div>
                      

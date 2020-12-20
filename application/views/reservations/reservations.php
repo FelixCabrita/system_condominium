@@ -49,10 +49,10 @@
                         <td class="text-center" style="vertical-align: middle;">
                              <?php if($permissions->U==1){ ?>
                                 <?php if($rol!=ROLE_TENANT && $record->status == RESERVE_PENDING){ ?>
-                                    <a class="btn btn-sm btn-success changeStatusReservation"  href="#" data-titulo="<?php echo $record->apartment_code; ?>" data-isactive="1" data-userid="<?php echo $record->id; ?>" title="APROBAR"><i class="fa fa-check"></i></a> 
+                                    <a class="btn btn-sm btn-success changeStatusReservation"  href="#" data-titulo="<?php echo $record->apartment_code; ?>" data-isactive="<?php echo RESERVE_APPROVED ?>" data-userid="<?php echo $record->id; ?>" title="APROBAR"><i class="fa fa-check"></i></a> 
                                 <?php } ?> 
                                 <?php if($rol!=ROLE_TENANT && $record->status > RESERVE_DECLINED){ ?>
-                                    <a class="btn btn-sm btn-danger changeStatusReservation"  href="#" data-titulo="<?php echo $record->apartment_code; ?>" data-isactive="-1" data-userid="<?php echo $record->id; ?>" title="DECLINAR"><i class="fa fa-trash"></i></a>
+                                    <a class="btn btn-sm btn-danger changeStatusReservation"  href="#" data-titulo="<?php echo $record->apartment_code; ?>" data-isactive="<?php echo RESERVE_DECLINED ?>" data-userid="<?php echo $record->id; ?>" title="DECLINAR"><i class="fa fa-trash"></i></a>
                                 <?php } ?>  
                             <?php } ?> 
                             <?php if(empty(!$record->observations)){ ?> <a class="btn btn-sm btn-info observationTag"  href="#" data-name="<?php echo $record->apartment_code; ?>" data-observations="<?php echo $record->observations; ?>" data-userid="<?php echo $record->id; ?>" title="OBSERVACION"><i class="fa fa-info"></i></a>   <?php } ?> 

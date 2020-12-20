@@ -205,5 +205,17 @@ $route['editando_reservaciones'] = 'reservation/edit';
 $route['eliminar_reservaciones'] = 'reservation/delete'; 
 $route['cambio_estado_reservaciones'] = 'reservation/changeStatus';  
 
+/*INCIDENTS*/
+$route['insidencias'] = 'incidents/listing';
+$route['agregarinsidencias'] = 'incidents/addNew';  
+$route['nuevo_insidencias'] = 'incidents/addNewData'; 
+$route['editarinsidencias'] = "incidents/editOld";
+$route['editarinsidencias/(:num)'] = "incidents/editOld/$1";
+$route['editando_insidencias'] = 'incidents/edit'; 
+$route['eliminar_insidencias'] = 'incidents/delete'; 
+$route['ver_informacion_insidencias'] = 'incidents/viewInformation';  
+$route['ver_informacion_insidencias/(:num)'] = "incidents/viewInformation/$1";
+$route['cambio_estado_insidencias'] = 'incidents/changeStatus';  
+
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

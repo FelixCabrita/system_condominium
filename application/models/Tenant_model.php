@@ -49,7 +49,22 @@ class tenant_model extends CI_Model
     
     }
 
+    function getAssignment($id,$condominium)
+    { 
+        $this->db->select("asi.id, asi.edifice, asi.apartment, asi.tenant, asi.status ,e.code as 'edifice_code',a.apartment as 'apartment_code'");
+        $this->db->from('assigning_apartment as asi');     
+        $this->db->join('edifice as e', 'e.id = asi.edifice');
+        $this->db->join('apartment as a', 'a.id = asi.apartment');
+        $this->db->where('asi.condominium',$condominium);
+        $this->db->where('asi.tenant',$id);   
+        $this->db->where('asi.status',1); 
+        $this->db->order_by(' asi.status,asi.id', 'DESC'); 
+        $query = $this->db->get(); 
+        $result = $query->result();        
+        return $result;
 
+     
+    }
     
  
     /**

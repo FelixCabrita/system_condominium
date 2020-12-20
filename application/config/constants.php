@@ -88,13 +88,10 @@ defined('EXIT__AUTO_MAX') or define('EXIT__AUTO_MAX', 125); // highest automatic
 defined('ROLE_ADMIN') or define('ROLE_ADMIN', '1');
 defined('ROLE_MANAGER') or define('ROLE_MANAGER', '2');
 defined('ROLE_VENDOR') or define('ROLE_VENDOR', '3');
-defined('ROLE_EMPLOYEE') or define('ROLE_ACCOUNTING', '4');
-defined('ROLE_EMPLOYEE') or define('ROLE_VIGILANT', '5');
-
-/**** TENANT DEFINED CONSTANTS **********/
-
-defined('ROLE_OWNER') or define('ROLE_OWNER', '1');
-defined('ROLE_TENANT') or define('ROLE_TENANT', '2');
+defined('ROLE_ACCOUNTING') or define('ROLE_ACCOUNTING', '4');
+defined('ROLE_VIGILANT') or define('ROLE_VIGILANT', '5');  
+defined('ROLE_OWNER') or define('ROLE_OWNER', '6');
+defined('ROLE_TENANT') or define('ROLE_TENANT', '7');
 
 
 defined('STATUS_ACTIVE') or define('STATUS_ACTIVE', '1');
@@ -114,10 +111,19 @@ defined('RESERVE_PENDING') or define('RESERVE_PENDING', 0);
 defined('RESERVE_APPROVED') or define('RESERVE_APPROVED', 1);
 defined('RESERVE_DECLINED') or define('RESERVE_DECLINED', -1);
 
+/**** INCIDENTS DEFINED CONSTANTS **********/
+defined('INCIDENTS_PENDING') or define('INCIDENTS_PENDING', 0);
+defined('INCIDENTS_IN_REVIEW') or define('INCIDENTS_IN_REVIEW', 1);
+defined('INCIDENTS_SOLVED') or define('INCIDENTS_SOLVED', 2);
+
+define('PHOTO_PATH', './assets/images/incidents');
+define('PHOTO_W', '1000');
+define('PHOTO_H', '1000');
+define('PHOTO_DEFAULT', 'no_image_found.png');
 
 defined('CONDITIONS') or define('CONDITIONS', ["OCUPADO","DESOCUPADO","ALQUILADO","EN VENTA"]);
 defined('USER_TYPE') or define('USER_TYPE', ["ADMINISTRADOR","CAJA","CONTABILIDAD","VIGILANTE"]);
-defined('PERMISSION_DEFAULT') or define('PERMISSION_DEFAULT', '{ "users": { "C": 1, "R": 1, "U": 1, "D": 1 }, "apartments": { "C": 1, "R": 1, "U": 1, "D": 1 }, "edifices": { "C": 1, "R": 1, "U": 1, "D": 1 }, "tenants": { "C": 1, "R": 1, "U": 1, "D": 1 }, "tags": { "C": 1, "R": 1, "U": 1, "D": 1 }, "services": { "C": 1, "R": 1, "U": 1, "D": 1 }, "reservations": { "C": 1, "R": 1, "U": 1, "D": 1 }, "period": { "C": 1, "R": 1, "U": 1, "D": 1 }, "directive": { "C": 1, "R": 1, "U": 1, "D": 1 }, "setting": { "C": 1, "R": 1, "U": 1, "D": 1 }, "incidence": { "C": 1, "R": 1, "U": 1, "D": 1 }, "vigilant": { "C": 1, "R": 1, "U": 1, "D": 1 }, "commonarea": { "C": 1, "R": 1, "U": 1, "D": 1 }, "Payments": { "C": 1, "R": 1, "U": 1, "D": 1 }, "bills": { "C": 1, "R": 1, "U": 1, "D": 1 }, "vehicles": { "C": 1, "R": 1, "U": 1, "D": 1 }, "employees": { "C": 1, "R": 1, "U": 1, "D": 1 }, "shopping": { "C": 1, "R": 1, "U": 1, "D": 1 }, "condominium_items": { "C": 1, "R": 1, "U": 1, "D": 1 }, "condominium": { "C": 1, "R": 1, "U": 1, "D": 1 }, "pay": { "C": 1, "R": 1, "U": 1, "D": 1 } }');
+defined('PERMISSION_DEFAULT') or define('PERMISSION_DEFAULT', '{ "users": { "C": 1, "R": 1, "U": 1, "D": 1 }, "apartments": { "C": 1, "R": 1, "U": 1, "D": 1 }, "edifices": { "C": 1, "R": 1, "U": 1, "D": 1 }, "tenants": { "C": 1, "R": 1, "U": 1, "D": 1 }, "tags": { "C": 1, "R": 1, "U": 1, "D": 1 }, "services": { "C": 1, "R": 1, "U": 1, "D": 1 }, "reservations": { "C": 1, "R": 1, "U": 1, "D": 1 }, "period": { "C": 1, "R": 1, "U": 1, "D": 1 }, "directive": { "C": 1, "R": 1, "U": 1, "D": 1 }, "setting": { "C": 1, "R": 1, "U": 1, "D": 1 }, "incidents": { "C": 1, "R": 1, "U": 1, "D": 1 }, "vigilant": { "C": 1, "R": 1, "U": 1, "D": 1 }, "commonarea": { "C": 1, "R": 1, "U": 1, "D": 1 }, "Payments": { "C": 1, "R": 1, "U": 1, "D": 1 }, "bills": { "C": 1, "R": 1, "U": 1, "D": 1 }, "vehicles": { "C": 1, "R": 1, "U": 1, "D": 1 }, "employees": { "C": 1, "R": 1, "U": 1, "D": 1 }, "shopping": { "C": 1, "R": 1, "U": 1, "D": 1 }, "condominium_items": { "C": 1, "R": 1, "U": 1, "D": 1 }, "condominium": { "C": 1, "R": 1, "U": 1, "D": 1 }, "pay": { "C": 1, "R": 1, "U": 1, "D": 1 } }');
 
 /************************** EMAIL CONSTANTS *****************************/
 define('EMAIL_FROM', 'no-reply@buskato.com.ar'); // e.g. email@example.com
