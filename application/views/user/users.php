@@ -40,9 +40,9 @@
                         <td class="text-center" style="vertical-align: middle;"><?php echo checkRole($record->type) ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php echo  $record->created_at  ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php 
-                        if($record->status==1){
+                        if($record->status==STATUS_ACTIVE){
                             echo '<span class="badge badge-success">ACTIVO</span>';
-                        }else if($record->status==0){
+                        }else if($record->status==STATUS_INACTIVE){
                             echo '<span class="badge badge-danger">INACTIVO</span>';
                         } ?></td>
                         <td class="text-center" style="vertical-align: middle;">

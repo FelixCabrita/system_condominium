@@ -496,13 +496,13 @@ jQuery(document).ready(function() {
         data.append('isactive', (isactive == 1 ? 0 : 1));
 
         Swal.queue([{
-            title: "¿Desea " + (isactive == 1 ? "desactivar" : "activar") + " este periodo?",
+            title: "¿Desea " + (isactive == 1 ? "desactivar" : "activar") + " este apartamento?",
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: 'SI!',
             cancelButtonText: 'No, cancelar!',
-            text: 'Cambiara el estado de este periodo, podras reversar esta accion.',
+            text: 'Cambiara el estado de este apartamento, podras reversar esta accion.',
             showLoaderOnConfirm: true,
             preConfirm: () => {
                 return fetch(hitURL, {
@@ -514,7 +514,7 @@ jQuery(document).ready(function() {
                         Swal.fire({
                             position: 'top-end',
                             icon: 'success',
-                            title: "Periodo " + (isactive == 1 ? "desactivado" : "activado") + "  con exito",
+                            title: "Apartamento " + (isactive == 1 ? "desactivado" : "activado") + "  con exito",
                             showConfirmButton: false,
                             timer: 2000
                         }).then((result) => {
@@ -526,7 +526,7 @@ jQuery(document).ready(function() {
                         Swal.fire({
                             position: 'top-end',
                             icon: 'error',
-                            title: "Por alguna razon no podemos " + (isactive == 1 ? "desactivar" : "activar") + " este Periodo",
+                            title: "Por alguna razon no podemos " + (isactive == 1 ? "desactivar" : "activar") + " este apartamento",
                             showConfirmButton: false,
                             timer: 2000
                         })))
@@ -631,7 +631,7 @@ jQuery(document).ready(function() {
                         Swal.fire({
                             position: 'top-end',
                             icon: 'error',
-                            title: "Por alguna razon no podemos " + (isactive == 1 ? "desactivar" : "activar") + " este Periodo",
+                            title: "Por alguna razon no podemos " + (isactive == 1 ? "desactivar" : "activar") + " este miembro",
                             showConfirmButton: false,
                             timer: 2000
                         })))
@@ -1331,6 +1331,68 @@ jQuery(document).ready(function() {
             title: status === 1 ? "ENTRADA DE " + name : "SALIDA DE " + name,
             html: observation
         })
+    });
+    jQuery(document).on("click", ".changeStatusEmployees", function() {
+        var userId = $(this).data("userid"),
+            isactive = $(this).data("isactive"),
+            hitURL = baseURL + "cambio_estado_etiquetas";
+
+        const data = new FormData();
+        data.append('id', userId);
+        data.append('isactive', (isactive == 1 ? 0 : 1));
+
+        Swal.queue([{
+            title: "¿Desea " + (isactive == 1 ? "desactivar" : "activar") + " este empleado?",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'SI!',
+            cancelButtonText: 'No, cancelar!',
+            input: 'text',
+            inputPlaceholder: 'Ingresa una observacion',
+            text: 'Por favo agregue una observacion, esto ayudara a resolver posibles inconvenientes.',
+            showLoaderOnConfirm: true,
+            inputValidator: (value) => {
+                if (!value) {
+                    return 'Debes colocar una observacion!'
+                }
+            },
+            preConfirm: () => {
+                data.append('observation', (isactive == 1 ? "desactivado" : "activado") + ": " + $('.swal2-input').val());
+
+                return fetch(hitURL, {
+                        method: 'POST',
+                        body: data
+                    })
+                    .then(response => response.json())
+                    .then(data => (data.status ?
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: "Empleado " + (isactive == 1 ? "desactivado" : "activado") + "  con exito",
+                            showConfirmButton: false,
+                            timer: 2000
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                window.location = baseURL + "empleados"
+                            }
+                        }) :
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: "Por alguna razon no podemos " + (isactive == 1 ? "desactivar" : "activar") + " este empleado",
+                            showConfirmButton: false,
+                            timer: 2000
+                        })))
+                    .catch(() => {
+                        Swal.insertQueueStep({
+                            icon: 'error',
+                            title: 'acceso denegado..!'
+                        })
+                    })
+            }
+        }])
     });
 
     jQuery(document).on("click", ".searchList", function() {

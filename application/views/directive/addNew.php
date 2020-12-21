@@ -33,7 +33,12 @@
                     </div> 
                     <div class="form-group col-sm-4">
                         <label for="chargue">Cargo</label>
-                        <input type="text"  class="form-control mb-2 mr-sm-5"  autocomplete="nope" autocomplete="off"  id="chargue"  name="chargue" value="<?php echo set_value('chargue'); ?>"   maxlength="250" > 
+                        <select name="chargue" id="chargue" class="form-control">
+                            <option value ="">SELECCIONE UN PERIODO</option>
+                             <?php  for($x=0;$x<COUNT(DIRECTIVE_CHARGUE);$x++) {  ?>
+                                <option value ="<?php echo $x ?>" <?php echo set_value('chargue')==$x?"selected":"" ?>><?php echo DIRECTIVE_CHARGUE[$x] ?></option>
+                            <?php  } ?> 
+                        </select> 
                         <?php echo validation_error('chargue');?> 
                     </div> 
                 </div>  
@@ -51,7 +56,7 @@
                     <div class="form-group col-sm-4">
                         <label for="apartment">Apartamento</label>
                         <select name="apartment" id="apartment" class="form-control">
-                            <option value ="">SELECCIONE UN EDIFICIO</option>
+                            <option value ="">SELECCIONE UN APARTAMENTO</option>
                         </select>
                         <?php echo validation_error('apartment');?> 
                     </div>  
@@ -60,7 +65,7 @@
                          <select name="period" id="period" class="form-control">
                             <option value ="">SELECCIONE UN PERIODO</option>
                             <?php  if(!empty($periodRecords)) { foreach($periodRecords as $record) {  ?>
-                                <option value ="<?php echo $record->name ?>" <?php echo set_value('period')==$record->name?"selected":"" ?>><?php echo $record->name ?></option>
+                                <option value ="<?php echo $record->id ?>" <?php echo set_value('period')==$record->id?"selected":"" ?>><?php echo $record->name ?></option>
                             <?php }} ?> 
                         </select> 
                         <?php echo validation_error('period');?> 

@@ -60,15 +60,15 @@ $this->load->helper('form');
                         <td class="text-center" style="vertical-align: middle;"><?php echo $record->apartment_code ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php echo  $record->created_at ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php 
-                        if($record->status==1){
+                        if($record->status==STATUS_ACTIVE){
                             echo '<span class="badge badge-success">VINCULADO</span>';
-                        }else if($record->status==0){
+                        }else if($record->status==STATUS_INACTIVE){
                             echo '<span class="badge badge-danger">DESVINCULADO</span>';
                         } ?></td> 
                         <td class="text-center" style="vertical-align: middle;"> 
-                            <?php if($record->status==0){ ?> <a class="btn btn-sm btn-info view_asignation" href="#" data-date="<?php echo $record->updated_at ?>"  data-observation="<?php echo $record->observation ?>" data-name="<?php echo $record->apartment_code ?>" title="Eliminar"><i class="fa fa-info"></i></a>  <?php }  ?>
+                            <?php if($record->status==STATUS_INACTIVE){ ?> <a class="btn btn-sm btn-info view_asignation" href="#" data-date="<?php echo $record->updated_at ?>"  data-observation="<?php echo $record->observation ?>" data-name="<?php echo $record->apartment_code ?>" title="Eliminar"><i class="fa fa-info"></i></a>  <?php }  ?>
                             
-                            <?php if($permissions->D==1 && $record->status==1){ ?> <a class="btn btn-sm btn-danger delete_asignation" href="#" data-userid="<?php echo $record->id; ?>" data-name="<?php echo $record->apartment_code ?>" title="Eliminar"><i class="fa fa-trash"></i></a>  <?php } ?>
+                            <?php if($permissions->D==1 && $record->status==STATUS_ACTIVE){ ?> <a class="btn btn-sm btn-danger delete_asignation" href="#" data-userid="<?php echo $record->id; ?>" data-name="<?php echo $record->apartment_code ?>" title="Eliminar"><i class="fa fa-trash"></i></a>  <?php } ?>
                         </td>
                     </tr>
                     <?php } } ?>

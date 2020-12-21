@@ -39,12 +39,12 @@
                         <td class="text-center" style="vertical-align: middle;"><?php echo $record->name ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php echo $record->apartment ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php echo  $record->code ?></td>
-                        <td class="text-center" style="vertical-align: middle;"><?php echo  $record->chargue ?></td>
+                        <td class="text-center" style="vertical-align: middle;"><?php echo DIRECTIVE_CHARGUE[$record->chargue] ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php echo  $record->period  ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php 
-                        if($record->status==1){
+                        if($record->status==STATUS_ACTIVE){
                             echo '<span class="badge badge-success">ACTIVO</span>';
-                        }else if($record->status==0){
+                        }else if($record->status==STATUS_INACTIVE){
                             echo '<span class="badge badge-danger">INACTIVO</span>';
                         } ?></td>
                         <td class="text-center" style="vertical-align: middle;">

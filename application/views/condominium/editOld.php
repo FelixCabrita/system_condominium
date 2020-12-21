@@ -1,7 +1,10 @@
 <?php
 $id = $condominiumInfo->id;
 $name = $condominiumInfo->name;
-$address = $condominiumInfo->address;    
+$address = $condominiumInfo->address;   
+$mobile = $condominiumInfo->mobile;
+$rcn = $condominiumInfo->rcn;    
+$email = $condominiumInfo->email;    
 $this->load->helper('form');
 $readonly = "readonly";
 if($permissions->U==1){
@@ -30,19 +33,37 @@ if($permissions->U==1){
             <?php } ?>
             <?php if($permissions->U==1){ ?>
             <form class="form-inlne"  action="<?php echo base_url() ?>editando_condominio" method="post" id="editando_condominio" role="form"><?php } ?>
-               
-                    <div class="form-group">
+                <div class="row">
+                    <div class="form-group col-sm-6">
                         <label for="fname">Nombre</label>
                         <input type="text"  class="form-control mb-2 mr-sm-5" id="fname"  name="fname" value="<?php echo $name; ?>" <?php echo $readonly; ?> maxlength="100" >
                         <input type="hidden" value="<?php echo $id; ?>" name="id" id="id" />    
                         <?php echo validation_error('fname');?> 
                     </div> 
-                    <div class="form-group">
+                    <div class="form-group col-sm-6">
                         <label for="address">Direccion</label>
                         <input type="text"   class="form-control mb-2 mr-sm-5" id="address"   name="address" value="<?php echo $address; ?>" <?php echo $readonly; ?>>
                         <?php echo validation_error('address');?> 
                     </div> 
-                   
+                </div> 
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        <label for="rcn">RCN</label>
+                        <input type="text"  class="form-control mb-2 mr-sm-5" id="rcn"  name="rcn" value="<?php echo $rcn; ?>" <?php echo $readonly; ?>   maxlength="100" > 
+                        <?php echo validation_error('rcn');?> 
+                    </div> 
+                        
+                    <div class="form-group col-sm-4">
+                        <label for="mobile">Telefono</label>
+                        <input type="tel"   class="form-control mb-2 mr-sm-5" id="mobile"  value="<?php echo $mobile; ?>" <?php echo $readonly; ?> name="mobile" maxlength="100" > 
+                        <?php echo validation_error('mobile');?> 
+                    </div> 
+                    <div class="form-group col-sm-4">
+                        <label for="email">Correo electronico</label>
+                        <input type="email"   class="form-control mb-2 mr-sm-5" id="email"  value="<?php echo $email; ?>" <?php echo $readonly; ?> name="email" maxlength="100" > 
+                        <?php echo validation_error('email');?> 
+                    </div> 
+                </div> 
                 <?php if($permissions->U==1){ ?>
                 
                 <div class="form-group">

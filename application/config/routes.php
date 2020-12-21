@@ -230,5 +230,16 @@ $route['eliminar_visitante'] = 'vigilant/delete';
 $route['ver_informacion_visitante'] = 'vigilant/viewInformation';  
 $route['ver_informacion_visitante/(:num)'] = "vigilant/viewInformation/$1";
 $route['cambio_estado_visitante'] = 'vigilant/changeStatus';  
+
+/*EMPLOYEES*/
+$route['empleados'] = 'employees/listing';
+$route['agregarempleados'] = 'employees/addNew'; 
+$route['chequeo_empleados'] = 'employees/checkExists';
+$route['nuevo_empleados'] = 'employees/addNewData'; 
+$route['editarempleados'] = "employees/editOld";
+$route['editarempleados/(:num)'] = "employees/editOld/$1";
+$route['editando_empleados'] = 'employees/edit'; 
+$route['eliminar_empleados'] = 'employees/delete'; 
+$route['cambio_estado_empleados'] = 'employees/changeStatus';  
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

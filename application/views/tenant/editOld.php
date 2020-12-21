@@ -38,7 +38,7 @@ if($permissions->U==1){
                 <div class="row">
                     <div class="form-group col-sm-4">
                         <label for="document">Documento de identidad</label>
-                        <input type="text"  class="form-control mb-2 mr-sm-5"  autocomplete="nope" autocomplete="off"  id="edifice"  name="document" value="<?php echo $document; ?>" <?php echo $readonly; ?>  maxlength="50" > 
+                        <input type="text"  class="form-control mb-2 mr-sm-5"  autocomplete="nope" autocomplete="off"  id="document"  name="document" value="<?php echo $document; ?>" <?php echo $readonly; ?>  maxlength="50" > 
                         <input type="hidden" value="<?php echo $id; ?>" name="id" id="id" />  
                         <?php echo validation_error('edifice');?> 
                     </div> 

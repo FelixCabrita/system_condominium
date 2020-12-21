@@ -87,15 +87,21 @@ class condominium extends BaseController
             $this->load->library('form_validation'); 
             $this->form_validation->set_rules('fname', 'Nombre completo', 'trim|required|max_length[250]'); 
             $this->form_validation->set_rules('address', 'Direccion', 'trim|required'); 
-            
+            $this->form_validation->set_rules('mobile', 'Telefono', 'trim|required|max_length[100]'); 
+            $this->form_validation->set_rules('rcn', 'RCN', 'trim|required|max_length[100]'); 
+            $this->form_validation->set_rules('email', 'Correo electronico', 'trim|required|max_length[100]'); 
+          
             if ($this->form_validation->run() == false) {
                 $this->addNew();
             } else { 
                
                 $name = (($this->security->xss_clean($this->input->post('fname')))); 
                 $address = ucwords(strtolower($this->security->xss_clean($this->input->post('address'))));
-           
-                $condominiumInfo = array('name' => $name, 'address' => $address);
+                $mobile = (($this->security->xss_clean($this->input->post('mobile')))); 
+                $rcn = (($this->security->xss_clean($this->input->post('rcn')))); 
+                $email = (($this->security->xss_clean($this->input->post('email')))); 
+
+                $condominiumInfo = array('name' => $name,'mobile' => $mobile, 'rcn' => $rcn, 'email' => $email,  'address' => $address);
                 $result = $this->condominium_model->addNew($condominiumInfo);
 
                 if ($result > 0) {
@@ -148,13 +154,20 @@ class condominium extends BaseController
             $condominiumId = $this->input->post('id');
             $this->form_validation->set_rules('fname', 'Nombre completo', 'trim|required|max_length[250]'); 
             $this->form_validation->set_rules('address', 'Direccion', 'trim|required'); 
-             
+            $this->form_validation->set_rules('mobile', 'Telefono', 'trim|required|max_length[100]'); 
+            $this->form_validation->set_rules('rcn', 'RCN', 'trim|required|max_length[100]'); 
+            $this->form_validation->set_rules('email', 'Correo electronico', 'trim|required|max_length[100]'); 
+
             if ($this->form_validation->run() == false) {
                 $this->editOld($condominiumId);
             } else { 
                 $name = (($this->security->xss_clean($this->input->post('fname')))); 
                 $address = ucwords(strtolower($this->security->xss_clean($this->input->post('address'))));
-                $condominiumInfo = array('name' => $name, 'address' => $address); 
+                $mobile = (($this->security->xss_clean($this->input->post('mobile')))); 
+                $rcn = (($this->security->xss_clean($this->input->post('rcn')))); 
+                $email = (($this->security->xss_clean($this->input->post('email')))); 
+
+                $condominiumInfo = array('name' => $name,'mobile' => $mobile, 'rcn' => $rcn, 'email' => $email,  'address' => $address);
                 $result = $this->condominium_model->edit($condominiumInfo, $condominiumId);
 
                 if ($result == true) {

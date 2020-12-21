@@ -44,7 +44,7 @@ if($permissions->U==1){
                         <input type="text"  class="form-control mb-2 mr-sm-5"   name="block" value="<?php echo $block; ?>" readonly > 
                     </div>
                     <div class="form-group col-sm-4">
-                        <label for="block">Codigo Unico(Edificio-Manzana) </label>
+                        <label for="block">Codigo Unico(Manzana-Edificio) </label>
                         <input type="text"  class="form-control mb-2 mr-sm-5"   name="code" value="<?php echo $code; ?>" readonly > 
                     </div>
                 </div>  

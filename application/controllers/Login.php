@@ -1,6 +1,6 @@
 <?php if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
-} 
+}
 require APPPATH . '/libraries/BaseController.php';
 /**
  * Class : Login (LoginController)
@@ -8,7 +8,7 @@ require APPPATH . '/libraries/BaseController.php';
  * @author : Felix Cabrita
  * @version : 1.1
  * @since : 01 Octubre 2020
- */ 
+ */
 
 const USER_VALID_CODE = 0;
 const USER_NOT_EXISTS = 1;
@@ -17,7 +17,6 @@ const USER_INVALID_ROLE = 3;
 
 class Login extends BaseController
 {
-   
 
     public function __construct()
     {
@@ -28,8 +27,9 @@ class Login extends BaseController
 
     public function index()
     {
-        if($this->isLoggedIn())
+        if ($this->isLoggedIn()) {
             redirect('/dashboard');
+        }
 
         $this->load->view('login/login');
     }
@@ -43,7 +43,7 @@ class Login extends BaseController
 
     public function logUser()
     {
-        if($this->IsValidLoginForm()){
+        if ($this->IsValidLoginForm()) {
             $email = strtolower($this->security->xss_clean($this->input->post('username')));
             $password = $this->input->post('password');
 
@@ -52,73 +52,86 @@ class Login extends BaseController
 
             $UserValidCode = $this->validPanelUser($UserData);
 
-            if($UserValidCode == USER_VALID_CODE){
-                $sessionArray = 
+            if ($UserValidCode == USER_VALID_CODE) {
+                $sessionArray =
                 array(
                     'id' => $UserData->id,
                     'username' => $UserData->username,
                     'permissions' => $UserData->permissions,
-                    'name' => $UserData->name,  
-                    'rol' => $UserData->type,
+                    'name' => $UserData->name,
+                    'rol' => $UserData->type, 'apartment' => 0,
                     'condominium' => $UserData->condominium,
                     'condominium_text' => $UserData->condominium_name,
                     'isLoggedIn' => true,
                 );
 
                 $this->session->set_userdata($sessionArray);
-                unset($sessionArray['id'], $sessionArray['isLoggedIn']); 
+                unset($sessionArray['id'], $sessionArray['isLoggedIn']);
                 $this->index();
-            }else
+            } else {
                 $this->displayLoginFormError($UserValidCode);
-                $this->index(); 
-        }else
+            }
+
             $this->index();
+        } else {
+            $this->index();
+        }
+
     }
 
-    private function isValidLoginForm(){
+    private function isValidLoginForm()
+    {
         $this->form_validation->set_rules('username', 'Usuario', 'required|valid_email|max_length[128]|trim');
         $this->form_validation->set_rules('password', 'Contraseña', 'required|max_length[32]');
-    
+
         return $this->form_validation->run() === true;
-    } 
-   
-    private function displayLoginFormError($UserValidCode){
-        if($UserValidCode == USER_NOT_EXISTS)
+    }
+
+    private function displayLoginFormError($UserValidCode)
+    {
+        if ($UserValidCode == USER_NOT_EXISTS) {
             $this->session->set_flashdata('error', 'Usuario o Contraseña incorrectos');
-        else if($UserValidCode == USER_NOT_ACTIVE)
-            $this->session->set_flashdata('error', 'Este usuario no esta activo');  
-        else if($UserValidCode == USER_INVALID_ROLE)
-            $this->session->set_flashdata('error', 'Usuario o Clave incorrectos'); 
+        } else if ($UserValidCode == USER_NOT_ACTIVE) {
+            $this->session->set_flashdata('error', 'Este usuario no esta activo');
+        } else if ($UserValidCode == USER_INVALID_ROLE) {
+            $this->session->set_flashdata('error', 'Usuario o Clave incorrectos');
+        }
+
     }
 
-    private function validPanelUser($UserData){
-        if(empty($UserData))
+    private function validPanelUser($UserData)
+    {
+        if (empty($UserData)) {
             return USER_NOT_EXISTS;
-        else if($UserData->status != STATUS_ACTIVE)
-            return  USER_NOT_ACTIVE; 
+        } else if ($UserData->status != STATUS_ACTIVE) {
+            return USER_NOT_ACTIVE;
+        }
+
     }
 
-    private function createLoginFormErrorMessage($UserValidCode){             
-        switch($UserValidCode){
+    private function createLoginFormErrorMessage($UserValidCode)
+    {
+        switch ($UserValidCode) {
             case USER_NOT_EXISTS:
                 $this->session->set_flashdata('error', 'Correo o Clave incorrectos');
                 $this->index();
-            break;
+                break;
             case USER_NOT_ACTIVE:
                 $this->session->set_flashdata('error', 'Usuario inactivo');
                 $this->index();
-            break;
+                break;
             case USER_INVALID_ROLE:
                 $this->session->set_flashdata('error', 'Este usuario no posee los permisos necesarios');
                 $this->index();
-            break;
+                break;
         }
     }
 
     public function forgotPassword()
     {
-        if($this->isLoggedIn())
+        if ($this->isLoggedIn()) {
             redirect('/dashboard');
+        }
 
         $this->load->view('user/forgotPassword', null);
     }
@@ -127,8 +140,8 @@ class Login extends BaseController
     {
         $status = '';
 
-        if($this->isValidResetPasswordForm()){ 
-            $email = strtolower($this->security->xss_clean($this->input->post('login_email'))); 
+        if ($this->isValidResetPasswordForm()) {
+            $email = strtolower($this->security->xss_clean($this->input->post('login_email')));
             if ($this->login_model->checkEmailExist($email)) {
                 $encoded_email = urlencode($email);
 
@@ -151,9 +164,9 @@ class Login extends BaseController
                         $data1["message"] = "Restablecer su contraseña";
                     }
 
-                    $mensaje = "Buen dia " . $userInfo->name . " para restablecer su contraseña de ".NAME_SYSTEM." por favor acceda a este link $link  y siga los pasos.";
+                    $mensaje = "Buen dia " . $userInfo->name . " para restablecer su contraseña de " . NAME_SYSTEM . " por favor acceda a este link $link  y siga los pasos.";
                     $sendStatus = $this->enviar($userInfo->email, $userInfo->name, "Restablecer contraseña", $mensaje);
-                     
+
                     if ($sendStatus > 0) {
                         $status = "success";
                         setFlashData($status, "El enlace para restablecer la contraseña se envió correctamente, verifique los correos.");
@@ -169,14 +182,16 @@ class Login extends BaseController
                 $status = 'error';
                 setFlashData($status, "Este correo electrónico no está registrado con nosotros.");
             }
-            redirect("/recuperar");            
+            redirect("/recuperar");
 
-        }else
-            redirect("/recuperar");          
+        } else {
+            redirect("/recuperar");
+        }
 
     }
 
-    private function isValidResetPasswordForm(){
+    private function isValidResetPasswordForm()
+    {
         $this->form_validation->set_rules('login_email', 'Email', 'required|valid_email|max_length[128]|trim');
 
         return $this->form_validation->run() === true;
@@ -185,8 +200,8 @@ class Login extends BaseController
     public function resetPasswordConfirmUser($activation_id, $email)
     {
         // Get email and activation code from URL values at index 3-4
-        $email = urldecode($email); 
-        $is_correct = $this->login_model->checkActivationDetails($email, $activation_id); 
+        $email = urldecode($email);
+        $is_correct = $this->login_model->checkActivationDetails($email, $activation_id);
         $data['email'] = $email;
         $data['activation_code'] = $activation_id;
 
@@ -208,7 +223,7 @@ class Login extends BaseController
 
         $this->form_validation->set_rules('password', 'Contraseña', 'required|max_length[20]');
         $this->form_validation->set_rules('cpassword', 'Confirma contraseña', 'trim|required|matches[password]|max_length[20]');
-      
+
         if ($this->form_validation->run() == false) {
             $this->resetPasswordConfirmUser($origin, $activation_id, urlencode($email));
         } else {

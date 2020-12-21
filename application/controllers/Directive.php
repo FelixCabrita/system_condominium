@@ -114,7 +114,7 @@ class Directive extends BaseController
             $this->load->library('form_validation');
             $this->form_validation->set_rules('document', 'Documento', 'trim|required|max_length[50]');
             $this->form_validation->set_rules('name', 'Nombre', 'trim|required|max_length[250]');
-            $this->form_validation->set_rules('chargue', 'Numero de parqueo', 'trim|required|max_length[250]');
+            $this->form_validation->set_rules('chargue', 'Cargo', 'trim|required|max_length[250]');
             $this->form_validation->set_rules('period', 'Periodo', 'trim|required|max_length[10]');
             $this->form_validation->set_rules('edifice', 'Edificio', 'trim|required|max_length[10]');
             $this->form_validation->set_rules('apartment', 'Apartamento', 'trim|required|max_length[11]');
@@ -188,7 +188,7 @@ class Directive extends BaseController
 
             $this->form_validation->set_rules('document', 'Documento', 'trim|required|max_length[50]');
             $this->form_validation->set_rules('name', 'Nombre', 'trim|required|max_length[250]');
-            $this->form_validation->set_rules('chargue', 'Numero de parqueo', 'trim|required|max_length[250]');
+            $this->form_validation->set_rules('chargue', 'Cargo', 'trim|required|max_length[250]');
             $this->form_validation->set_rules('period', 'Periodo', 'trim|required|max_length[10]');
             $this->form_validation->set_rules('edifice', 'Edificio', 'trim|required|max_length[10]');
             $this->form_validation->set_rules('apartment', 'Apartamento', 'trim|required|max_length[11]');

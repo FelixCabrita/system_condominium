@@ -20,19 +20,37 @@
                     </div>  
             <?php } ?>
             <form class="form-inlne" id="addCondominium" action="<?php echo base_url() ?>nuevo_condominio" method="post" role="form">
-                
-                <div class="form-group ">
-                    <label for="fname">Nombre</label>
-                    <input type="text"  class="form-control mb-2 mr-sm-5" id="fname"  name="fname" value="<?php echo set_value('fname'); ?>"   maxlength="100" > 
-                    <?php echo validation_error('fname');?> 
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label for="fname">Nombre</label>
+                        <input type="text"  class="form-control mb-2 mr-sm-5" id="fname"  name="fname" value="<?php echo set_value('fname'); ?>"   maxlength="100" > 
+                        <?php echo validation_error('fname');?> 
+                    </div> 
+                        
+                    <div class="form-group col-sm-6">
+                        <label for="address">Direccion</label>
+                        <input type="text"   class="form-control mb-2 mr-sm-5" id="address"  value="<?php echo set_value('address'); ?>" name="address">
+                        <?php echo validation_error('address');?> 
+                    </div> 
                 </div> 
-                    
-                <div class="form-group ">
-                    <label for="address">Direccion</label>
-                    <input type="text"   class="form-control mb-2 mr-sm-5" id="address"  value="<?php echo set_value('address'); ?>" name="address">
-                    <?php echo validation_error('address');?> 
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        <label for="rcn">RCN</label>
+                        <input type="text"  class="form-control mb-2 mr-sm-5" id="rcn"  name="rcn" value="<?php echo set_value('rcn'); ?>"   maxlength="100" > 
+                        <?php echo validation_error('rcn');?> 
+                    </div> 
+                        
+                    <div class="form-group col-sm-4">
+                        <label for="mobile">Telefono</label>
+                        <input type="tel"   class="form-control mb-2 mr-sm-5" id="mobile"  value="<?php echo set_value('mobile'); ?>" name="mobile" maxlength="100" > 
+                        <?php echo validation_error('mobile');?> 
+                    </div> 
+                    <div class="form-group col-sm-4">
+                        <label for="email">Correo electronico</label>
+                        <input type="email"   class="form-control mb-2 mr-sm-5" id="email"  value="<?php echo set_value('email'); ?>" name="email" maxlength="100" > 
+                        <?php echo validation_error('email');?> 
+                    </div> 
                 </div> 
-                   
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary btn-form">AGREGAR</button>
                 </div>

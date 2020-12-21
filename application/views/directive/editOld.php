@@ -19,7 +19,7 @@ if($permissions->U==1){
 <div class="app-main__inner">  
     <div class="card form-card">
         <div class="card-body"> 
-            <h4 class="card-title mb-4"> <i class="fa fa-users"></i> Apartamentos <br>
+            <h4 class="card-title mb-4"> <i class="fa fa-users"></i> Miembros de la junta directiva <br>
             <?php if($permissions->U==1){ ?> <small> Agregar / <b>Editar</b></small></h4><?php } ?> 
             <?php
                 $error = $this->session->flashdata('error');   
@@ -51,9 +51,19 @@ if($permissions->U==1){
                         <input type="text"  class="form-control mb-2 mr-sm-5"  autocomplete="nope" autocomplete="off"  id="name"  name="name"   value="<?php echo $name; ?>"  value="<?php echo $readonly ; ?>"   maxlength="250" > 
                         <?php echo validation_error('name');?> 
                     </div> 
-                    <div class="form-group col-sm-4">
+                    <div class="form-group col-sm-4"> 
                         <label for="chargue">Cargo</label>
-                        <input type="text"  class="form-control mb-2 mr-sm-5"  autocomplete="nope" autocomplete="off"  id="chargue"  name="chargue"   value="<?php echo $chargue; ?>"  value="<?php echo $readonly ; ?>"   maxlength="250" > 
+                        <?php if(empty($readonly)){ ?>
+                            <select name="chargue" id="chargue" class="form-control">
+                                <option value ="">SELECCIONE UN PERIODO</option>
+                                <?php  for($x=0;$x<COUNT(DIRECTIVE_CHARGUE);$x++) {  ?>
+                                    <option value ="<?php echo $x ?>" <?php echo $chargue==$x?"selected":"" ?>><?php echo DIRECTIVE_CHARGUE[$x] ?></option>
+                                <?php  } ?> 
+                            </select>  
+                        <?php }else{ ?>  
+                            <input type="text"  class="form-control mb-2 mr-sm-5"  autocomplete="nope" autocomplete="off"  id="chargue"  name="chargue"   value="<?php echo DIRECTIVE_CHARGUE[$chargue] ; ?>"  value="<?php echo $readonly ; ?>"   maxlength="250" > 
+                         <?php }  ?>
+                       
                         <?php echo validation_error('chargue');?> 
                     </div> 
                 </div> 
@@ -72,7 +82,7 @@ if($permissions->U==1){
                         <div class="form-group col-sm-4">
                             <label for="apartment">Apartamento</label>
                             <select name="apartment" id="apartment" class="form-control">
-                                <option value ="">SELECCIONE UN EDIFICIO</option>
+                                <option value ="">SELECCIONE UN APARTAMENTO</option>
                             </select>
                             <?php echo validation_error('apartment');?> 
                         </div>  
@@ -81,7 +91,7 @@ if($permissions->U==1){
                             <select name="period" id="period" class="form-control">
                                 <option value ="">SELECCIONE UN PERIODO</option>
                                 <?php  if(!empty($periodRecords)) { foreach($periodRecords as $record) {  ?>
-                                    <option value ="<?php echo $record->name ?>" <?php echo $period==$record->name?"selected":"" ?>><?php echo $record->name ?></option>
+                                    <option value ="<?php echo $record->id ?>" <?php echo $period==$record->id?"selected":"" ?>><?php echo $record->name ?></option>
                                 <?php }} ?> 
                             </select> 
                             <?php echo validation_error('period');?> 

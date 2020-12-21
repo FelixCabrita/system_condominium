@@ -61,9 +61,7 @@ class tenant_model extends CI_Model
         $this->db->order_by(' asi.status,asi.id', 'DESC'); 
         $query = $this->db->get(); 
         $result = $query->result();        
-        return $result;
-
-     
+        return $result; 
     }
     
  

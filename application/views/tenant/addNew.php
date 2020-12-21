@@ -23,8 +23,8 @@
                 <div class="row">
                     <div class="form-group col-sm-4">
                         <label for="document">Documento de identidad</label>
-                        <input type="text"  class="form-control mb-2 mr-sm-5"  autocomplete="nope" autocomplete="off"  id="edifice"  name="document" value="<?php echo set_value('edifice'); ?>"   maxlength="20" > 
-                        <?php echo validation_error('edifice');?> 
+                        <input type="text"  class="form-control mb-2 mr-sm-5"  autocomplete="nope" autocomplete="off"  id="document"  name="document" value="<?php echo set_value('document'); ?>"   maxlength="20" > 
+                        <?php echo validation_error('document');?> 
                     </div> 
                     <div class="form-group col-sm-4">
                         <label for="name">Nombre Completo</label>

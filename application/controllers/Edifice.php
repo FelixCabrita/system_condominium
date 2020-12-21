@@ -103,7 +103,7 @@ class Edifice extends BaseController
                 $block = strtoupper($this->security->xss_clean($this->input->post('block')));
                 $manager = strtoupper($this->security->xss_clean($this->input->post('manager')));
                 $observation = strtolower($this->security->xss_clean($this->input->post('observation')));
-                $code = $edifice.$block;
+                $code =$block.$edifice;
 
                 $check = $this->edifice_model->checkExists($code, 0, $this->condominium);
                 if (empty($check)) { 

@@ -16,6 +16,7 @@ class BaseController extends CI_Controller
     protected $permissions = '';
     protected $condominium_text = '';
     protected $condominium = '';
+    protected $apartment = '';
     protected $rol = '';
     protected $globalAppApp = array();
     protected $lastLogin = '';
@@ -49,6 +50,7 @@ class BaseController extends CI_Controller
             $this->username = $this->session->userdata('username');
             $this->permissions = $this->session->userdata('permissions');
             $this->name = $this->session->userdata('name');
+            $this->apartment = $this->session->userdata('apartment');
             $this->rol = $this->session->userdata('rol');
             $this->lastLogin = $this->session->userdata('lastLogin');
             $this->isLoggedIn = $this->session->userdata('isLoggedIn');
@@ -57,18 +59,19 @@ class BaseController extends CI_Controller
             $this->globalApp['id'] = $this->id;
             $this->globalApp['username'] = $this->username;
             $this->globalApp['permissions'] = $this->permissions;
+            $this->globalApp['apartment'] = $this->apartment;
             $this->globalApp['rol'] = $this->rol;
             $this->globalApp['name'] = $this->name;
             $this->globalApp['isLoggedIn'] = $this->isLoggedIn;
             $this->globalApp['condominium'] = $this->condominium;
             $this->globalApp['condominium_text'] = $this->condominium_text;
         }
-	}
-	
-	public function getPermissions(){
+    }
+
+    public function getPermissions()
+    {
         return json_decode($this->permissions);
     }
- 
 
     /**
      * This function is used to check the access

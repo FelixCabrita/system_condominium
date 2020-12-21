@@ -20,7 +20,7 @@
                     </div>  
             <?php } ?>
             <form class="form-inlne" id="add"  action="<?php echo base_url() ?>nuevo_edificio" method="post" role="form">
-            <div class="row">
+                <div class="row">
                     <div class="form-group col-sm-4">
                         <label for="edifice">Edificio</label>
                         <input type="text"  class="form-control mb-2 mr-sm-5"  autocomplete="nope" autocomplete="off"  id="edifice"  name="edifice" value="<?php echo set_value('edifice'); ?>"   maxlength="10" > 
@@ -32,7 +32,7 @@
                         <?php echo validation_error('block');?> 
                     </div>  
                     <div class="form-group col-sm-4">
-                        <label for="code">Codigo Unico(Edificio-Manzana)</label>
+                        <label for="code">Codigo Unico(Manzana-Edificio)</label>
                         <input type="text"  class="form-control mb-2 mr-sm-5" id="code"  name="code" value="<?php echo set_value('code'); ?>" readonly > 
                         <?php echo validation_error('code');?> 
                     </div>  

@@ -211,15 +211,17 @@ class Tenant extends BaseController
                     $password = $this->tenant_model->getInfo($id, $this->condominium)->password;
                     if ($this->input->post('user') == 'on' && empty($password)) {
                         $password = getHashedPassword($document);
+                    }else{
+                        $password = "";
                     }
                     $info = array('document' => $document, 'name' => $name, 'mobile' => $mobile, 'type' => $type, 'condominium' => $this->condominium,
                         'landline_phone' => $landline_phone, 'password' => ($password), 'email' => $email);
                     $result = $this->tenant_model->edit($info, $id, $this->condominium);
 
                     if ($result > 0) {
-                        $this->session->set_flashdata('success', 'inquilino creado exitosamente');
+                        $this->session->set_flashdata('success', 'inquilino actualizado exitosamente');
                     } else {
-                        $this->session->set_flashdata('error', 'Fallo la creacción del inquilino');
+                        $this->session->set_flashdata('error', 'Fallo la actualizacion del inquilino');
                     }
                 } else {
                     $this->session->set_flashdata('error', 'El documento de inquilino ya existe, por favor compruebe e intente de nuevo');

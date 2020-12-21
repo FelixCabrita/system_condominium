@@ -18,12 +18,14 @@ class Directive_model extends CI_Model
      */
     function Listing($id,$condominium)
     { 
-        $this->db->select("d.id, d.name, d.edifice, d.document, d.chargue, d.period, d.created_at, d.status, a.apartment,e.code");
+        $this->db->select("d.id, d.name, d.edifice, d.document, d.chargue, p.name as 'period', d.created_at, d.status, a.apartment,e.code");
         $this->db->from('directive d');       
         $this->db->join('edifice as e', 'e.id = d.edifice');
         $this->db->join('apartment as a', 'a.id = d.apartment');
+        $this->db->join('period as p', 'p.id = d.period');
         $this->db->where('d.condominium',$condominium);
-        $this->db->order_by('d.id', 'DESC'); 
+        $this->db->where('p.status',1);
+        $this->db->order_by('d.chargue', 'ASC'); 
         $query = $this->db->get(); 
         $result = $query->result();        
         return $result;
