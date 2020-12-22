@@ -229,4 +229,35 @@ class Tag extends BaseController
             if ($result > 0) {echo (json_encode(array('status' => true)));} else {echo (json_encode(array('status' => false)));}
         }
     }
+
+    public function undoVehicle()
+    {
+        if (checkForPermissions('tags', PERMISSION_UPDATE) != true) {
+            echo (json_encode(array('status' => 'access')));
+        } else {
+            $tagId = $this->input->post('tag_id'); 
+            $observation = $this->input->post('observation');  
+            $tag = $this->tag_model->getInfo($tagId, $this->condominium); 
+            $observation = (empty($tag->observations)?"":$tag->observations." | ").$observation; 
+
+            $tagInfo = array('vehicle' => '','observations' => $observation); 
+            $result = $this->tag_model->edit($tagInfo, $tagId, $this->condominium);
+
+            if ($result > 0) {echo (json_encode(array('status' => true)));} else {echo (json_encode(array('status' => false)));}
+        }
+    }
+
+
+    public function changeVehicle()
+    {
+        if (checkForPermissions('tags', PERMISSION_UPDATE) != true) {
+            echo (json_encode(array('status' => 'access')));
+        } else {
+            $tag_id = $this->input->post('tag_id');
+            $vehicle = $this->input->post('vehicle'); 
+            $tagInfo = array('vehicle' => $vehicle); 
+            $result = $this->tag_model->edit($tagInfo, $tag_id, $this->condominium); 
+            if ($result > 0) {echo (json_encode(array('status' => true)));} else {echo (json_encode(array('status' => false)));}
+        }
+    }
 }

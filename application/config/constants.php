@@ -97,7 +97,7 @@ defined('ROLE_EMPLOYEES') or define('ROLE_EMPLOYEES', '8');
 defined('STATUS_ACTIVE') or define('STATUS_ACTIVE', '1');
 defined('STATUS_INACTIVE') or define('STATUS_INACTIVE', '0');
 
-defined('NAME_SYSTEM') or define('NAME_SYSTEM', 'CONDOMINIO');
+defined('NAME_SYSTEM') or define('NAME_SYSTEM', 'ADMINCONDOR');
 
 defined('SEGMENT') or define('SEGMENT', 2);
 

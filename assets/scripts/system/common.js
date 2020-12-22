@@ -1229,6 +1229,68 @@ jQuery(document).ready(function() {
         }])
     });
 
+    jQuery(document).on("click", ".deleteVehicleTag", function() {
+        var userId = $(this).data("userid"),
+            name = $(this).data("name"),
+            hitURL = baseURL + "desvinculacion_vehiculo_etiqueta";
+
+        const data = new FormData();
+        data.append('tag_id', userId);
+
+        Swal.queue([{
+            title: "¿Desea desvincular la placa {" + name + "} esta etiqueta?",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'SI!',
+            cancelButtonText: 'No, cancelar!',
+            input: 'text',
+            inputPlaceholder: 'Ingresa una observacion',
+            text: 'Cambiara el estado de esta etiqueta , podras reversar esta accion.',
+            showLoaderOnConfirm: true,
+            inputValidator: (value) => {
+                if (!value) {
+                    return 'Debes colocar una observacion!'
+                }
+            },
+            preConfirm: () => {
+
+                data.append('observation', "Vehiculo {" + name + "} desvinculado: " + $('.swal2-input').val());
+
+                return fetch(hitURL, {
+                        method: 'POST',
+                        body: data
+                    })
+                    .then(response => response.json())
+                    .then(data => (data.status ?
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: "Vehiculo  desvinculado  con exito",
+                            showConfirmButton: false,
+                            timer: 2000
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                window.location = baseURL + "etiquetas"
+                            }
+                        }) :
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: "Por alguna razon no podemos desvincular este vehiculo",
+                            showConfirmButton: false,
+                            timer: 2000
+                        })))
+                    .catch(() => {
+                        Swal.insertQueueStep({
+                            icon: 'error',
+                            title: 'acceso denegado..!'
+                        })
+                    })
+            }
+        }])
+    });
     jQuery(document).on("click", ".observationTag", function() {
         var name = $(this).data("name"),
             observations = $(this).data("observations").replace("|", "<br>");
@@ -1385,8 +1447,6 @@ jQuery(document).ready(function() {
         }])
     });
 
-
-
     jQuery(document).on("click", ".changeStatusVehicles", function() {
         var userId = $(this).data("userid"),
             isactive = $(this).data("isactive"),
@@ -1428,6 +1488,63 @@ jQuery(document).ready(function() {
                             position: 'top-end',
                             icon: 'error',
                             title: "Por alguna razon no podemos " + (isactive == 1 ? "desactivar" : "activar") + " este vehiculo",
+                            showConfirmButton: false,
+                            timer: 2000
+                        })))
+                    .catch(() => {
+                        Swal.insertQueueStep({
+                            icon: 'error',
+                            title: 'acceso denegado..!'
+                        })
+                    })
+            }
+        }])
+    });
+
+    jQuery(document).on("click", ".setVehicleToTag", function() {
+        var propietario = $(this).data("propietario"),
+            serial = $(this).data("serial"),
+            tag_id = $(this).data("tag_id"),
+            vehicle = $(this).data("vehicle"),
+            licence_plate = $(this).data("licence_plate"),
+            hitURL = baseURL + "asignacion_vehiculo_etiqueta";
+
+        const data = new FormData();
+        data.append('tag_id', tag_id);
+        data.append('vehicle', vehicle);
+
+        Swal.queue([{
+            title: "¿Desea asignar este vehiculo {PLACA: " + licence_plate + "} al serial {" + serial + "}?",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'SI!',
+            cancelButtonText: 'No, cancelar!',
+            html: 'Para reversar esta accion debera suspender la etiqueta.',
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return fetch(hitURL, {
+                        method: 'POST',
+                        body: data
+                    })
+                    .then(response => response.json())
+                    .then(data => (data.status ?
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: "Vehiculo asignado con exito",
+                            showConfirmButton: false,
+                            timer: 2000
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                window.location = baseURL + "etiquetas"
+                            }
+                        }) :
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: "Por alguna razon no podemos asignar este vehiculo",
                             showConfirmButton: false,
                             timer: 2000
                         })))

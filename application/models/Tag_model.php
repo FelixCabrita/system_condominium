@@ -18,10 +18,10 @@ class Tag_model extends CI_Model
      */
     function Listing($id,$condominium)
     { 
-        $this->db->select('t.id, t.serial,v.licence_plate,te.document,te.name, t.created_at,t.vehicle,  t.status, t.observations');     
+        $this->db->select('t.id, t.serial,v.licence_plate,t.apartment,a.code ,t.created_at,t.vehicle,  t.status, t.observations');     
         $this->db->from('tag as t');      
-        $this->db->join('vehicles as v', 'v.id = t.vehicle');
-        $this->db->join('tenant as te', 'te.id = v.tenant');
+        $this->db->join('vehicles as v', 'v.id = t.vehicle','left'); 
+        $this->db->join('apartment as a', 'a.id = t.apartment');
         $this->db->where('t.condominium',$condominium);
         $this->db->order_by('t.id', 'DESC'); 
         $query = $this->db->get(); 

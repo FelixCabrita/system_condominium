@@ -19,7 +19,8 @@
                 <table id="example" class="display" style="min-width: 845px">
                 <thead>
                     <tr> 
-                        <th class="text-center">SERIAL</th> 
+                        <th class="text-center">SERIAL</th>
+                        <th class="text-center">APARTAMENTO</th> 
                         <th class="text-center">VEHICULO</th>
                         <th class="text-center">FECHA DE CREACION</th>
                         <th class="text-center">ESTADO</th> 
@@ -35,7 +36,16 @@
                     ?>
                     <tr>  
                         <td class="text-center"style="vertical-align: middle;"><?php echo $record->serial ?></td>
-                        <td class="text-center" style="vertical-align: middle;"><a class="btn btn-sm btn-danger" title="VER INFORMACION DEL PROPIETARIO" href="<?php echo base_url().'informacion_vehiculo/'.$record->vehicle; ?>" ><?php echo $record->licence_plate ?></a></td>
+                        <td class="text-center" style="vertical-align: middle;"><?php echo $record->code ?></td>
+                        <td class="text-center" style="vertical-align: middle;">
+                        <?php if(!empty($record->vehicle)){ ?>
+                            <a class="btn btn-sm btn-info" title="VER INFORMACION DEL VEHICULO" href="<?php echo base_url().'informacion_vehiculo/'.$record->vehicle; ?>" ><?php echo $record->licence_plate ?></a>
+                            <?php if($permissions->U==1){ ?> <a class="btn btn-sm btn-danger deleteVehicleTag" href="#" data-userid="<?php echo $record->id; ?>" data-name="<?php echo $record->licence_plate ?>" title="Desvincular"><i class="fa fa-trash"></i></a>  <?php } ?>
+                        <?php }else{ ?> 
+                            <?php if($permissions->U==1){ ?>
+                                <a class="btn btn-sm btn-success" title="ASIGNAR VEHICULO" href="<?php echo base_url().'asignar_vehiculo/'.$record->id; ?>" >POR ASIGNAR</a><?php }else{ echo 'PLACA NO ASIGNADA'; } ?>
+                        <?php }?> 
+                        </td>
                         <td class="text-center" style="vertical-align: middle;"><?php echo  date_format (new DateTime($record->created_at), 'Y-m-d g:i A') ?></td> 
                         <td class="text-center" style="vertical-align: middle;"><?php 
                         if($record->status==STATUS_ACTIVE){
@@ -59,7 +69,9 @@
                 <tfoot>
                     <tr> 
                         <th class="text-center">SERIAL</th>
+                        <th class="text-center">APARTAMENTO</th> 
                         <th class="text-center">VEHICULO</th>
+                       
                         <th class="text-center">FECHA DE CREACION</th>
                         <th class="text-center">ESTADO</th> 
                         <th class="text-center">ACCIONES</th>

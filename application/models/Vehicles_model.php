@@ -34,6 +34,26 @@ class Vehicles_model extends CI_Model
         return $result;
     }
 
+
+    public function ListingforAparment($apartment,$condominium)
+    {
+        $this->db->select("v.id, v.condominium, v.tenant,tg.serial,  t.document, t.name , v.licence_plate, v.model, v.brand, v.year, v.colour, v.condition_car, v.status, v.updated_at, v.created_at");
+        $this->db->from('vehicles v');
+        $this->db->join("assigning_apartment as as", "as.apartment = '$apartment' AND as.tenant = v.tenant"); 
+        $this->db->join('tenant as t', 't.id = v.tenant'); 
+        $this->db->join('tag as tg', 'tg.vehicle = v.id','left'); 
+        $this->db->where('v.condominium', $condominium);
+      
+        $this->db->where("as.apartment", $apartment);
+        $this->db->where("as.status",1); 
+        $this->db->where("v.status",1);
+        $this->db->order_by('tg.serial', 'ASC');
+        $query = $this->db->get();
+        $result = $query->result();
+        return $result;
+    }
+
+
     /**
      * This function is used to check whether email id is already exist or not
      * @param {string} $email : This is email id

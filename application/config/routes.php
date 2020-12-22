@@ -194,7 +194,8 @@ $route['editaretiquetas/(:num)'] = "tag/editOld/$1";
 $route['editando_etiquetas'] = 'tag/edit'; 
 $route['eliminar_etiquetas'] = 'tag/delete'; 
 $route['cambio_estado_etiquetas'] = 'tag/changeStatus';  
-
+$route['asignacion_vehiculo_etiqueta'] = 'tag/changeVehicle';  
+$route['desvinculacion_vehiculo_etiqueta'] = 'tag/undoVehicle';  
 /*RESERVATIONS*/
 $route['reservaciones'] = 'reservation/listing';
 $route['agregarreservaciones'] = 'reservation/addNew';  
@@ -251,6 +252,8 @@ $route['editarvehiculos'] = "vehicles/editOld";
 $route['editarvehiculos/(:num)'] = "vehicles/editOld/$1";
 $route['informacion_vehiculo'] = "vehicles/getInformation";
 $route['informacion_vehiculo/(:num)'] = "vehicles/getInformation/$1";
+$route['asignar_vehiculo'] = "vehicles/asignation_vehicle";
+$route['asignar_vehiculo/(:num)'] = "vehicles/asignation_vehicle/$1";
 $route['editando_vehiculos'] = 'vehicles/edit'; 
 $route['eliminar_vehiculos'] = 'vehicles/delete'; 
 $route['cambio_estado_vehiculos'] = 'vehicles/changeStatus';  

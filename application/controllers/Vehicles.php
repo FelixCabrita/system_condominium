@@ -39,6 +39,13 @@ class Vehicles extends BaseController
         $this->loadViews("dashboard", $this->globalApp, null, null);
     }
 
+    public function getDataTag($id = '')
+    {
+        $this->load->model('tag_model'); 
+        return $this->tag_model->getInfo($id, $this->condominium);
+      
+    }
+
     public function getDataTenant()
     { 
         $this->load->model('tenant_model');
@@ -53,13 +60,33 @@ class Vehicles extends BaseController
         if (checkForPermissions('vehicles', PERMISSION_READ) != true) {
             $this->loadThis();
         } else {
+            
             $data['vehiclesRecords'] = $this->vehicles_model->Listing($this->rol > ROLE_VIGILANT?$this->id:"", $this->condominium);
             $data['permissions'] = $this->getPermissions()->{'vehicles'};
             $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Lista de vehiculos';
             $this->loadViews("vehicles/vehicles", $this->globalApp, $data, null);
         }
     }
-
+ /**
+     * This function is used to load the vehicles list
+     */
+    public function asignation_vehicle($id = null)
+    {
+        if (checkForPermissions('vehicles', PERMISSION_READ) != true) {
+            $this->loadThis();
+        } else {
+            if ($id == null) {
+                redirect('vehiculos');
+            }
+            $getDataTag = $this->getDataTag($id); 
+            $data['tag'] =  $getDataTag;
+            $data['vehiclesRecords'] = $this->vehicles_model->ListingforAparment($getDataTag->apartment, $this->condominium);
+            
+            $data['permissions'] = $this->getPermissions()->{'vehicles'};
+            $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Asignacion de vehiculo';
+            $this->loadViews("vehicles/asignation", $this->globalApp, $data, null);
+        }
+    }
     /**
      * This function is used to load the add new form
      */
