@@ -20,19 +20,19 @@
                     </div>  
             <?php } ?>
             <form class="form-inlne" id="add"  action="<?php echo base_url() ?>nuevo_insidencias" method="post" role="form" enctype="multipart/form-data">
-                <?php if($rol>ROLE_VIGILANT)  { ?> 
+                <?php if($rol>ROLE_VIGILANT){ ?> 
                     <div class="row">
                         <div class="form-group col-sm-4">
                             <label for="name">Quien la envia</label>
                             <input type="text"  class="form-control mb-2 mr-sm-5"  name="name" value="<?php echo $name ?>" readonly>  
                         </div> 
-                        <div class="form-group col-sm-4">
+                        <div class="form-group col-sm-3">
                             <label for="type">TIPO USUARIO</label>
                             <input type="text"  class="form-control mb-2 mr-sm-5"  name="type" value="<?php echo checkRole($rol) ?>"  readonly>  
                         </div>  
-                        <div class="form-group col-sm-4">
+                        <div class="form-group col-sm-5">
                             <label for="apartment">Apartamento donde reside (EDIFICIO - APARTAMENTO)</label>
-                            <select name="apartment" class="form-control">  
+                            <select name="apartment" id="apartment" class="form-control">  
                                 <?php  if(!empty($apt_assignation)) { foreach($apt_assignation as $record) {  ?>
                                     <option value ="<?php echo $record->apartment ?>" ><?php echo $record->edifice_code." - ".$record->apartment_code ?></option>
                                 <?php }} ?> 

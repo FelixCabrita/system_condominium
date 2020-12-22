@@ -35,7 +35,9 @@ class Apartment_model extends CI_Model
         $this->db->from('apartment as a');  
         $this->db->where("status",1);
         $this->db->where('a.condominium',$condominium);
-        $this->db->where("a.edifice",$edifice);
+        if (!empty($edifice)) {
+            $this->db->where("a.edifice",$edifice);
+        }
         $query = $this->db->get();
         $result = $query->result();
         return $result;

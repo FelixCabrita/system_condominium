@@ -46,7 +46,7 @@ class Incidents extends BaseController
             $this->load->model('user_model');
             return $this->user_model->getInfo($id, $this->condominium);
         } else {
-            $this->load->model('user_model');
+            $this->load->model('tenant_model');
             return $this->tenant_model->getInfo($id, $this->condominium);
         }
     }
@@ -75,7 +75,7 @@ class Incidents extends BaseController
         if (checkForPermissions('incidents', PERMISSION_READ) != true) {
             $this->loadThis();
         } else {
-            $data['incidentsRecords'] = $this->incidents_model->Listing($this->id, $this->condominium);
+            $data['incidentsRecords'] = $this->incidents_model->Listing($this->rol<ROLE_OWNER?"":$this->id, $this->condominium);
             $data['permissions'] = $this->getPermissions()->{'incidents'};
             $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Lista de reservaciones';
             $this->loadViews("incidents/incidents", $this->globalApp, $data, null);

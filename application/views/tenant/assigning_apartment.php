@@ -58,7 +58,7 @@ $this->load->helper('form');
                     <tr>  
                         <td class="text-center"style="vertical-align: middle;"><?php echo $record->edifice_code ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php echo $record->apartment_code ?></td>
-                        <td class="text-center" style="vertical-align: middle;"><?php echo  $record->created_at ?></td>
+                        <td class="text-center" style="vertical-align: middle;"><?php echo  date_format (new DateTime($record->created_at), 'Y-m-d g:i A') ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php 
                         if($record->status==STATUS_ACTIVE){
                             echo '<span class="badge badge-success">VINCULADO</span>';

@@ -39,7 +39,7 @@ class Tag_model extends CI_Model
      */
     function checkExists( $id_apartment,$condominium)
     {
-        $this->db->select("IFNULL(MAX(id),1) as 'max'");
+        $this->db->select("IFNULL(MAX(id),0) as 'max'");
         $this->db->from("tag"); 
         $this->db->where('condominium',$condominium); 
         $this->db->where("apartment", $id_apartment); 

@@ -112,7 +112,10 @@ jQuery(document).ready(function() {
                             });
                             $('#status option[value=' + 2 + ']').prop('selected', true);
                             $("#observation").val(visitor.observation);
+                        } else {
+                            $('#status option[value=' + 1 + ']').prop('selected', true);
                         }
+
                     } else {
                         Swal.fire({
                             position: 'top-end',

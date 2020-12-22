@@ -41,7 +41,7 @@
                         <td class="text-center" style="vertical-align: middle;"><?php echo $record->edifice ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php echo  $record->number_parking ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php echo  $record->conditions ?></td>
-                        <td class="text-center" style="vertical-align: middle;"><?php echo  $record->created_at  ?></td>
+                        <td class="text-center" style="vertical-align: middle;"><?php echo  date_format (new DateTime($record->created_at), 'Y-m-d g:i A')  ?></td>
                         <td class="text-center" style="vertical-align: middle;">
                             <?php if($permissions->U==1){ ?><a class="btn btn-sm btn-info" href="<?php echo base_url().'editarapartamento/'.$record->id; ?>" title="Editar"><i class="fa fa-paint-brush"></i></a> <?php }else { ?> <a class="btn btn-sm btn-info" href="<?php echo base_url().'editarapartamento/'.$record->id; ?>" title="VER INFORMACION"><i class="fa fa-info"></i></a>  <?php } ?>
                             <?php if($permissions->D==1){ ?> <a class="btn btn-sm btn-danger deleteApartment" href="#" data-userid="<?php echo $record->id; ?>" data-name="<?php echo $record->code ?>" title="Eliminar"><i class="fa fa-trash"></i></a>  <?php } ?>

@@ -40,6 +40,17 @@ class Reservation extends BaseController
         }
     }
 
+    public function getApartmentsAssignation($role, $id)
+    {
+        if ($role > ROLE_VIGILANT) {
+            $this->load->model('tenant_model');
+            return $this->tenant_model->getAssignment($id, $this->condominium);
+        } else {   
+            $this->load->model('apartment_model');
+            return $this->apartment_model->getListing("", $this->condominium); 
+        }
+    }
+
     public function getDataCommonArea()
     {
         $this->load->model('commonarea_model');
@@ -67,7 +78,7 @@ class Reservation extends BaseController
         if (checkForPermissions('reservations', PERMISSION_READ) != true) {
             $this->loadThis();
         } else {
-            $data['ReservationRecords'] = $this->reservation_model->Listing($this->id, $this->condominium);
+            $data['ReservationRecords'] = $this->reservation_model->Listing($this->rol<ROLE_OWNER?"":$this->id, $this->condominium);
             $data['permissions'] = $this->getPermissions()->{'reservations'};
             $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Lista de reservaciones';
             $this->loadViews("reservations/reservations", $this->globalApp, $data, null);
@@ -83,8 +94,9 @@ class Reservation extends BaseController
             $this->loadThis();
         } else {
             $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Nuevo reservacion';
-            $data['edificeRecords'] = $this->getDataEdifices();
+            $data['edificeRecords'] = $this->getDataEdifices(); 
             $data['commonareaRecords'] = $this->getDataCommonArea();
+            $data['apartmentRecords'] = $this->getApartmentsAssignation($this->rol,$this->id);
             $data['reservations'] = json_encode($this->reservation_model->getListing($this->condominium));
             $this->loadViews("reservations/addNew", $this->globalApp, $data, null);
         }

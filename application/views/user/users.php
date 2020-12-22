@@ -38,7 +38,7 @@
                         <td class="text-center"style="vertical-align: middle;"><?php echo $record->name ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php echo $record->username ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php echo checkRole($record->type) ?></td>
-                        <td class="text-center" style="vertical-align: middle;"><?php echo  $record->created_at  ?></td>
+                        <td class="text-center" style="vertical-align: middle;"><?php echo  date_format (new DateTime($record->created_at), 'Y-m-d g:i A')  ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php 
                         if($record->status==STATUS_ACTIVE){
                             echo '<span class="badge badge-success">ACTIVO</span>';

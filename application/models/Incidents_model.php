@@ -23,6 +23,9 @@ class Incidents_model extends CI_Model
                             i.user_type, i.description, i.photo_1, i.photo_2, i.status, i.observations, i.created_at, i.updated_at");
         $this->db->from('incidents as i');     
         $this->db->where('i.condominium',$condominium);
+        if(!empty($id)){
+            $this->db->where("i.user", $id);
+        }
         $this->db->order_by('i.status, i.id', 'ASC'); 
         $query = $this->db->get(); 
         $result = $query->result();        

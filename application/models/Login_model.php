@@ -36,6 +36,28 @@
         }
     }
 
+    function LoginTenant($email, $password)
+    {  
+        $this->db->select("t.id, t.condominium, t.document, t.name, t.mobile,  t.password, t.type, t.created_at, t.status"); 
+        $this->db->join('condominium as c', 'c.id = t.condominium');
+        $this->db->from('tenant as t'); 
+        $this->db->where('t.document', $email); 
+        $query = $this->db->get();
+        
+        $user = $query->row();
+        
+        if(!empty($user)){
+            if(verifyHashedPassword(strtoupper($password), $user->password)){
+                return $user;
+            } else {
+                return array();
+            }
+        } else {
+            return array();
+        }
+    }
+
+
     function ejectSQL($sql,$code)
     {
         $this->db = $this->load->database('', true,null,$code);

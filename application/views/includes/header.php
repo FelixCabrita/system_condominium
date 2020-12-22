@@ -159,88 +159,116 @@
                                     <i class="metismenu-icon pe-7s-graph3"></i> Dashboard
                                 </a>
                             </li>
-                            <li class="app-sidebar__heading">ADMINISTRACION</li>
+                            <?php echo $rol<ROLE_VIGILANT?'<li class="app-sidebar__heading">ADMINISTRACION</li>':"" ?> 
                             <?php  if($rol==ROLE_ADMIN){ ?>
                                 <li> 
                                     <a href="<?php echo base_url(); ?>condominios">
                                         <i class="metismenu-icon pe-7s-user"></i> CONDOMINIOS 
                                     </a>
                                 </li>
-                            <?php } ?> 
+                            <?php } 
+                             if (checkForPermissions('users', PERMISSION_READ) == true) { ?> 
                             <li> 
                                 <a href="<?php echo base_url(); ?>usuarios">
                                     <i class="metismenu-icon pe-7s-user"></i> USUARIOS 
                                 </a> 
                             </li> 
+                            <?php } 
+                             if (checkForPermissions('edifices', PERMISSION_READ) == true) { ?> 
                             <li> 
                                 <a href="<?php echo base_url(); ?>edificios">
                                     <i class="metismenu-icon pe-7s-user"></i> EDIFICIOS 
                                 </a>
                             </li>
+                            <?php } 
+                             if (checkForPermissions('apartments', PERMISSION_READ) == true) { ?> 
                             <li> 
                                 <a href="<?php echo base_url(); ?>apartamentos">
                                     <i class="metismenu-icon pe-7s-user"></i> APARTAMENTOS 
                                 </a>
                             </li> 
+                            <?php } 
+                             if (checkForPermissions('tags', PERMISSION_READ) == true) { ?> 
                             <li> 
                                 <a href="<?php echo base_url(); ?>etiquetas">
                                     <i class="metismenu-icon pe-7s-user"></i> ETIQUETAS
                                 </a>
                             </li> 
+                            <?php } 
+                             if (checkForPermissions('commonarea', PERMISSION_READ) == true) { ?> 
                             <li> 
                                 <a href="<?php echo base_url(); ?>areascomunes">
                                     <i class="metismenu-icon pe-7s-user"></i> AREAS COMUNES 
                                 </a>
                             </li>
+                            <?php } 
+                             if (checkForPermissions('tenants', PERMISSION_READ) == true) { ?> 
                             <li> 
                                 <a href="<?php echo base_url(); ?>inquilinos">
                                     <i class="metismenu-icon pe-7s-user"></i> INQUILINOS 
                                 </a>
                             </li>
+                            <?php } 
+                             if (checkForPermissions('services', PERMISSION_READ) == true) { ?> 
                             <li> 
                                 <a href="<?php echo base_url(); ?>servicios">
                                     <i class="metismenu-icon pe-7s-user"></i> SERVICIOS 
                                 </a>
                             </li>
+                            <?php } 
+                             if (checkForPermissions('period', PERMISSION_READ) == true) { ?> 
                             <li> 
                                 <a href="<?php echo base_url(); ?>periodos">
                                     <i class="metismenu-icon pe-7s-user"></i> PERIODOS 
                                 </a>
                             </li>
+                            <?php } 
+                             if (checkForPermissions('directive', PERMISSION_READ) == true) { ?> 
                             <li> 
                                 <a href="<?php echo base_url(); ?>juntadirectiva">
                                     <i class="metismenu-icon pe-7s-user"></i> JUNTA DIRECTIVA 
                                 </a>
                             </li> 
-                             <li class="app-sidebar__heading">RESERVA DE AREA COMUN</li>
+                            <?php }  ?>  
+                            <?php echo $rol<ROLE_VIGILANT?'<li class="app-sidebar__heading">RESERVA DE AREA COMUN</li>':"" ?>  
+                             <?php if (checkForPermissions('reservations', PERMISSION_READ) == true) { ?> 
                              <li> 
                                 <a href="<?php echo base_url(); ?>reservaciones">
-                                    <i class="metismenu-icon pe-7s-user"></i> VER RESERVACIONES
-                                </a>
-                            </li>  
-                            <li class="app-sidebar__heading">INSIDENCIAS</li>
-                             <li> 
-                                <a href="<?php echo base_url(); ?>insidencias">
-                                    <i class="metismenu-icon pe-7s-user"></i> VER INSIDENCIAS
+                                    <i class="metismenu-icon pe-7s-user"></i><?php echo $rol<ROLE_VIGILANT?'VER RESERVACIONES':"MIS RESERVACIONES" ?>  
                                 </a>
                             </li> 
+                            <?php } ?>  
+                            <?php echo $rol<ROLE_VIGILANT?'<li class="app-sidebar__heading">INSIDENCIAS</li>':"" ?>   
+                            <?php  if (checkForPermissions('incidents', PERMISSION_READ) == true) { ?>  
+                             <li> 
+                                <a href="<?php echo base_url(); ?>insidencias">
+                                    <i class="metismenu-icon pe-7s-user"></i> <?php echo $rol<ROLE_VIGILANT?'VER INSIDENCIAS':"MIS INSIDENCIAS" ?>    
+                                </a>
+                            </li> 
+                            <?php } 
+                             if (checkForPermissions('vigilant', PERMISSION_READ) == true) { ?> 
                             <li class="app-sidebar__heading">VIGILANCIA</li>
                              <li> 
                                 <a href="<?php echo base_url(); ?>casillavigilante">
                                     <i class="metismenu-icon pe-7s-user"></i> ENTRADAS Y SALIDAS
                                 </a> 
                             </li>  
-                            <li class="app-sidebar__heading">INQUILINOS</li>
+                            <?php } ?>
+                            <?php echo $rol<ROLE_VIGILANT?' <li class="app-sidebar__heading">INQUILINOS</li>':"" ?>   
+                           
+                            <?php   if (checkForPermissions('employees', PERMISSION_READ) == true) { ?> 
                             <li> 
                                 <a href="<?php echo base_url(); ?>empleados">
                                     <i class="metismenu-icon pe-7s-user"></i> EMPLEADOS
                                 </a> 
                             </li>  
+                            <?php }  if (checkForPermissions('vehicles', PERMISSION_READ) == true) { ?> 
                             <li> 
                                 <a href="<?php echo base_url(); ?>casillavigilante">
                                     <i class="metismenu-icon pe-7s-user"></i> VEHICULOS
                                 </a> 
                             </li> 
+                            <?php }  ?>
                         </ul>
                     </div>
                      

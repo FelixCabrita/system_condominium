@@ -17,16 +17,19 @@ class Reservation_model extends CI_Model
      * @return array $result : This is result
      */
     function Listing($id,$condominium)
-    { 
+    {  
         $this->db->select("r.id, r.apartment, r.commonarea, r.quantity_persons, r.start_time, r.ending_time, r.reservation_date, r.status, r.created_at
-                         , a.code as 'apartment_code',t.name as 'tenant_name', t.document as  'tenant_document',c.name as 'area_name',c.max_person,r.observations");
+        , a.code as 'apartment_code',c.max_person ,r.observations");
         $this->db->from('reservation r');       
-        $this->db->join('commonarea as c', 'c.id = r.commonarea');
-        $this->db->join('apartment as a', 'a.id = r.apartment');
-        $this->db->join('assigning_apartment as asi', 'asi.apartment = r.apartment');
-        $this->db->join('tenant as t', 't.id = asi.tenant');
+        $this->db->join('commonarea as c', 'c.id = r.commonarea'); 
+        $this->db->join('apartment as a', 'a.id = r.apartment');  
+        if(!empty($id)){
+            $this->db->join('assigning_apartment as asi', 'asi.apartment = r.apartment'); 
+            $this->db->where("asi.tenant", $id);
+        }
         $this->db->where('r.condominium',$condominium);
         $this->db->order_by('r.status, r.id', 'DESC'); 
+        $this->db->group_by('r.id');
         $query = $this->db->get(); 
         $result = $query->result();        
         return $result;

@@ -35,9 +35,9 @@
                     ?>
                     <tr>  
                         <td class="text-center"style="vertical-align: middle;"><?php echo $record->apartment_code ?></td>
-                        <td class="text-center" style="vertical-align: middle;"><?php echo $record->reservation_date ?></td>
-                        <td class="text-center" style="vertical-align: middle;"><?php echo  $record->start_time . " - " . $record->ending_time ?></td>
-                        <td class="text-center" style="vertical-align: middle;"><?php echo  $record->created_at  ?></td>
+                        <td class="text-center" style="vertical-align: middle;"><?php echo date_format (new DateTime($record->reservation_date), 'Y-m-d') ?></td>
+                        <td class="text-center" style="vertical-align: middle;"><?php echo  date_format (new DateTime($record->start_time), 'g:i A') . " - " . date_format (new DateTime($record->ending_time), 'g:i A')   ?></td>
+                        <td class="text-center" style="vertical-align: middle;"><?php echo  date_format (new DateTime($record->created_at), 'Y-m-d g:i A')  ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php 
                         if($record->status== RESERVE_APPROVED){
                             echo '<span class="badge badge-success">APROBADO</span>';
@@ -48,10 +48,10 @@
                         } ?></td>
                         <td class="text-center" style="vertical-align: middle;">
                              <?php if($permissions->U==1){ ?>
-                                <?php if($rol!=ROLE_TENANT && $record->status == RESERVE_PENDING){ ?>
+                                <?php if($rol<ROLE_VIGILANT && $record->status == RESERVE_PENDING){ ?>
                                     <a class="btn btn-sm btn-success changeStatusReservation"  href="#" data-titulo="<?php echo $record->apartment_code; ?>" data-isactive="<?php echo RESERVE_APPROVED ?>" data-userid="<?php echo $record->id; ?>" title="APROBAR"><i class="fa fa-check"></i></a> 
                                 <?php } ?> 
-                                <?php if($rol!=ROLE_TENANT && $record->status > RESERVE_DECLINED){ ?>
+                                <?php if($record->status > RESERVE_DECLINED){ ?>
                                     <a class="btn btn-sm btn-danger changeStatusReservation"  href="#" data-titulo="<?php echo $record->apartment_code; ?>" data-isactive="<?php echo RESERVE_DECLINED ?>" data-userid="<?php echo $record->id; ?>" title="DECLINAR"><i class="fa fa-trash"></i></a>
                                 <?php } ?>  
                             <?php } ?> 

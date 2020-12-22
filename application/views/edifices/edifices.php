@@ -37,7 +37,7 @@
                         <td class="text-center"style="vertical-align: middle;"><?php echo $record->code ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php echo $record->manager ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php echo  $record->observation ?></td>
-                        <td class="text-center" style="vertical-align: middle;"><?php echo  $record->created_at  ?></td>
+                        <td class="text-center" style="vertical-align: middle;"><?php echo  date_format (new DateTime($record->created_at), 'Y-m-d g:i A')  ?></td>
                          
                         <td class="text-center" style="vertical-align: middle;">
                           <?php if($permissions->U==1){ ?> <!-- <a class="btn btn-sm btn-primary changeStatusEdifice"  href="#" data-titulo="<?php echo $record->code; ?>" data-isactive="<?php echo $record->status; ?>" data-userid="<?php echo $record->id; ?>" title="Cambio de estado"><i class="fa fa-eye"></i></a>-->

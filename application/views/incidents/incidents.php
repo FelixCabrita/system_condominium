@@ -37,7 +37,7 @@
                         <td class="text-center"style="vertical-align: middle;"><?php echo str_pad($record->id, 4, '0', STR_PAD_LEFT) ?></td>
                         <td class="text-center"style="vertical-align: middle;"><?php echo $record->name ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php echo checkRole($record->user_type) ?></td> 
-                        <td class="text-center" style="vertical-align: middle;"><?php echo  $record->created_at  ?></td>
+                        <td class="text-center" style="vertical-align: middle;"><?php echo  date_format (new DateTime($record->created_at), 'Y-m-d g:i A')  ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php 
                         if($record->status== INCIDENTS_IN_REVIEW){
                             echo '<span class="badge badge-warning">EN REVISION</span>';
@@ -47,9 +47,9 @@
                             echo '<span class="badge badge-success">SOLUCIONADO</span>';
                         } ?></td>
                         <td class="text-center" style="vertical-align: middle;">
-                            <?php if( $id == $record->user){ ?>
+                            <?php if($rol < ROLE_VIGILANT && $permissions->U==1 ){ ?>
                                 <a class="btn btn-sm btn-info" href="<?php echo base_url().'ver_informacion_insidencias/'.$record->id; ?>" title="VER INFORMACION"><i class="fa fa-info"></i></a>  
-                            <?php }  if($rol < ROLE_VIGILANT && $permissions->U==1){   ?>     
+                            <?php }  if($id == $record->user){   ?>     
                                     <a class="btn btn-sm btn-primary" href="<?php echo base_url().'editarinsidencias/'.$record->id; ?>" title="EDITAR INFORMACION"><i class="fa fa-paint-brush"></i></a>  
                             <?php }   ?>
                             <?php if(empty(!$record->observations)){ ?> <a class="btn btn-sm btn-success observationIncidents"  href="#" data-name="<?php echo str_pad($record->id, 4, '0', STR_PAD_LEFT); ?>" data-observations="<?php echo $record->observations; ?>" data-userid="<?php echo $record->id; ?>" title="COMENTARIOS"><i class="fa fa-comment"></i></a>   <?php } ?> 

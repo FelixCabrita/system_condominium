@@ -30,23 +30,33 @@
                 <div class="form-group col-sm-6">
                         <label for="name">Reservado por: </label>
                     <div class="row form-group ">
-                        <div class="form-group col-sm-6">
-                            <label for="edifice">Edificio</label>
-                            <select name="edifice" id="edifice" class="form-control">
-                                <option value ="">SELECCIONE UN EDIFICIO</option>
-                                <?php if (!empty($edificeRecords)) {foreach ($edificeRecords as $record) {?>
-                                    <option value ="<?php echo $record->id ?>" <?php echo set_value('edifice') == $record->code ? "selected" : "" ?>><?php echo $record->code . " - " . $record->manager ?></option>
-                                <?php }}?>
-                            </select>
-                            <?php echo validation_error('edifice'); ?>
-                        </div>
-                        <div class="form-group col-sm-6">
-                            <label for="apartment">Apartamento</label>
-                            <select name="apartment" id="apartment" class="form-control">
-                                <option value ="">SELECCIONE UN EDIFICIO</option>
-                            </select>
-                            <?php echo validation_error('apartment'); ?>
-                        </div>
+                        <?php if($rol <= ROLE_VIGILANT) { ?>
+                            <div class="form-group col-sm-6">
+                                <label for="type">TIPO USUARIO</label>
+                                <input type="text"  class="form-control mb-2 mr-sm-5"  name="type" value="<?php echo checkRole($rol) ?>"  readonly>  
+                            </div>  
+                            <div class="form-group col-sm-6">
+                                <label for="apartment">(EDIFICIO - APARTAMENTO)</label>
+                                <select name="apartment"  id="apartment"  class="form-control">  
+                                    <?php  if(!empty($apartmentRecords)) { foreach($apartmentRecords as $record) {  ?>
+                                        <option value ="<?php echo $record->id ?>" ><?php echo $record->code ?></option>
+                                    <?php }} ?> 
+                                </select>
+                            </div>  
+                        <?php }else{ ?>
+                            <div class="form-group col-sm-6">
+                                <label for="type">TIPO USUARIO</label>
+                                <input type="text"  class="form-control mb-2 mr-sm-5"  name="type" value="<?php echo checkRole($rol) ?>"  readonly>  
+                            </div>  
+                            <div class="form-group col-sm-6">
+                                <label for="apartment">(EDIFICIO - APARTAMENTO)</label>
+                                <select name="apartment"  id="apartment"  class="form-control">  
+                                    <?php  if(!empty($apartmentRecords)) { foreach($apartmentRecords as $record) {  ?>
+                                        <option value ="<?php echo $record->apartment ?>" ><?php echo $record->edifice_code." - ".$record->apartment_code ?></option>
+                                    <?php }} ?> 
+                                </select>
+                            </div>  
+                        <?php } ?>
                     </div>
                     <div class="form-group ">
                         <label for="commonarea">Area comun a reservar</label>
@@ -235,7 +245,7 @@
                         start_time = $("#start_time").val(),
                         ending_time = $("#ending_time").val(), 
                         hitURL = baseURL + "reservar_areacomun"; 
-                        if(edifice!=='' && apartment!==''&& commonarea!==''&& quantity_persons!==''&& start_time!==''&& ending_time!=='' && date_selected !==''){
+                        if(apartment !=='' && commonarea!==''&& quantity_persons!==''&& start_time!==''&& ending_time!=='' && date_selected !==''){
                             const data = new FormData();
                             data.append('edifice', edifice);
                             data.append('apartment', apartment);

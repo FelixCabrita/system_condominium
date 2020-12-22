@@ -30,7 +30,7 @@
                         <tr>  
                             <td class="text-center"style="vertical-align: middle;"><?php echo str_pad($record->id, 4, '0', STR_PAD_LEFT) ?> </td>
                             <td class="text-center"style="vertical-align: middle;"><a href="<?php echo base_url()."historial_visitante/".$record->document ?>" title="Ver historial"><?php echo "(".$record->document.") ".$record->name ?></a></td>
-                            <td class="text-center" style="vertical-align: middle;"><?php echo $record->created_at ?></td> 
+                            <td class="text-center" style="vertical-align: middle;"><?php echo date_format (new DateTime($record->created_at), 'Y-m-d g:i A') ?></td> 
                             <td class="text-center" style="vertical-align: middle;"><?php 
                             if($record->status==VIGILANT_INPUT){
                                 echo '<span class="badge badge-success">ENTRADA</span>';

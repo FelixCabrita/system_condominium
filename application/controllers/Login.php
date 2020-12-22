@@ -69,10 +69,31 @@ class Login extends BaseController
                 unset($sessionArray['id'], $sessionArray['isLoggedIn']);
                 $this->index();
             } else {
+                $TenantData = $this->login_model->LoginTenant($email, $password);
+                $TenantValidCode = $this->validPanelUser($TenantData);
+                if ($TenantValidCode == USER_VALID_CODE) {
+                    $sessionArray =
+                        array(
+                            'id' => $TenantData->id,
+                            'username' => $TenantData->document,
+                            'permissions' => PERMISSION_TENANT,
+                            'name' => $TenantData->name,
+                            'rol' =>  $TenantData->type,
+                            'condominium' => $TenantData->condominium,
+                            'condominium_text' => $TenantData->condominium_name,
+                            'isLoggedIn' => true,
+                        ); 
+                    $this->session->set_userdata($sessionArray);
+                    unset($sessionArray['id'], $sessionArray['isLoggedIn']);
+                    $this->index();
+                } 
+                   
+                
                 $this->displayLoginFormError($UserValidCode);
+                $this->index();
             }
 
-            $this->index();
+           
         } else {
             $this->index();
         }
@@ -81,7 +102,7 @@ class Login extends BaseController
 
     private function isValidLoginForm()
     {
-        $this->form_validation->set_rules('username', 'Usuario', 'required|valid_email|max_length[128]|trim');
+        $this->form_validation->set_rules('username', 'Usuario', 'required|max_length[128]|trim');
         $this->form_validation->set_rules('password', 'Contraseña', 'required|max_length[32]');
 
         return $this->form_validation->run() === true;

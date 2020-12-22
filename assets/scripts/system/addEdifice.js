@@ -12,11 +12,11 @@ $(document).ready(function() {
 
     var addForm = $("#add");
     $("#edifice").keyup(function() {
-        $("#code").val($("#edifice").val() + $("#block").val());
+        $("#code").val($("#block").val() + $("#edifice").val());
     });
 
     $("#block").keyup(function() {
-        $("#code").val($("#edifice").val() + $("#block").val());
+        $("#code").val($("#block").val() + $("#edifice").val());
     });
     var validator = addForm.validate({
 

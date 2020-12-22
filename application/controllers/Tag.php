@@ -119,8 +119,11 @@ class Tag extends BaseController
                 $id_apartment = strtoupper($this->security->xss_clean($this->input->post('apartment')));   
                 $apartment = $this->getDataApartment($id_apartment);
                 $max_id = $this->tag_model->checkExists($apartment->id,$this->condominium);
-
-                for($i=$max_id->max;$i<=($serial+$max_id->max);$i++){
+                $start = 1;
+                if($max_id){
+                    $start =$max_id->max;
+                }
+                for($i= $start ;$i<($serial+$max_id->max);$i++){
                     $code_serial =  $apartment->code.str_pad($i, 6, '0', STR_PAD_LEFT);
                     $info = array('serial' => $code_serial, 'apartment' => $id_apartment, 'condominium'=>$this->condominium);
                     $result = $this->tag_model->addNew($info);
