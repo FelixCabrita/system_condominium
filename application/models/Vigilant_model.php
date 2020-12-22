@@ -47,7 +47,8 @@ class Vigilant_model extends CI_Model
         $this->db->from("vigilant");
         $this->db->where("document like '%" . $document . "%'");
         $this->db->where('condominium', $condominium);
-      
+        $this->db->order_by('created_at ', "DESC");
+        $this->db->limit(1);
         $query = $this->db->get();return $query->row();
     }
     /**

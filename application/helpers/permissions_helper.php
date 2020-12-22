@@ -31,8 +31,7 @@ if (!function_exists('checkForPermissions'))
 
 if (!function_exists('checkRole'))
 {  
-    function checkRole($rol){ 
-        $CI =& get_instance();   
+    function checkRole($rol){  
         $role_text =$rol;
         switch($rol){
             case ROLE_ADMIN:
@@ -58,6 +57,37 @@ if (!function_exists('checkRole'))
             break;
         } 
         return $role_text;
+    } 
+}
+
+if (!function_exists('getPermission'))
+{  
+    function getPermission($rol){  
+        $permission =PERMISSION_DEFAULT;
+        switch($rol){
+            case ROLE_ADMIN:
+                $permission =PERMISSION_DEFAULT;
+            break;
+            case ROLE_MANAGER:
+                $permission =PERMISSION_DEFAULT;
+            break;
+            case ROLE_VENDOR:
+                $permission =PERMISSION_DEFAULT;
+            break;
+            case ROLE_ACCOUNTING:
+                $permission =PERMISSION_DEFAULT;
+            break;
+            case ROLE_VIGILANT:
+                $permission =PERMISSION_VIGILANT;
+            break;
+            case ROLE_OWNER:
+                $permission =PERMISSION_TENANT;
+            break; 
+            case ROLE_TENANT:
+                $permission =PERMISSION_TENANT;
+            break;
+        } 
+        return $permission;
     } 
 }
 

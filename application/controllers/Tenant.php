@@ -49,6 +49,8 @@ class Tenant extends BaseController
         }
     }
 
+
+
     /**
      * This function is used to load the Tenant list
      */
@@ -110,6 +112,18 @@ class Tenant extends BaseController
 
         if (empty($result)) {echo ("true");} else {echo ("false");}
     }
+
+    
+    /**
+     * This function is used to check whether email already exist or not
+     */
+    public function getTenant()
+    { 
+        $document = $this->input->post("document"); 
+        $result = $this->tenant_model->getInfodocument($document,  $this->condominium); 
+        if ($result) {echo (json_encode(array('status' => true,"tenant"=>$result)));} else {echo (json_encode(array('status' => false)));}
+    }
+
 
     /**
      * This function is used to add new Tenant to the system

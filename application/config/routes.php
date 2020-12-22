@@ -172,7 +172,7 @@ $route['cambio_estado_areascomunes'] = 'commonarea/changeStatus';
 /*TENANT*/
 $route['inquilinos'] = 'tenant/listing'; 
 $route['agregarinquilinos'] = 'tenant/addNew'; 
-$route['chequeo_inquilinos'] = 'tenant/checkExists';
+$route['chequeo_inquilinos'] = 'tenant/checkExists';$route['obtener_informacion_inquilino'] = 'tenant/getTenant';
 $route['nuevo_inquilinos'] = 'tenant/addNewData'; 
 $route['editarinquilinos'] = "tenant/editOld";
 $route['editarinquilinos/(:num)'] = "tenant/editOld/$1";
@@ -241,5 +241,18 @@ $route['editarempleados/(:num)'] = "employees/editOld/$1";
 $route['editando_empleados'] = 'employees/edit'; 
 $route['eliminar_empleados'] = 'employees/delete'; 
 $route['cambio_estado_empleados'] = 'employees/changeStatus';  
+
+/*VEHICLES*/
+$route['vehiculos'] = 'vehicles/listing';
+$route['agregarvehiculos'] = 'vehicles/addNew'; 
+$route['chequeo_vehiculos'] = 'vehicles/checkExists';
+$route['nuevo_vehiculos'] = 'vehicles/addNewData'; 
+$route['editarvehiculos'] = "vehicles/editOld";
+$route['editarvehiculos/(:num)'] = "vehicles/editOld/$1";
+$route['informacion_vehiculo'] = "vehicles/getInformation";
+$route['informacion_vehiculo/(:num)'] = "vehicles/getInformation/$1";
+$route['editando_vehiculos'] = 'vehicles/edit'; 
+$route['eliminar_vehiculos'] = 'vehicles/delete'; 
+$route['cambio_estado_vehiculos'] = 'vehicles/changeStatus';  
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

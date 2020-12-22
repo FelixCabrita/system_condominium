@@ -234,7 +234,7 @@
                              <?php if (checkForPermissions('reservations', PERMISSION_READ) == true) { ?> 
                              <li> 
                                 <a href="<?php echo base_url(); ?>reservaciones">
-                                    <i class="metismenu-icon pe-7s-user"></i><?php echo $rol<ROLE_VIGILANT?'VER RESERVACIONES':"MIS RESERVACIONES" ?>  
+                                    <i class="metismenu-icon pe-7s-user"></i><?php echo $rol<=ROLE_VIGILANT?'VER RESERVACIONES':"MIS RESERVACIONES" ?>  
                                 </a>
                             </li> 
                             <?php } ?>  
@@ -242,12 +242,12 @@
                             <?php  if (checkForPermissions('incidents', PERMISSION_READ) == true) { ?>  
                              <li> 
                                 <a href="<?php echo base_url(); ?>insidencias">
-                                    <i class="metismenu-icon pe-7s-user"></i> <?php echo $rol<ROLE_VIGILANT?'VER INSIDENCIAS':"MIS INSIDENCIAS" ?>    
+                                    <i class="metismenu-icon pe-7s-user"></i> <?php echo $rol<=ROLE_VIGILANT?'VER INSIDENCIAS':"MIS INSIDENCIAS" ?>    
                                 </a>
                             </li> 
-                            <?php } 
-                             if (checkForPermissions('vigilant', PERMISSION_READ) == true) { ?> 
-                            <li class="app-sidebar__heading">VIGILANCIA</li>
+                            <?php } ?> 
+                            <?php echo $rol<ROLE_VIGILANT?'<li class="app-sidebar__heading">VIGILANCIA</li>':"" ?>   
+                            <?php if (checkForPermissions('vigilant', PERMISSION_READ) == true) { ?>  
                              <li> 
                                 <a href="<?php echo base_url(); ?>casillavigilante">
                                     <i class="metismenu-icon pe-7s-user"></i> ENTRADAS Y SALIDAS
@@ -264,7 +264,7 @@
                             </li>  
                             <?php }  if (checkForPermissions('vehicles', PERMISSION_READ) == true) { ?> 
                             <li> 
-                                <a href="<?php echo base_url(); ?>casillavigilante">
+                                <a href="<?php echo base_url(); ?>vehiculos">
                                     <i class="metismenu-icon pe-7s-user"></i> VEHICULOS
                                 </a> 
                             </li> 

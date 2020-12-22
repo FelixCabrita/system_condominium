@@ -23,6 +23,15 @@
                 <div class="row">
                     <div class="form-group col-sm-4"> 
                         <label for="apartment">Apartamento donde trabajara</label>
+                        <?php if($rol <= ROLE_VIGILANT){ ?>
+                            <select name="apartment" id="apartment" class="form-control">
+                             <option value ="">SELECCIONE UN APARTAMENTO</option>
+                             <?php  if(!empty($apartmentRecord)) { foreach($apartmentRecord as $record) {  ?>
+                                 <option value ="<?php echo $record->id ?>"  ><?php echo $record->code
+                                 ?></option>
+                             <?php }} ?> 
+                             </select> 
+                         <?php }else{ ?>
                         <?php if($rol == ROLE_TENANT){   ?>
                             <?php  if(!empty($apartmentRecord)) { foreach($apartmentRecord as $record) {  ?>
                                 <input type="text"  class="form-control mb-2 mr-sm-5" id="apartment"  name="apartment" value="<?php echo $record->edifice_code.$record->apartment_code ?>" readonly > 
@@ -35,7 +44,7 @@
                                  ?></option>
                              <?php }} ?> 
                              </select> 
-                        <?php } ?> 
+                        <?php }} ?> 
                         <?php echo validation_error('apartment');?> 
                     </div>  
                     <div class="form-group col-sm-4">

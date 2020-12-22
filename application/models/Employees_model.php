@@ -18,7 +18,7 @@ class Employees_model extends CI_Model
      * @param number $segment : This is pagination limit
      * @return array $result : This is result
      */
-    public function Listing($condominium,$apartment='')
+    public function Listing($apartment='',$condominium)
     {
         $this->db->select("em.id, em.name, em.document, em.observation, em.started_work, em.work_type, em.created_at, em.status, a.apartment,e.code");
         $this->db->from('employees em');
@@ -33,6 +33,18 @@ class Employees_model extends CI_Model
         $result = $query->result();
         return $result;
     }
+
+    public function getListing($condominium)
+    {  
+        $this->db->select('em.id, em.name, em.document'); 
+        $this->db->from('employees as em');  
+        $this->db->where("em.status",1);
+        $this->db->where('em.condominium',$condominium); 
+        $query = $this->db->get();
+        $result = $query->result();
+        return $result;
+    }
+ 
 
     /**
      * This function is used to check whether email id is already exist or not

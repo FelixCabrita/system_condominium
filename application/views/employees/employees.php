@@ -36,8 +36,8 @@
                         </td> 
                         <td class="text-center" style="vertical-align: middle;">
                             <?php if($permissions->U==1){ ?><a class="btn btn-sm btn-primary changeStatusEmployees"  href="#" data-titulo="<?php echo  "(".$record->document.") ".$record->name; ?>" data-isactive="<?php echo $record->status; ?>" data-userid="<?php echo $record->id; ?>" title="Cambio de estado"><i class="fa fa-eye"></i></a>  <?php } ?>
-                            <?php if(empty(!$record->observations)){ ?>
-                                 <a class="btn btn-sm btn-info observationEmployees"  href="#" data-name="<?php echo  "(".$record->document.") ".$record->name; ?>" data-observations="<?php echo $record->observations; ?>" data-userid="<?php echo $record->id; ?>" title="OBSERVACION"><i class="fa fa-info"></i></a>  
+                            <?php if(empty(!$record->observation)){ ?>
+                                 <a class="btn btn-sm btn-info observationEmployees"  href="#" data-name="<?php echo  "(".$record->document.") ".$record->name; ?>" data-observations="<?php echo $record->observation; ?>" data-userid="<?php echo $record->id; ?>" title="OBSERVACION"><i class="fa fa-info"></i></a>  
                             <?php } ?>
                             <?php  if($record->status==STATUS_ACTIVE){ ?>
                             <a class="btn btn-sm btn-info" href="<?php echo base_url().'editarempleados/'.$record->id; ?>" title="Editar"><i class="fa fa-paint-brush"></i></a> <?php } ?>

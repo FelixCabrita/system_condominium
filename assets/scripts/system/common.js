@@ -1320,18 +1320,8 @@ jQuery(document).ready(function() {
         }])
     });
 
-    jQuery(document).on("click", ".observationVigilant", function() {
-        var name = $(this).data("name"),
-            status = $(this).data("status"),
-            observation = $(this).data("observation");
 
-        Swal.fire({
-            position: 'top-end',
-            icon: 'info',
-            title: status === 1 ? "ENTRADA DE " + name : "SALIDA DE " + name,
-            html: observation
-        })
-    });
+
     jQuery(document).on("click", ".changeStatusEmployees", function() {
         var userId = $(this).data("userid"),
             isactive = $(this).data("isactive"),
@@ -1395,6 +1385,87 @@ jQuery(document).ready(function() {
         }])
     });
 
+
+
+    jQuery(document).on("click", ".changeStatusVehicles", function() {
+        var userId = $(this).data("userid"),
+            isactive = $(this).data("isactive"),
+            hitURL = baseURL + "cambio_estado_vehiculos";
+
+        const data = new FormData();
+        data.append('id', userId);
+        data.append('isactive', (isactive == 1 ? 0 : 1));
+
+        Swal.queue([{
+            title: "¿Desea " + (isactive == 1 ? "desactivar" : "activar") + " este vehiculo?",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'SI!',
+            cancelButtonText: 'No, cancelar!',
+            text: 'Cambiara el estado de este vehiculo , podras reversar esta accion.',
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return fetch(hitURL, {
+                        method: 'POST',
+                        body: data
+                    })
+                    .then(response => response.json())
+                    .then(data => (data.status ?
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: "Vehiculo " + (isactive == 1 ? "desactivado" : "activado") + "  con exito",
+                            showConfirmButton: false,
+                            timer: 2000
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                window.location = baseURL + "vehiculos"
+                            }
+                        }) :
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: "Por alguna razon no podemos " + (isactive == 1 ? "desactivar" : "activar") + " este vehiculo",
+                            showConfirmButton: false,
+                            timer: 2000
+                        })))
+                    .catch(() => {
+                        Swal.insertQueueStep({
+                            icon: 'error',
+                            title: 'acceso denegado..!'
+                        })
+                    })
+            }
+        }])
+    });
+
+    jQuery(document).on("click", ".observationVehicles", function() {
+        var name = $(this).data("name"),
+            status = $(this).data("status"),
+            observation = $(this).data("observation");
+
+        Swal.fire({
+            position: 'top-end',
+            icon: 'info',
+            title: "CONDICION DEL VEHICULO {" + name + "}",
+            html: observation
+        })
+    });
+
+    jQuery(document).on("click", ".getDatatenant", function() {
+        var name = $(this).data("name"),
+            status = $(this).data("status"),
+            observation = $(this).data("observation");
+
+        Swal.fire({
+            position: 'top-end',
+            icon: 'info',
+            title: "CONDICION DEL VEHICULO {" + name + "}",
+            html: observation
+        })
+    });
     jQuery(document).on("click", ".searchList", function() {
 
     });

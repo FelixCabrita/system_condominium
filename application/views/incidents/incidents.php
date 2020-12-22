@@ -49,7 +49,7 @@
                         <td class="text-center" style="vertical-align: middle;">
                             <?php if($rol < ROLE_VIGILANT && $permissions->U==1 ){ ?>
                                 <a class="btn btn-sm btn-info" href="<?php echo base_url().'ver_informacion_insidencias/'.$record->id; ?>" title="VER INFORMACION"><i class="fa fa-info"></i></a>  
-                            <?php }  if($id == $record->user){   ?>     
+                            <?php }  if($id == $record->user && $record->user_type == $rol){   ?>     
                                     <a class="btn btn-sm btn-primary" href="<?php echo base_url().'editarinsidencias/'.$record->id; ?>" title="EDITAR INFORMACION"><i class="fa fa-paint-brush"></i></a>  
                             <?php }   ?>
                             <?php if(empty(!$record->observations)){ ?> <a class="btn btn-sm btn-success observationIncidents"  href="#" data-name="<?php echo str_pad($record->id, 4, '0', STR_PAD_LEFT); ?>" data-observations="<?php echo $record->observations; ?>" data-userid="<?php echo $record->id; ?>" title="COMENTARIOS"><i class="fa fa-comment"></i></a>   <?php } ?> 

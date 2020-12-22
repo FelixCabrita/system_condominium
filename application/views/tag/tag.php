@@ -20,7 +20,7 @@
                 <thead>
                     <tr> 
                         <th class="text-center">SERIAL</th> 
-                        <th class="text-center">APARTAMENTO</th>
+                        <th class="text-center">VEHICULO</th>
                         <th class="text-center">FECHA DE CREACION</th>
                         <th class="text-center">ESTADO</th> 
                         <th class="text-center">ACCIONES</th>
@@ -35,7 +35,7 @@
                     ?>
                     <tr>  
                         <td class="text-center"style="vertical-align: middle;"><?php echo $record->serial ?></td>
-                        <td class="text-center" style="vertical-align: middle;"><?php echo $record->apartment ?></td>
+                        <td class="text-center" style="vertical-align: middle;"><a class="btn btn-sm btn-danger" title="VER INFORMACION DEL PROPIETARIO" href="<?php echo base_url().'informacion_vehiculo/'.$record->vehicle; ?>" ><?php echo $record->licence_plate ?></a></td>
                         <td class="text-center" style="vertical-align: middle;"><?php echo  date_format (new DateTime($record->created_at), 'Y-m-d g:i A') ?></td> 
                         <td class="text-center" style="vertical-align: middle;"><?php 
                         if($record->status==STATUS_ACTIVE){
@@ -59,7 +59,7 @@
                 <tfoot>
                     <tr> 
                         <th class="text-center">SERIAL</th>
-                        <th class="text-center">APARTAMENTO</th>
+                        <th class="text-center">VEHICULO</th>
                         <th class="text-center">FECHA DE CREACION</th>
                         <th class="text-center">ESTADO</th> 
                         <th class="text-center">ACCIONES</th>

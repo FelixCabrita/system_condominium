@@ -105,7 +105,7 @@ class User extends BaseController
                 $mobile = strtolower($this->security->xss_clean($this->input->post('mobile')));
                 $type = strtolower($this->security->xss_clean($this->input->post('type')));
                 $password = $this->input->post('password');
-                $userInfo = array('username' => $email, 'mobile' => $mobile,'condominium'=>$this->condominium,  'type' => $type,'password' => getHashedPassword($password), 'name' => ucwords($name),'permissions'=>PERMISSION_DEFAULT);
+                $userInfo = array('username' => $email, 'mobile' => $mobile,'condominium'=>$this->condominium,  'type' => $type,'password' => getHashedPassword($password), 'name' => ucwords($name),'permissions'=>getPermission($type));
                 $result = $this->user_model->addNew($userInfo);
 
                 if ($result > 0) {
@@ -192,7 +192,7 @@ class User extends BaseController
                 if (empty($password)) {
                     $userInfo = array('username' => $email, 'mobile' => $mobile, 'type' => $type,'name' => ucwords($name));
                 } else {
-                    $userInfo = array('username' => $email, 'mobile' => $mobile, 'type' => $type, 'password' => getHashedPassword($password), 'name' => ucwords($name));
+                    $userInfo = array('username' => $email, 'mobile' => $mobile, 'type' => $type,'permissions'=>getPermission($type), 'password' => getHashedPassword($password), 'name' => ucwords($name));
                 }
 
                 $result = $this->user_model->edit($userInfo, $userId,$this->condominium);

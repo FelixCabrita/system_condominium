@@ -1,7 +1,7 @@
 <div class="app-main__inner">  
     <div class="card form-card">
         <div class="card-body"> 
-            <h4 class="card-title mb-4"> <i class="fa fa-users"></i> Empleados <br>
+            <h4 class="card-title mb-4"> <i class="fa fa-users"></i> Vehiculo <br>
                 <small> <b>Agregar</b> / Editar</small></h4>
             <?php
                 $this->load->helper('form');
@@ -19,60 +19,79 @@
                         <?php echo $success; ?>              
                     </div>  
             <?php } ?>
-            <form class="form-inlne" id="add"  action="<?php echo base_url() ?>nuevo_empleados" method="post" role="form">
+            <form class="form-inlne" id="add"  action="<?php echo base_url() ?>nuevo_vehiculos" method="post" role="form">
                 <div class="row">
+                    <?php if($rol <= ROLE_VIGILANT ){  ?>
                     <div class="form-group col-sm-4"> 
-                        <label for="apartment">Apartamento donde trabajara</label>
-                        <?php if($rol == ROLE_TENANT){   ?>
-                            <?php  if(!empty($apartmentRecord)) { foreach($apartmentRecord as $record) {  ?>
-                                <input type="text"  class="form-control mb-2 mr-sm-5" id="apartment"  name="apartment" value="<?php echo $record->edifice_code.$record->apartment_code ?>" readonly > 
-                            <?php }} ?> 
-                        <?php }else{ ?>
-                             <select name="apartment" id="apartment" class="form-control">
-                             <option value ="">SELECCIONE UN APARTAMENTO</option>
-                             <?php  if(!empty($apartmentRecord)) { foreach($apartmentRecord as $record) {  ?>
-                                 <option value ="<?php echo $record->apartment ?>"  ><?php echo $record->edifice_code.$record->apartment_code
-                                 ?></option>
-                             <?php }} ?> 
-                             </select> 
-                        <?php } ?> 
-                        <?php echo validation_error('apartment');?> 
+                        <label for="apartment">Buscar inquilino por documento de identidad </label>
+                        <div class="input-group"> 
+                            <input type="text"  class="form-control " placeholder ="ejemplo: 156565465" autocomplete="nope" autocomplete="off"  id="document"  name="document"  maxlength="100" > 
+                            <div class="input-group-prepend">
+                                <a id ="search" class="btn btn-secondary"><i class="fa fa-search"></i></a>
+                            </div>
+                        </div> 
+                        <input type="hidden"  name="tenant" id="tenant" />  
+                        <?php echo validation_error('tenant');?> 
                     </div>  
                     <div class="form-group col-sm-4">
-                        <label for="document">Documento de identidad</label>
-                        <input type="text"  class="form-control mb-2 mr-sm-5"  autocomplete="nope" autocomplete="off"  id="document"  name="document" value="<?php echo set_value('document'); ?>"   maxlength="20" > 
-                        <?php echo validation_error('document');?> 
-                    </div> 
-                    <div class="form-group col-sm-4">
-                        <label for="name">Nombre Completo</label>
-                        <input type="text"  class="form-control mb-2 mr-sm-5" id="name"  name="name" value="<?php echo set_value('name'); ?>"   maxlength="250" > 
-                        <?php echo validation_error('name');?> 
+                        <label for="name">Nombre completo</label>
+                        <input type="text"  class="form-control mb-2 mr-sm-5" id="name" readonly>  
                     </div>  
-                   
+                    <div class="form-group col-sm-4">
+                        <label for="type">Tipo de inquilino</label>
+                        <input type="text"  class="form-control mb-2 mr-sm-5" id="type" readonly>  
+                    </div>  
+                    <?php }else{ ?>
+                        <div class="form-group col-sm-6">
+                            <label for="name">Propietario</label>
+                            <input type="text"  class="form-control mb-2 mr-sm-5" id="name" value="<?php echo $name ?>" readonly>  
+                        </div>  
+                        <div class="form-group col-sm-6">
+                            <label for="type">Tipo de inquilino</label>
+                            <input type="text"  class="form-control mb-2 mr-sm-5" id="type" value="<?php echo  checkRole($rol) ?>"  readonly>  
+                        </div>  
+                        <input type="hidden" value="<?php echo $id ?>"  name="tenant" id="tenant" />  
+                    <?php } ?>
                 </div>  
                 <div class="row">
-                    <div class="form-group col-sm-4">
-                        <label for="mobile">Telefono movil</label>
-                        <input type="tel"  class="form-control mb-2 mr-sm-5" id="mobile"  name="mobile" value="<?php echo set_value('mobile'); ?>" maxlength="50" > 
-                        <?php echo validation_error('mobile');?> 
+                    <div class="form-group col-sm-3">
+                        <label for="licence_plate">Placa</label>
+                        <input type="text"  class="form-control mb-2 mr-sm-5" id="licence_plate"  name="licence_plate" value="<?php echo set_value('licence_plate'); ?>" maxlength="20" > 
+                        <?php echo validation_error('licence_plate');?> 
                     </div>  
-                    <div class="form-group col-sm-4">
-                        <label for="started_work">Inicio a trabajar</label>
-                        <input type="date"  class="form-control mb-2 mr-sm-5" id="started_work"  name="started_work" value="<?php echo set_value('started_work'); ?>"> 
-                        <?php echo validation_error('started_work');?> 
+                    <div class="form-group col-sm-3">
+                        <label for="model">Modelo</label>
+                        <input type="text"  class="form-control mb-2 mr-sm-5" id="model"  name="model" value="<?php echo set_value('model'); ?>"  maxlength="20" > 
+                        <?php echo validation_error('model');?> 
                     </div> 
-                    <div class="form-group col-sm-4">
-                        <label for="work_type" >Tipo de labor (maximo 20 letras)</label>
-                        <input type="text"  class="form-control mb-2 mr-sm-5" id="work_type"  name="work_type" value="<?php echo set_value('work_type'); ?>"   maxlength="20" > 
-                        <?php echo validation_error('work_type');?> 
+                    <div class="form-group col-sm-3">
+                        <label for="brand" >Marca</label>
+                        <input type="text"  class="form-control mb-2 mr-sm-5" id="brand"  name="brand" value="<?php echo set_value('brand'); ?>"   maxlength="20" > 
+                        <?php echo validation_error('brand');?> 
                     </div> 
+                    <div class="form-group col-sm-3">
+                        <label for="year" >Año</label>
+                        <input type="number"  class="form-control mb-2 mr-sm-5" id="year"  name="year" value="<?php echo set_value('year'); ?>"   maxlength="4" > 
+                        <?php echo validation_error('year');?> 
+                    </div> 
+                </div>   
+                <div class="row">
+                    <div class="form-group col-sm-3">
+                        <label for="colour">Color</label>
+                        <input type="text"  class="form-control mb-2 mr-sm-5" id="colour"  name="colour" value="<?php echo set_value('color'); ?>" maxlength="200" > 
+                        <?php echo validation_error('colour');?> 
+                    </div>  
+                    <div class="form-group col-sm-9">
+                        <label for="condition_car">Condicion del vehiculo</label>
+                        <input type="text"  class="form-control mb-2 mr-sm-5" id="condition_car"  name="condition_car" value="<?php echo set_value('condition_car'); ?>"> 
+                        <?php echo validation_error('condition_car');?> 
+                    </div>  
                 </div>   
                 <div class="form-group"> 
                     <button type="submit" class="btn btn-primary btn-form">AGREGAR</button>
-                </div>
-                    
+                </div> 
             </form>
         </div>
     </div> 
 </div>  
-<script src="<?php echo base_url(); ?>assets/scripts/system/addEmployees.js" type="text/javascript"></script>  
+<script src="<?php echo base_url(); ?>assets/scripts/system/addVehicle.js" type="text/javascript"></script>  

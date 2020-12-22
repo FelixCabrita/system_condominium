@@ -27,6 +27,18 @@ class tenant_model extends CI_Model
     }
 
 
+    public function getListing($condominium)
+    {  
+        $this->db->select('t.id, t.name, t.document'); 
+        $this->db->from('tenant as t');  
+        $this->db->where("t.status",1);
+        $this->db->where('t.condominium',$condominium); 
+        $query = $this->db->get();
+        $result = $query->result();
+        return $result;
+    }
+ 
+
     function Assignment($id,$condominium,$_id ='')
     { 
         $this->db->select("asi.id, asi.edifice, asi.apartment, asi.tenant, asi.status, asi.created_at, asi.updated_at, asi.observation
@@ -73,7 +85,7 @@ class tenant_model extends CI_Model
      */
     function checkExists($document, $id = 0,$condominium)
     {
-        $this->db->select("document,password");
+        $this->db->select("name,document,type,password");
         $this->db->from("tenant");
         $this->db->where("document", $document);   
         $this->db->where('condominium',$condominium);
@@ -118,7 +130,7 @@ class tenant_model extends CI_Model
     function getInfodocument($document,$condominium)
     { 
         $this->db->from('tenant'); 
-        $this->db->where('document', $document);
+        $this->db->where("UPPER(document) = UPPER('$document')");
         $this->db->where('condominium',$condominium);
         $query = $this->db->get();
         

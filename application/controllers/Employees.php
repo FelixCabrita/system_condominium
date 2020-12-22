@@ -41,11 +41,15 @@ class Employees extends BaseController
 
     public function getDataApartment()
     {
-        $this->load->model('tenant_model');
-        return $this->tenant_model->getAssignment($this->id, $this->condominium);
-
+        if ($this->rol > ROLE_VIGILANT) {
+            $this->load->model('tenant_model');
+            return $this->tenant_model->getAssignment($id, $this->condominium);
+        } else {   
+            $this->load->model('apartment_model');
+            return $this->apartment_model->getListing("", $this->condominium); 
+        }
     }
-
+    
     /**
      * This function is used to load the employees list
      */
@@ -54,7 +58,7 @@ class Employees extends BaseController
         if (checkForPermissions('employees', PERMISSION_READ) != true) {
             $this->loadThis();
         } else {
-            $data['employeesRecords'] = $this->employees_model->Listing($this->id, $this->condominium);
+            $data['employeesRecords'] = $this->employees_model->Listing($this->rol > ROLE_VIGILANT?$this->id:"", $this->condominium);
             $data['permissions'] = $this->getPermissions()->{'employees'};
             $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Lista de empleados';
             $this->loadViews("employees/employees", $this->globalApp, $data, null);
