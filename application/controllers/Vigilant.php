@@ -108,7 +108,7 @@ class Vigilant extends BaseController
     public function checkExists()
     {
         
-        $code = $this->input->post("code"); 
+        $code = $this->input->post("document"); 
         $result = $this->vigilant_model->checkExists($code, 0, $this->condominium); 
         if ($result) {echo (json_encode(array('status' => true,"visitor"=>$result)));} else {echo (json_encode(array('status' => false)));}
     }

@@ -177,7 +177,7 @@ class Vehicles extends BaseController
             if ($data['vehiclesInfo'] == null) {
                 redirect('vehiculos');
             }
-            $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Editar inquilino';
+            $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Editar vehiculo';
 
             $this->loadViews("vehicles/editOld", $this->globalApp, $data, null);
         }

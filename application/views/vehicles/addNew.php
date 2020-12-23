@@ -23,7 +23,7 @@
                 <div class="row">
                     <?php if($rol <= ROLE_VIGILANT ){  ?>
                     <div class="form-group col-sm-4"> 
-                        <label for="apartment">Buscar inquilino por documento de identidad </label>
+                        <label for="apartment">Buscar cliente por documento de identidad </label>
                         <div class="input-group"> 
                             <input type="text"  class="form-control " placeholder ="ejemplo: 156565465" autocomplete="nope" autocomplete="off"  id="document"  name="document"  maxlength="100" > 
                             <div class="input-group-prepend">
@@ -38,7 +38,7 @@
                         <input type="text"  class="form-control mb-2 mr-sm-5" id="name" readonly>  
                     </div>  
                     <div class="form-group col-sm-4">
-                        <label for="type">Tipo de inquilino</label>
+                        <label for="type">Tipo de cliente</label>
                         <input type="text"  class="form-control mb-2 mr-sm-5" id="type" readonly>  
                     </div>  
                     <?php }else{ ?>
@@ -47,7 +47,7 @@
                             <input type="text"  class="form-control mb-2 mr-sm-5" id="name" value="<?php echo $name ?>" readonly>  
                         </div>  
                         <div class="form-group col-sm-6">
-                            <label for="type">Tipo de inquilino</label>
+                            <label for="type">Tipo de cliente</label>
                             <input type="text"  class="form-control mb-2 mr-sm-5" id="type" value="<?php echo  checkRole($rol) ?>"  readonly>  
                         </div>  
                         <input type="hidden" value="<?php echo $id ?>"  name="tenant" id="tenant" />  
@@ -60,15 +60,16 @@
                         <?php echo validation_error('licence_plate');?> 
                     </div>  
                     <div class="form-group col-sm-3">
-                        <label for="model">Modelo</label>
-                        <input type="text"  class="form-control mb-2 mr-sm-5" id="model"  name="model" value="<?php echo set_value('model'); ?>"  maxlength="20" > 
-                        <?php echo validation_error('model');?> 
-                    </div> 
-                    <div class="form-group col-sm-3">
                         <label for="brand" >Marca</label>
                         <input type="text"  class="form-control mb-2 mr-sm-5" id="brand"  name="brand" value="<?php echo set_value('brand'); ?>"   maxlength="20" > 
                         <?php echo validation_error('brand');?> 
                     </div> 
+                    <div class="form-group col-sm-3">
+                        <label for="model">Modelo</label>
+                        <input type="text"  class="form-control mb-2 mr-sm-5" id="model"  name="model" value="<?php echo set_value('model'); ?>"  maxlength="20" > 
+                        <?php echo validation_error('model');?> 
+                    </div> 
+                    
                     <div class="form-group col-sm-3">
                         <label for="year" >Año</label>
                         <input type="number"  class="form-control mb-2 mr-sm-5" id="year"  name="year" value="<?php echo set_value('year'); ?>"   maxlength="4" > 

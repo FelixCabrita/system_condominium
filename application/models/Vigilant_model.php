@@ -18,14 +18,14 @@ class Vigilant_model extends CI_Model
      * @param number $segment : This is pagination limit
      * @return array $result : This is result
      */
-    public function Listing($condominium,$document='')
+    public function Listing($condominium, $document = '')
     {
         $this->db->select("d.id, d.name, d.document, d.observation, d.created_at, d.status, a.apartment,e.code");
         $this->db->from('vigilant d');
         $this->db->join('edifice as e', 'e.id = d.edifice');
         $this->db->join('apartment as a', 'a.id = d.apartment');
         $this->db->where('d.condominium', $condominium);
-        if(!empty($document)){
+        if (!empty($document)) {
             $this->db->where("document", $document);
         }
         $this->db->order_by('d.created_at', 'DESC');
@@ -43,13 +43,14 @@ class Vigilant_model extends CI_Model
     public function checkExists($document, $id = 0, $condominium)
     {
         $this->db->select("name,document,status,edifice,apartment,observation,
-        (select IFNULL(v.mobile,'') as 'mobile' from vigilant v where v.document like '%" . $document . "%' AND v.mobile <> ''  AND v.condominium = $condominium LIMIT 1)  as 'mobile'");
+        (select IFNULL(v.mobile,'') as 'mobile' from vigilant v where v.document = '" . $document . "' AND v.mobile <> ''  AND v.condominium = $condominium LIMIT 1)  as 'mobile'");
         $this->db->from("vigilant");
-        $this->db->where("document like '%" . $document . "%'");
+        $this->db->where("document = '" . $document . "'");
         $this->db->where('condominium', $condominium);
         $this->db->order_by('created_at ', "DESC");
         $this->db->limit(1);
-        $query = $this->db->get();return $query->row();
+        $query = $this->db->get();
+        return $query->row();
     }
     /**
      * This function is used to add new vigilant to system

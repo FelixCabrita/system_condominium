@@ -61,7 +61,7 @@ class Tenant extends BaseController
         } else {
             $data['TenantRecords'] = $this->tenant_model->Listing($this->id, $this->condominium);
             $data['permissions'] = $this->getPermissions()->{'tenants'};
-            $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Lista de inquilino';
+            $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Lista de clientes';
             $this->loadViews("tenant/tenant", $this->globalApp, $data, null);
         }
     }
@@ -91,7 +91,7 @@ class Tenant extends BaseController
         if (checkForPermissions('tenants', PERMISSION_CREATE) != true) {
             $this->loadThis();
         } else {
-            $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Nueva inquilino';
+            $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Nueva cliente';
             $this->loadViews("tenant/addNew", $this->globalApp, null, null);
         }
     }
@@ -159,12 +159,12 @@ class Tenant extends BaseController
                     $result = $this->tenant_model->addNew($info);
 
                     if ($result > 0) {
-                        $this->session->set_flashdata('success', 'inquilino creado exitosamente');
+                        $this->session->set_flashdata('success', 'Clientes creado exitosamente');
                     } else {
-                        $this->session->set_flashdata('error', 'Fallo la creacción del inquilino');
+                        $this->session->set_flashdata('error', 'Fallo la creacción del clientes');
                     }
                 } else {
-                    $this->session->set_flashdata('error', 'El documento de inquilino ya existe, por favor compruebe e intente de nuevo');
+                    $this->session->set_flashdata('error', 'El documento de clientes ya existe, por favor compruebe e intente de nuevo');
                 }
                 redirect('agregarinquilinos');
             }
@@ -189,7 +189,7 @@ class Tenant extends BaseController
             if ($data['TenantInfo'] == null) {
                 redirect('inquilinos');
             }
-            $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Editar inquilino';
+            $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Editar cliente';
 
             $this->loadViews("tenant/editOld", $this->globalApp, $data, null);
         }
@@ -233,12 +233,12 @@ class Tenant extends BaseController
                     $result = $this->tenant_model->edit($info, $id, $this->condominium);
 
                     if ($result > 0) {
-                        $this->session->set_flashdata('success', 'inquilino actualizado exitosamente');
+                        $this->session->set_flashdata('success', 'clientes actualizado exitosamente');
                     } else {
-                        $this->session->set_flashdata('error', 'Fallo la actualizacion del inquilino');
+                        $this->session->set_flashdata('error', 'Fallo la actualizacion del clientes');
                     }
                 } else {
-                    $this->session->set_flashdata('error', 'El documento de inquilino ya existe, por favor compruebe e intente de nuevo');
+                    $this->session->set_flashdata('error', 'El documento de clientes ya existe, por favor compruebe e intente de nuevo');
                 }
                 redirect("editarinquilinos/" . $id);
             }

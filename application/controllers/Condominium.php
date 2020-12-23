@@ -106,6 +106,12 @@ class condominium extends BaseController
 
                 if ($result > 0) {
                     $this->session->set_flashdata('success', 'Condominio creado exitosamente');
+                    $userInfo = array('condominium' => $result);
+                    $this->load->model('user_model');
+                    $result = $this->user_model->edit($userInfo,$this->id,$this->condominium);
+                    $this->session->set_userdata('condominium_text', $data->name);
+                    $this->session->set_userdata('condominium', $result); 
+
                     redirect('condominios');
                 } else {
                     $this->session->set_flashdata('error', 'Fallo la creacción del condominio');

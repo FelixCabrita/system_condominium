@@ -17,8 +17,8 @@
      */
     function LoginUser($email, $password)
     {  
-        $this->db->select("u.id,u.condominium,u.username,u.password,u.permissions,u.name,u.status,u.type, c.name as 'condominium_name'"); 
-        $this->db->join('condominium as c', 'c.id = u.condominium');
+        $this->db->select("u.id,IFNULL(u.condominium,'0') as 'condominium' ,u.username,u.password,u.permissions,u.name,u.status,u.type, IFNULL(c.name,'SIN CONDOMINIO') as 'condominium_name'"); 
+        $this->db->join('condominium as c', 'c.id = u.condominium','left');
         $this->db->from('users as u'); 
         $this->db->where('username', $email); 
         $query = $this->db->get();

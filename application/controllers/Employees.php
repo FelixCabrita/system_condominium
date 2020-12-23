@@ -158,7 +158,7 @@ class Employees extends BaseController
             if ($data['employeesInfo'] == null) {
                 redirect('empleados');
             }
-            $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Editar inquilino';
+            $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Editar empleado';
 
             $this->loadViews("employees/editOld", $this->globalApp, $data, null);
         }

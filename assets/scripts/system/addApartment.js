@@ -13,13 +13,11 @@ $(document).ready(function() {
     var addForm = $("#add");
 
     $("#apartment").keyup(function() {
-        $("#code").val($("#apartment").val() + $("#edifice").val());
-        console.log($("#apartment").val());
+        $("#code").val($("#edifice").val() + $("#apartment").val());
     });
 
     $("#edifice").change(function() {
-        $("#code").val($("#apartment").val() + $("#edifice").val());
-        console.log($("#apartment").val());
+        $("#code").val($("#edifice").val() + $("#apartment").val());
     });
 
     var validator = addForm.validate({

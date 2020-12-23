@@ -18,9 +18,10 @@
                     <tr>   
                         <?php if($rol<=ROLE_VIGILANT){ ?><th class="text-center">PROPIETARIO</th> <?php } ?>
                         <th class="text-center">PLACA</th>  
+                        <th class="text-center">MARCA</th> 
                         <th class="text-center">MODELO</th>
                         <th class="text-center">COLOR</th> 
-                        <th class="text-center">MARCA</th> 
+                      
                         <th class="text-center">AÑO</th>  
                         <th class="text-center">ESTADO</th> 
                         <th class="text-center">ACCIONES</th>
@@ -31,9 +32,10 @@
                     <tr>  
                          <?php if($rol<=ROLE_VIGILANT){ ?><td class="text-center"style="vertical-align: middle;"><?php echo "(".$record->document.") ".$record->name  ?></td> <?php } ?>
                         <td class="text-center" style="vertical-align: middle;"><?php echo $record->licence_plate ?></td>
+                        <td class="text-center" style="vertical-align: middle;"><?php echo  $record->brand ?></td> 
                         <td class="text-center" style="vertical-align: middle;"><?php echo   $record->model ?></td> 
                         <td class="text-center" style="vertical-align: middle;"><?php echo  $record->colour ?></td> 
-                        <td class="text-center" style="vertical-align: middle;"><?php echo  $record->brand ?></td> 
+                  
                         <td class="text-center" style="vertical-align: middle;"><?php echo  $record->year ?></td>   
                         <td class="text-center" style="vertical-align: middle;">
                             <?php  if($record->status==STATUS_ACTIVE){ echo '<span class="badge badge-success">ACTIVO</span>'; }else if($record->status==STATUS_INACTIVE){  echo '<span class="badge badge-danger">INACTIVO</span>';  } ?>
@@ -60,9 +62,9 @@
                     <tr> 
                         <?php if($rol<=ROLE_VIGILANT){ ?><th class="text-center">PROPIETARIO</th> <?php } ?>
                         <th class="text-center">PLACA</th>  
-                        <th class="text-center">MODELO</th>
-                        <th class="text-center">COLOR</th> 
                         <th class="text-center">MARCA</th> 
+                        <th class="text-center">MODELO</th>
+                        <th class="text-center">COLOR</th>  
                         <th class="text-center">AÑO</th>  
                         <th class="text-center">ESTADO</th> 
                         <th class="text-center">ACCIONES</th>

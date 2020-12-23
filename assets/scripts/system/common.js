@@ -869,13 +869,13 @@ jQuery(document).ready(function() {
         data.append('id', userId);
 
         Swal.queue([{
-            title: '¿Desea eliminar el inquilino "' + name + '?',
+            title: '¿Desea eliminar el clientes "' + name + '?',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: 'SI!',
             cancelButtonText: 'No, cancelar!',
-            text: 'Si este inquilino tiene datos enlazados no podra eliminarlo.',
+            text: 'Si este clientes tiene datos enlazados no podra eliminarlo.',
             showLoaderOnConfirm: true,
             preConfirm: () => {
                 return fetch(hitURL, {

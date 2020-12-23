@@ -4,11 +4,11 @@
         <div class="card-body">
         <div class="row page-titles" style = "background: rgba(255, 255, 255, 0);margin-bottom:3rem">
                 <div class="col-sm-9">
-                    <h4>Listado de inquilinos</h4>
+                    <h4>Listado de clientes</h4>
                 </div>
                 <?php if($permissions->C==1){ ?>
                     <div class="col-sm-3 "> 
-                            <button onclick ="window.location = 'agregarinquilinos'" type="button" class="btn btn-primary btn-lg btn-block"><span class="btn-icon-right"><i class="fa fa-plus"> </i> Agregar nuevo inquilino </span></button> 
+                            <button onclick ="window.location = 'agregarinquilinos'" type="button" class="btn btn-primary btn-lg btn-block"><span class="btn-icon-right"><i class="fa fa-plus"> </i> Agregar nuevo cliente </span></button> 
                     </div>
                 <?php } ?>
             </div>

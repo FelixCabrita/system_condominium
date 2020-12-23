@@ -1,7 +1,7 @@
 <div class="app-main__inner">  
     <div class="card form-card">
         <div class="card-body"> 
-            <h4 class="card-title mb-4"> <i class="fa fa-users"></i> Inquilinos <br>
+            <h4 class="card-title mb-4"> <i class="fa fa-users"></i> clientes <br>
                 <small> <b>Agregar</b> / Editar</small></h4>
             <?php
                 $this->load->helper('form');
@@ -58,7 +58,7 @@
                 </div>  
                 <div class="form-group">
               
-                    <div class="position-relative form-check"><label class="form-check-label"><input type="checkbox"  id="user"  name="user" class="form-check-input"> Generarle usuario para el sistema de inquilino </label></div>
+                    <div class="position-relative form-check"><label class="form-check-label"><input type="checkbox"  id="user"  name="user" class="form-check-input"> Generarle usuario para el sistema de clientes </label></div>
                 </div>  
                 <label><b>NOTA: Para el acceso del sistema del inquilinios sera: Documento de identidad y una clave generada enviada al correo electronico.</b></label>
                 <div class="form-group"> 

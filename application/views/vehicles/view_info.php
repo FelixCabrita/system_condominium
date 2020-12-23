@@ -17,7 +17,7 @@ $type = $vehiclesInfo->type;
             <h4 class="card-title mb-4"> <i class="fa fa-users"></i> Informacion del Vehiculo <br> </h4>  
                 <div class="row"> 
                     <div class="form-group col-sm-4"> 
-                        <label for="apartment">Buscar inquilino por documento de identidad </label>
+                        <label for="apartment">Buscar cliente por documento de identidad </label>
                         <div class="input-group"> 
                             <input type="text"  class="form-control " readonly value="<?php echo $document ?>"   >  
                         </div>   
@@ -27,7 +27,7 @@ $type = $vehiclesInfo->type;
                         <input type="text"  class="form-control mb-2 mr-sm-5" value="<?php echo $name ?>" id="name" readonly>  
                     </div>  
                     <div class="form-group col-sm-4">
-                        <label for="type">Tipo de inquilino</label>
+                        <label for="type">Tipo de cliente</label>
                         <input type="text"  class="form-control mb-2 mr-sm-5"  value="<?php echo  checkRole($type) ?>" id="type" readonly>  
                     </div>  
                     
@@ -39,15 +39,16 @@ $type = $vehiclesInfo->type;
                         
                     </div>  
                     <div class="form-group col-sm-3">
-                        <label for="model">Modelo</label>
-                        <input type="text"  class="form-control mb-2 mr-sm-5"readonly value="<?php echo $model; ?>"  maxlength="20" > 
-                       
-                    </div> 
-                    <div class="form-group col-sm-3">
                         <label for="brand" >Marca</label>
                         <input type="text"  class="form-control mb-2 mr-sm-5" readonly value="<?php echo $brand; ?>"   maxlength="20" > 
                    
                     </div> 
+                    <div class="form-group col-sm-3">
+                        <label for="model">Modelo</label>
+                        <input type="text"  class="form-control mb-2 mr-sm-5"readonly value="<?php echo $model; ?>"  maxlength="20" > 
+                       
+                    </div> 
+                  
                     <div class="form-group col-sm-3">
                         <label for="year" >Año</label>
                         <input type="number"  class="form-control mb-2 mr-sm-5" readonly value="<?php echo $year; ?>"   maxlength="4" > 

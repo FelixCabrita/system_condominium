@@ -205,7 +205,7 @@
                              if (checkForPermissions('tenants', PERMISSION_READ) == true) { ?> 
                             <li> 
                                 <a href="<?php echo base_url(); ?>inquilinos">
-                                    <i class="metismenu-icon pe-7s-user"></i> INQUILINOS 
+                                    <i class="metismenu-icon pe-7s-user"></i> CLIENTES 
                                 </a>
                             </li>
                             <?php } 

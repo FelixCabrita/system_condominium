@@ -122,7 +122,7 @@ class Apartment extends BaseController
                 $edifice = ($this->security->xss_clean($this->input->post('edifice')));
                 $number_parking = ($this->security->xss_clean($this->input->post('number_parking')));
                 $conditions = strtoupper($this->security->xss_clean($this->input->post('conditions')));
-                $code = $apartment . $edifice;
+                $code = $edifice.$apartment;
                 $conditions = (empty($conditions)?CONDITIONS[0]:$conditions); 
                 $check = $this->apartment_model->checkExists($code, 0, $this->condominium);
                

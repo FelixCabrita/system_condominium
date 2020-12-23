@@ -55,7 +55,7 @@ if($permissions->U==1){
                         <?php echo validation_error('manager');?> 
                     </div> 
                     <div class="form-group col-sm-6">
-                        <label for="observation">Observation</label>
+                        <label for="observation">Observacion</label>
                         <input type="text"   class="form-control mb-2 mr-sm-5" id="observation"  name="observation" value="<?php echo $observation; ?>" <?php echo $readonly; ?>> 
                     </div> 
                 </div> 
