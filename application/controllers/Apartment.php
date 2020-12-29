@@ -237,4 +237,96 @@ class Apartment extends BaseController
             if ($result > 0) {echo (json_encode(array('status' => true)));} else {echo (json_encode(array('status' => false)));}
         }
     }
+
+    public function importData() {
+        $this->load->library('excel');     
+        $this->load->helper(array('form', 'url'));   
+            $path = "./assets/excel/";
+            $config['upload_path'] = $path;
+            $config['allowed_types'] = 'xlsx|xls';
+            $config['remove_spaces'] = TRUE;
+            $this->load->library('upload', $config);
+            if (!$this->upload->do_upload('userfile')) {
+                $error = array('error' => $this->upload->display_errors());
+                
+                $this->session->set_flashdata('error',$this->upload->display_errors());
+            } else {
+                $data = array('upload_data' => $this->upload->data());
+            }
+            
+            if (!empty($data['upload_data']['file_name'])) {
+                $import_xls_file = $data['upload_data']['file_name'];
+            } else {
+                $import_xls_file = 0;
+            }
+            $inputFileName = $path . $import_xls_file;
+            try {
+                $inputFileType = PHPExcel_IOFactory::identify($inputFileName);
+                $objReader = PHPExcel_IOFactory::createReader($inputFileType);
+                $objPHPExcel = $objReader->load($inputFileName);
+            } catch (Exception $e) {
+                $this->session->set_flashdata('error', 'Error loading file "' . pathinfo($inputFileName, PATHINFO_BASENAME)
+                . '": ' . $e->getMessage());
+              
+            }
+            $allDataInSheet = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
+            
+            $arrayCount = count($allDataInSheet);
+            $flag = 0;//Existencia	PRECIO1	PRECIO2	PRECIO3	GRUPO	MARCA	IMPUESTO	COD_BARRA	ACTIVO
+
+            $createArray = array('EDIFICIO', 'APARTAMENTO', 'NRO_PARQUEO', 'CONDICION');
+            $makeArray = array('EDIFICIO' => 'EDIFICIO', 'APARTAMENTO' => 'APARTAMENTO', 'NRO_PARQUEO' => 'NRO_PARQUEO', 'CONDICION' => 'CONDICION' );
+            $SheetDataKey = array();
+            foreach ($allDataInSheet as $dataInSheet) {
+                foreach ($dataInSheet as $key => $value) {
+                    if (in_array(trim($value), $createArray)) {
+                        $value = preg_replace('/\s+/', '', $value);
+                        $SheetDataKey[trim($value)] = $key;
+                    } else {
+                        
+                    }
+                }
+            }
+            $data = array_diff_key($makeArray, $SheetDataKey);
+           
+            if (empty($data)) {
+                $flag = 1;
+            }
+            if ($flag == 1) {
+                for ($i = 2; $i <= $arrayCount; $i++) {
+                    $addresses = array();
+                    //'EDIFICIO', 'EDIFICIO', 'NRO_PARQUEO', 'CONDICION'
+                    $edifice = $SheetDataKey['EDIFICIO'];
+                    $apartment = $SheetDataKey['APARTAMENTO'];
+                    $number_parking = $SheetDataKey['NRO_PARQUEO'];
+                    $condition = $SheetDataKey['CONDICION']; 
+
+
+                    $apartment = filter_var(trim($allDataInSheet[$i][$apartment]), FILTER_SANITIZE_STRING);
+                    $edifice = filter_var(trim($allDataInSheet[$i][$edifice]), FILTER_SANITIZE_STRING);
+                    $number_parking = filter_var(trim($allDataInSheet[$i][$number_parking]), FILTER_SANITIZE_STRING);
+                    $condition = filter_var(trim($allDataInSheet[$i][$condition]), FILTER_SANITIZE_STRING); 
+
+                    if(!empty($apartment)){
+                        $code =$edifice.$apartment; 
+                        $check = $this->getDataEdifices($edifice);
+                        
+                        if (($check)) { 
+                       
+                            $info = array('apartment' => $apartment, 'edifice' => $check->id, 'number_parking' => $number_parking, 'condominium' => $this->condominium,
+                            'conditions' => $condition, 'code' => $code);
+                           $result = $this->apartment_model->addNew($info);
+                        } 
+                    }
+                   
+                }   
+                $this->session->set_flashdata('success', 'Apartamentos Importados con exito');
+              
+            } else {
+                $this->session->set_flashdata('error', 'Error al importar el archivo');
+               
+            } 
+           redirect('apartamentos');
+        
+    }
 }

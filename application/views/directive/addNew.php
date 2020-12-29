@@ -19,11 +19,16 @@
                         <?php echo $success; ?>              
                     </div>  
             <?php } ?>
-            <form class="form-inlne" id="add"  action="<?php echo base_url() ?>nuevo_miembro" method="post" role="form">
+            <form class="form-inlne" id="add"  action="<?php echo base_url() ?>nuevo_miembro" method="post" role="form" enctype="multipart/form-data">
                 <div class="row">
                     <div class="form-group col-sm-4">
                         <label for="document">Documento de identidad</label>
-                        <input type="text"  class="form-control mb-2 mr-sm-5"  autocomplete="nope" autocomplete="off"  id="document"  name="document" value="<?php echo set_value('document'); ?>"   maxlength="50" > 
+                        <div class="input-group"> 
+                            <input type="text"  class="form-control " value="<?php echo set_value('document'); ?>"  autocomplete="nope" autocomplete="off"  id="document"  name="document"  maxlength="100" > 
+                            <div class="input-group-prepend">
+                                <a id ="search" class="btn btn-secondary"><i class="fa fa-search"></i></a>
+                            </div>
+                        </div> 
                         <?php echo validation_error('document');?> 
                     </div> 
                     <div class="form-group col-sm-4">
@@ -32,11 +37,11 @@
                         <?php echo validation_error('name');?> 
                     </div> 
                     <div class="form-group col-sm-4">
-                        <label for="chargue">Cargo</label>
-                        <select name="chargue" id="chargue" class="form-control">
-                            <option value ="">SELECCIONE UN PERIODO</option>
+                        <label for="position">PUESTO</label>
+                        <select name="position" id="position" class="form-control">
+                            <option value ="">SELECCIONE UN PUESTO</option>
                              <?php  for($x=0;$x<COUNT(DIRECTIVE_CHARGUE);$x++) {  ?>
-                                <option value ="<?php echo $x ?>" <?php echo set_value('chargue')==$x?"selected":"" ?>><?php echo DIRECTIVE_CHARGUE[$x] ?></option>
+                                <option value ="<?php echo $x ?>" <?php echo set_value('position')==$x?"selected":"" ?>><?php echo DIRECTIVE_CHARGUE[$x] ?></option>
                             <?php  } ?> 
                         </select> 
                         <?php echo validation_error('chargue');?> 
@@ -44,11 +49,16 @@
                 </div>  
                 <div class="row"> 
                     <div class="form-group col-sm-4">
+                        <label for="chargue">Cargo</label>
+                        <input type="text"  class="form-control mb-2 mr-sm-5"  autocomplete="nope" autocomplete="off"  id="chargue"  name="chargue" value="<?php echo set_value('chargue'); ?>"   maxlength="250" > 
+                        <?php echo validation_error('name');?> 
+                    </div> 
+                    <div class="form-group col-sm-4">
                         <label for="edifice">Edificio</label>
                         <select name="edifice" id="edifice" class="form-control">
                             <option value ="">SELECCIONE UN EDIFICIO</option>
                             <?php  if(!empty($edificeRecords)) { foreach($edificeRecords as $record) {  ?>
-                                <option value ="<?php echo $record->id ?>" <?php echo set_value('edifice')==$record->code?"selected":"" ?>><?php echo $record->code." - ".$record->manager ?></option>
+                                <option value ="<?php echo $record->id ?>" <?php echo set_value('edifice')==$record->code?"selected":"" ?>><?php echo $record->code ?></option>
                             <?php }} ?> 
                         </select>
                         <?php echo validation_error('edifice');?> 
@@ -60,17 +70,23 @@
                         </select>
                         <?php echo validation_error('apartment');?> 
                     </div>  
-                    <div class="form-group col-sm-4">
-                         <label for="code">Periodo</label>
-                         <select name="period" id="period" class="form-control">
-                            <option value ="">SELECCIONE UN PERIODO</option>
-                            <?php  if(!empty($periodRecords)) { foreach($periodRecords as $record) {  ?>
-                                <option value ="<?php echo $record->id ?>" <?php echo set_value('period')==$record->id?"selected":"" ?>><?php echo $record->name ?></option>
-                            <?php }} ?> 
-                        </select> 
+                </div>  
+                <div class="row"> 
+                    <div class="form-group col-sm-6">
+                        <label for="code">Periodo</label>
+                        <?php  if(!empty($periodRecords)) { foreach($periodRecords as $record) {  ?> 
+                            <input type="text"   class="form-control mb-2 mr-sm-5"  value="<?php echo  $record->name; ?>"  readonly  maxlength="250">
+                            <input type="hidden" value="<?php echo $record->id; ?>" name="period" id="period" />        
+                        <?php }} ?> 
                         <?php echo validation_error('period');?> 
                     </div>  
+                    <div class="form-group col-sm-6">
+                        <label for="file1" class="">Foto 1 (opcional)</label>
+                        <input name="file1" id="file1" type="file" class="form-control-file"  accept="image/png, image/jpeg, image/jpg" aria-describedby="image">
+                        <small class="form-text text-muted">Por favor sea lo mas explicito en la foto y evite cargar fotos borrosas.</small>
+                    </div>   
                 </div> 
+               
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary btn-form">AGREGAR</button>
                 </div>

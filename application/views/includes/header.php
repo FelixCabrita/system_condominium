@@ -118,6 +118,135 @@
                 </div>
             </div>
         </div>
+        <!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">REPORTE DE VISITANTES</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body"> 
+                <form class="form-inlne" id="generateReport" action="<?php echo base_url() ?>generando_reporte" method="post" role="form">
+                    <div class="row form-group ">
+                        <div class="form-group col-sm-6">
+                            <label for="start_time">Desde</label>
+                            <input type="date"  class="form-control mb-2 mr-sm-5" id="start_date"  name="start_date" >
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label for="ending_time">Hasta</label>
+                            <input type="date"  class="form-control mb-2 mr-sm-5" id="ending_date"  name="ending_date" >
+                        </div>
+                    </div>                       
+                    <div class="row form-group ">
+                        <div class="form-group col-sm-6">
+                            <label for="type_visitor">tipo de visitante</label>
+                            <select name="type_visitor" id="type_visitor" class="form-control">
+                                <option value ="" >AMBOS</option>
+                                <option value ="<?php echo VISITOR_DEFAULT ?>" >NORMAL</option>
+                                <option value ="<?php echo VISITOR_EMPLOYEES ?>">EMPLEADOS</option>   
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label for="type_input">tipo de entrada</label>
+                            <select name="type_input" id="type_input" class="form-control">
+                                <option value ="" >AMBOS</option>
+                                <option value ="<?php echo VIGILANT_INPUT ?>" >ENTRADAS</option>
+                                <option value ="<?php echo VIGILANT_EXIT ?>">SALIDAS</option>   
+                            </select>
+                        </div>
+                    </div> 
+                </form>      
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary generate_report">Generar reporte</button>
+            </div>
+        </div>
+    </div>
+</div>  
+<!-- Modal -->
+<div class="modal fade" id="importEdifices" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">IMPORTAR DATOS DE EDIFICIOS</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+         <form  id="importEdifice" action="<?php echo base_url()  ?>importacion_edificios" method="post" role="form"  enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="userfile">Selecciona tu excel (xlsx|xls)</label>
+                <input type="file" class="form-control-file" id="userfile" name="userfile" accept=".xlsx,.xls">
+            </div>
+        </form>
+      </div>
+      <div class="modal-footer"> 
+        <a href="<?php echo base_url()  ?>/assets/format/edifice.xlsx" target="_blank" class="btn btn-success" >Descargar formato</a>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" onclick="importEdifice()">Procesar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="importApartmentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">IMPORTAR DATOS DE APARTAMENTOS</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+         <form  id="importApartment" action="<?php echo base_url()  ?>importacion_apartemantos" method="post" role="form"  enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="userfile">Selecciona tu excel (xlsx|xls)</label>
+                <input type="file" class="form-control-file" id="userfile" name="userfile" accept=".xlsx,.xls">
+            </div>
+            <label for="userfile">NOTA: Se comprobara la existencia del edificio antes de agregar el apartamento, esto nos asegurara de mantener informacion correcta y enlazada</label>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <a href="<?php echo base_url()  ?>/assets/format/apartment.xlsx" target="_blank" class="btn btn-success" >Descargar formato</a>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" onclick="importApartment()">Procesar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="importClientss" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">IMPORTAR DATOS DE CLIENTES</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+         <form  id="importClients" action="<?php echo base_url()  ?>importacion_clientes" method="post" role="form"  enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="userfile">Selecciona tu excel (xlsx|xls)</label>
+                <input type="file" class="form-control-file" id="userfile" name="userfile" accept=".xlsx,.xls">
+            </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+      <a href="<?php echo base_url()  ?>/assets/format/clients.xlsx" target="_blank" class="btn btn-success" >Descargar formato</a>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" onclick="importClients()">Procesar</button>
+      </div>
+    </div>
+  </div>
+</div>
         <div class="app-main">
             <div class="app-sidebar sidebar-shadow">
                 <div class="app-header__logo">
@@ -204,7 +333,7 @@
                             <?php } 
                              if (checkForPermissions('tenants', PERMISSION_READ) == true) { ?> 
                             <li> 
-                                <a href="<?php echo base_url(); ?>inquilinos">
+                                <a href="<?php echo base_url(); ?>clientes">
                                     <i class="metismenu-icon pe-7s-user"></i> CLIENTES 
                                 </a>
                             </li>
@@ -252,9 +381,19 @@
                                 <a href="<?php echo base_url(); ?>casillavigilante">
                                     <i class="metismenu-icon pe-7s-user"></i> ENTRADAS Y SALIDAS
                                 </a> 
+                            </li>   
+                            <li> 
+                                <a href="<?php echo base_url(); ?>visitantes">
+                                    <i class="metismenu-icon pe-7s-user"></i> VISITANTES
+                                </a> 
+                            </li> 
+                             <li> 
+                                <a href="#"  data-toggle="modal" data-target="#exampleModal">
+                                    <i class="metismenu-icon pe-7s-user"></i> REPORTES
+                                </a> 
                             </li>  
                             <?php } ?>
-                            <?php echo $rol<ROLE_VIGILANT?' <li class="app-sidebar__heading">INQUILINOS</li>':"" ?>   
+                            <?php echo $rol<ROLE_VIGILANT?' <li class="app-sidebar__heading">CLIENTES</li>':"" ?>   
                            
                             <?php   if (checkForPermissions('employees', PERMISSION_READ) == true) { ?> 
                             <li> 
@@ -274,5 +413,6 @@
                      
                 </div>
             </div>
+            
             <div class="app-main__outer">
                 

@@ -68,7 +68,7 @@ jQuery(document).ready(function() {
 
     function search_document() {
         var document = $("#document").val(),
-            hitURL = baseURL + "obtener_informacion_inquilino";
+            hitURL = baseURL + "obtener_informacion_cliente";
 
         const data = new FormData();
         data.append('document', document);

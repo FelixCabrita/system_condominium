@@ -21,8 +21,8 @@
                             <th class="text-center">VISITANTE</th>
                             <th class="text-center">FECHA DE EMISION </th>
                             <th class="text-center">TIPO</th>  
-                            <th class="text-center">EDIF. - APTO.</th>  
-                            <th class="text-center">ACCIONES</th> 
+                            <th class="text-center">EDIF. - APTO.</th>    <th class="text-center">PLACA</th>  
+                            <th class="text-center">OBSERVACION</th> 
                         </tr>
                     </thead>
                     <tbody> 
@@ -37,9 +37,10 @@
                             }else if($record->status==VIGILANT_EXIT){
                                 echo '<span class="badge badge-danger">SALIDA</span>';
                             } ?></td> 
-                            <td class="text-center" style="vertical-align: middle;"><?php echo  $record->code . ' - '. $record->apartment ?></td>
+                            <td class="text-center" style="vertical-align: middle;"><?php echo  $record->code . ' - '. $record->apartment ?></td>  
+                             <td class="text-center" style="vertical-align: middle;"><?php echo  $record->licence_plate ?></td>
                             <td class="text-center" style="vertical-align: middle;"> 
-                                <a class="btn btn-sm btn-info observationVigilant" href="#" data-status="<?php echo $record->status; ?>" data-observation="<?php echo  $record->observation ?>"  data-name="<?php echo "(".$record->document.") ".$record->name ?>" title="Ver observacion"><i class="fa fa-info"></i> OBSERVACION</a>  
+                                <?php if(!empty($record->observation)){ ?><a class="btn btn-sm btn-info observationVigilant" href="#" data-status="<?php echo $record->status; ?>" data-observation="<?php echo  $record->observation ?>"  data-name="<?php echo "(".$record->document.") ".$record->name ?>" title="Ver observacion"><i class="fa fa-info"></i> OBSERVACION</a> <?php }else{ echo "SIN OBSERVACION";} ?> 
                             </td>
                         </tr>
                         <?php } } ?>
@@ -50,8 +51,8 @@
                             <th class="text-center">VISITANTE</th>
                             <th class="text-center">FECHA DE EMISION </th>
                             <th class="text-center">TIPO</th>  
-                            <th class="text-center">EDIF. - APTO.</th>  
-                            <th class="text-center">ACCIONES</th>
+                            <th class="text-center">EDIF. - APTO.</th>     <th class="text-center">PLACA</th>  
+                            <th class="text-center">OBSERVACION</th>
                         </tr>
                     </tfoot>
                 </table> 

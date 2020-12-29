@@ -113,7 +113,7 @@ $route['editaredificio/(:num)'] = "edifice/editOld/$1";
 $route['editando_edificio'] = 'edifice/edit'; 
 $route['eliminar_edificio'] = 'edifice/delete';
 $route['cambio_estado_edificio'] = 'edifice/changeStatus'; 
- 
+$route['importacion_edificios'] = 'edifice/importData'; 
 /*PERIODS*/
 $route['periodos'] = 'period/listing';
 $route['agregareperiodos'] = 'period/addNew'; 
@@ -135,6 +135,7 @@ $route['editando_apartamento'] = 'apartment/edit';
 $route['eliminar_apartamento'] = 'apartment/delete'; 
 $route['cambio_estado_apartamento'] = 'apartment/changeStatus'; 
 $route['obtener_apartemantos/(:num)'] = 'apartment/getDataApartments/$1'; 
+$route['importacion_apartemantos'] = 'apartment/importData'; 
 
 /*DIRECTIVE*/
 $route['juntadirectiva'] = 'directive/listing';
@@ -170,19 +171,22 @@ $route['eliminar_areascomunes'] = 'commonarea/delete';
 $route['cambio_estado_areascomunes'] = 'commonarea/changeStatus';  
 
 /*TENANT*/
-$route['inquilinos'] = 'tenant/listing'; 
-$route['agregarinquilinos'] = 'tenant/addNew'; 
-$route['chequeo_inquilinos'] = 'tenant/checkExists';$route['obtener_informacion_inquilino'] = 'tenant/getTenant';
-$route['nuevo_inquilinos'] = 'tenant/addNewData'; 
-$route['editarinquilinos'] = "tenant/editOld";
-$route['editarinquilinos/(:num)'] = "tenant/editOld/$1";
-$route['editando_inquilinos'] = 'tenant/edit'; 
-$route['eliminar_inquilinos'] = 'tenant/delete'; 
-$route['cambio_estado_inquilinos'] = 'tenant/changeStatus';  
+$route['clientes'] = 'tenant/listing'; 
+$route['agregarclientes'] = 'tenant/addNew'; 
+$route['chequeo_clientes'] = 'tenant/checkExists';
+$route['obtener_informacion_cliente'] = 'tenant/getTenant';
+$route['nuevo_clientes'] = 'tenant/addNewData'; 
+$route['editarclientes'] = "tenant/editOld";
+$route['editarclientes/(:num)'] = "tenant/editOld/$1";
+$route['editando_clientes'] = 'tenant/edit'; 
+$route['eliminar_clientes'] = 'tenant/delete'; 
+$route['cambio_estado_clientes'] = 'tenant/changeStatus';  
 $route['asignaciones'] = 'tenant/assignments';
 $route['asignaciones/(:num)'] = 'tenant/assignments/$1';
 $route['asignar_apartamento'] = 'tenant/set_asignation'; 
+$route['obtener_asignaciones'] = 'tenant/getApartmentsAssignation'; 
 $route['desvincular_apartamento'] = 'tenant/delete_asignation'; 
+$route['importacion_clientes'] = 'tenant/importData'; 
 
 /*TAG*/
 $route['etiquetas'] = 'tag/listing';
@@ -231,6 +235,7 @@ $route['eliminar_visitante'] = 'vigilant/delete';
 $route['ver_informacion_visitante'] = 'vigilant/viewInformation';  
 $route['ver_informacion_visitante/(:num)'] = "vigilant/viewInformation/$1";
 $route['cambio_estado_visitante'] = 'vigilant/changeStatus';  
+$route['generando_reporte'] = 'vigilant/generateReport';  
 
 /*EMPLOYEES*/
 $route['empleados'] = 'employees/listing';
@@ -242,7 +247,7 @@ $route['editarempleados/(:num)'] = "employees/editOld/$1";
 $route['editando_empleados'] = 'employees/edit'; 
 $route['eliminar_empleados'] = 'employees/delete'; 
 $route['cambio_estado_empleados'] = 'employees/changeStatus';  
-
+$route['obtener_empleado/(:any)'] = 'employees/getDataEmployee/$1';  
 /*VEHICLES*/
 $route['vehiculos'] = 'vehicles/listing';
 $route['agregarvehiculos'] = 'vehicles/addNew'; 
@@ -256,6 +261,21 @@ $route['asignar_vehiculo'] = "vehicles/asignation_vehicle";
 $route['asignar_vehiculo/(:num)'] = "vehicles/asignation_vehicle/$1";
 $route['editando_vehiculos'] = 'vehicles/edit'; 
 $route['eliminar_vehiculos'] = 'vehicles/delete'; 
-$route['cambio_estado_vehiculos'] = 'vehicles/changeStatus';  
+$route['cambio_estado_vehiculos'] = 'vehicles/changeStatus'; 
+
+/*VISITOR*/
+$route['visitantes'] = 'visitor/listing';
+$route['agregarvisitantes'] = 'visitor/addNew'; 
+$route['chequeo_visitantes'] = 'visitor/checkExists';
+$route['nuevo_visitantes'] = 'visitor/addNewData'; 
+$route['editarvisitantes'] = "visitor/editOld";
+$route['editarvisitantes/(:num)'] = "visitor/editOld/$1";
+$route['informacion_visitante'] = "visitor/getInformation";
+$route['informacion_visitante/(:num)'] = "visitor/getInformation/$1";
+$route['asignar_visitante'] = "visitor/asignation_vehicle";
+$route['asignar_visitante/(:num)'] = "visitor/asignation_vehicle/$1";
+$route['editando_visitantes'] = 'visitor/edit'; 
+$route['eliminar_visitantes'] = 'visitor/delete'; 
+$route['cambio_estado_visitantes'] = 'visitor/changeStatus';  
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

@@ -75,7 +75,10 @@ class Period_model extends CI_Model
      */
     function edit($PeriodInfo, $PeriodId,$condominium)
     {
-        $this->db->where('id', $PeriodId);
+        if(!empty( $PeriodId)){
+            $this->db->where('id', $PeriodId);
+        }
+      
         $this->db->where('condominium',$condominium);
         $this->db->update('period', $PeriodInfo); 
         return $this->db->affected_rows();

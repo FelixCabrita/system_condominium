@@ -34,7 +34,7 @@ if($permissions->U==1){
                     </div>  
             <?php } ?>
             <?php if($permissions->U==1){ ?>
-            <form class="form-inlne"  action="<?php echo base_url() ?>editando_inquilinos" method="post" id="edit" role="form"><?php } ?>
+            <form class="form-inlne"  action="<?php echo base_url() ?>editando_clientes" method="post" id="edit" role="form"><?php } ?>
                 <div class="row">
                     <div class="form-group col-sm-4">
                         <label for="document">Documento de identidad</label>

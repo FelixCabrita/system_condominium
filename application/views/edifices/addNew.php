@@ -37,13 +37,25 @@
                         <?php echo validation_error('code');?> 
                     </div>  
                 </div>  
-                <div class="row">
+                <hr>
+                <label for="manager">Infomacion del encargado</label>
+                <div class="row"> 
                     <div class="form-group col-sm-6">
-                        <label for="manager">Encargado</label>
-                        <input type="text"  class="form-control mb-2 mr-sm-5" id="manager"  name="manager" value="<?php echo set_value('manager'); ?>"   maxlength="250" > 
+                        <label for="manager">Documento de identidad</label>
+                        <div class="input-group"> 
+                            <input type="text"  class="form-control " value="<?php echo set_value('manager'); ?>"  autocomplete="nope" autocomplete="off"  id="manager"  name="manager"  maxlength="100" > 
+                            <div class="input-group-prepend">
+                                <a id ="search" class="btn btn-secondary"><i class="fa fa-search"></i></a>
+                            </div>
+                        </div> 
+                        <?php echo validation_error('manager');?> 
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label for="name">Nombre completo</label>
+                        <input type="text"  class="form-control mb-2 mr-sm-5" id="name"  name="name" readonly value="<?php echo set_value('name'); ?>"> 
                         <?php echo validation_error('manager');?> 
                     </div> 
-                    <div class="form-group col-sm-6">
+                    <div class="form-group col-sm-12">
                         <label for="observation">Observacion</label>
                         <input type="text"  class="form-control mb-2 mr-sm-5" id="observation"  name="observation" value="<?php echo set_value('observation'); ?>"> 
                         <?php echo validation_error('observation');?> 

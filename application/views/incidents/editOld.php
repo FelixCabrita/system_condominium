@@ -72,7 +72,7 @@ $this->load->helper('form');
                 </div>  
                 <div class="row"> 
                     <div class="form-group col-sm-6">
-                        <label for="file1" class="">Foto 1 (opcional)  <a  data-toggle="modal" data-target="#exampleModalLong" href="<?php echo base_url()."assets/images/incidents/".$photo_1 ?>" target= "_blank">VER FOTO ACTUAL AQUI</a> </label>
+                        <label for="file1" class="">Foto 1 (opcional)  <a   href="<?php echo base_url()."assets/images/incidents/".$photo_1 ?>" target= "_blank">VER FOTO ACTUAL AQUI</a> </label>
                         <input name="file1" id="file1" type="file" class="form-control-file"  accept="image/png, image/jpeg, image/jpg" aria-describedby="image">
                         <small class="form-text text-muted">Por favor sea lo mas explicito en la foto y evite cargar fotos borrosas.</small>
                     </div>  

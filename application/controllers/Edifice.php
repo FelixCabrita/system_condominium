@@ -94,8 +94,7 @@ class Edifice extends BaseController
         } else {
             $this->load->library('form_validation');
             $this->form_validation->set_rules('edifice', 'Edificio', 'trim|required|max_length[10]');
-            $this->form_validation->set_rules('block', 'Manzana', 'trim|required|max_length[10]');
-            $this->form_validation->set_rules('manager', 'Encargado', 'trim|required|max_length[250]');
+            $this->form_validation->set_rules('block', 'Manzana', 'trim|required|max_length[10]'); 
             if ($this->form_validation->run() == false) {
                 $this->addNew();
             } else {
@@ -154,31 +153,21 @@ class Edifice extends BaseController
     {
         if (checkForPermissions('edifices', PERMISSION_UPDATE) != true) {
             $this->loadThis();
-        } else {
-            $this->load->library('form_validation');
+        } else { 
 
-            $id = $this->input->post('id');
+            $id = $this->input->post('id');  
+            $manager = strtoupper($this->security->xss_clean($this->input->post('manager')));
+            $observation = strtolower($this->security->xss_clean($this->input->post('observation'))); 
+            $info = array('manager' => $manager, 'observation' => $observation); 
+            $result = $this->edifice_model->edit($info, $id, $this->condominium);
 
-            $this->form_validation->set_rules('manager', 'Encargado', 'trim|required|max_length[250]');
-            if ($this->form_validation->run() == false) {
-                $this->editOld($id);
+            if ($result == true) {
+                $this->session->set_flashdata('success', 'edificio actualizado');
             } else {
-                $manager = strtoupper($this->security->xss_clean($this->input->post('manager')));
-                $observation = strtolower($this->security->xss_clean($this->input->post('observation')));
-
-             
-                $info = array('manager' => $manager, 'observation' => $observation);
-                
-
-                $result = $this->edifice_model->edit($info, $id, $this->condominium);
-
-                if ($result == true) {
-                    $this->session->set_flashdata('success', 'edificio actualizado');
-                } else {
-                    $this->session->set_flashdata('error', 'Fallo actualización');
-                }
-                redirect("editaredificio/" . $id);
+                $this->session->set_flashdata('error', 'Fallo actualización');
             }
+            redirect("editaredificio/" . $id);
+            
         }
     }
 
@@ -216,5 +205,93 @@ class Edifice extends BaseController
 
             if ($result > 0) {echo (json_encode(array('status' => true)));} else {echo (json_encode(array('status' => false)));}
         }
+    }
+
+    
+    public function importData() {
+        $this->load->library('excel');     
+        $this->load->helper(array('form', 'url'));   
+            $path = "./assets/excel/";
+            $config['upload_path'] = $path;
+            $config['allowed_types'] = 'xlsx|xls';
+            $config['remove_spaces'] = TRUE;
+            $this->load->library('upload', $config);
+            if (!$this->upload->do_upload('userfile')) {
+                $error = array('error' => $this->upload->display_errors());
+                $this->session->set_flashdata('error',$this->upload->display_errors());
+            } else {
+                $data = array('upload_data' => $this->upload->data());
+            }
+            
+            if (!empty($data['upload_data']['file_name'])) {
+                $import_xls_file = $data['upload_data']['file_name'];
+            } else {
+                $import_xls_file = 0;
+            }
+            $inputFileName = $path . $import_xls_file;
+            try {
+                $inputFileType = PHPExcel_IOFactory::identify($inputFileName);
+                $objReader = PHPExcel_IOFactory::createReader($inputFileType);
+                $objPHPExcel = $objReader->load($inputFileName);
+            } catch (Exception $e) {
+                $this->session->set_flashdata('error', 'Error loading file "' . pathinfo($inputFileName, PATHINFO_BASENAME)
+                . '": ' . $e->getMessage());
+            }
+            $allDataInSheet = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
+            
+            $arrayCount = count($allDataInSheet);
+            $flag = 0;//Existencia	PRECIO1	PRECIO2	PRECIO3	GRUPO	MARCA	IMPUESTO	COD_BARRA	ACTIVO
+
+            $createArray = array('MANZANA', 'EDIFICIO', 'ENCARGADO', 'OBSERVACION');
+            $makeArray = array('MANZANA' => 'MANZANA', 'EDIFICIO' => 'EDIFICIO', 'ENCARGADO' => 'ENCARGADO', 'OBSERVACION' => 'OBSERVACION' );
+            $SheetDataKey = array();
+            foreach ($allDataInSheet as $dataInSheet) {
+                foreach ($dataInSheet as $key => $value) {
+                    if (in_array(trim($value), $createArray)) {
+                        $value = preg_replace('/\s+/', '', $value);
+                        $SheetDataKey[trim($value)] = $key;
+                    } else {
+                        
+                    }
+                }
+            }
+            $data = array_diff_key($makeArray, $SheetDataKey);
+           
+            if (empty($data)) {
+                $flag = 1;
+            }
+            if ($flag == 1) {
+                for ($i = 2; $i <= $arrayCount; $i++) {
+                    $addresses = array();
+                    //'MANZANA', 'EDIFICIO', 'ENCARGADO', 'OBSERVACION'
+                    $block = $SheetDataKey['MANZANA'];
+                    $edifice = $SheetDataKey['EDIFICIO'];
+                    $manager = $SheetDataKey['ENCARGADO'];
+                    $observation = $SheetDataKey['OBSERVACION']; 
+
+
+                    $block = filter_var(trim($allDataInSheet[$i][$block]), FILTER_SANITIZE_STRING);
+                    $edifice = filter_var(trim($allDataInSheet[$i][$edifice]), FILTER_SANITIZE_STRING);
+                    $manager = filter_var(trim($allDataInSheet[$i][$manager]), FILTER_SANITIZE_STRING);
+                    $observation = filter_var(trim($allDataInSheet[$i][$observation]), FILTER_SANITIZE_STRING); 
+
+                    if(!empty($block)){
+                        $code =$block.$edifice; 
+                        $check = $this->edifice_model->checkExists($code, 0, $this->condominium);
+                        if (empty($check)) { 
+                            $info = array('edifice' => $edifice,'code' => $code,'block' => $block,'condominium'=>$this->condominium, 'manager' => $manager, 'observation' => $observation);
+                            $result = $this->edifice_model->addNew($info);  
+                        } 
+                    }
+                   
+                }   
+                $this->session->set_flashdata('success', 'Edificios Importados con exito');
+              
+            } else {
+                $this->session->set_flashdata('error', 'Error al importar el archivo');
+               
+            } 
+           redirect('edificios');
+        
     }
 }

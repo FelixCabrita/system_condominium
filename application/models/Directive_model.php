@@ -16,16 +16,18 @@ class Directive_model extends CI_Model
      * @param number $segment : This is pagination limit
      * @return array $result : This is result
      */
-    function Listing($id,$condominium)
+    function Listing($id,$condominium,$status=1)
     { 
-        $this->db->select("d.id, d.name, d.edifice, d.document, d.chargue, p.name as 'period', d.created_at, d.status, a.apartment,e.code");
+        $this->db->select("d.id, d.name, d.edifice, d.position,  d.document, d.chargue, p.name as 'period', d.created_at, d.status, a.apartment,e.code,d.photo_1");
         $this->db->from('directive d');       
         $this->db->join('edifice as e', 'e.id = d.edifice');
         $this->db->join('apartment as a', 'a.id = d.apartment');
         $this->db->join('period as p', 'p.id = d.period');
         $this->db->where('d.condominium',$condominium);
-        $this->db->where('p.status',1);
-        $this->db->order_by('d.chargue', 'ASC'); 
+        if($status!=0){
+            $this->db->where('p.status',$status);
+        } 
+        $this->db->order_by('d.position', 'ASC'); 
         $query = $this->db->get(); 
         $result = $query->result();        
         return $result;
@@ -73,8 +75,8 @@ class Directive_model extends CI_Model
      */
     function getInfo($id,$condominium)
     { 
-        $this->db->select("d.id, d.name, d.edifice, d.document, d.chargue, d.period, d.created_at, d.status, d.apartment,
-                            concat(e.code,' - ',e.manager) as 'edifice_code', a.apartment as 'apartment_code'");
+        $this->db->select("d.id, d.name, d.edifice, d.document, d.chargue, d.period, d.created_at, d.status,d.position, d.apartment,
+                            concat(e.code,' - ',e.manager) as 'edifice_code', a.apartment as 'apartment_code',d.photo_1");
         $this->db->from('directive d');       
         $this->db->join('edifice as e', 'e.id = d.edifice');
         $this->db->join('apartment as a', 'a.id = d.apartment');

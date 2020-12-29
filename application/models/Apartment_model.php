@@ -18,9 +18,10 @@ class Apartment_model extends CI_Model
      */
     function Listing($id,$condominium)
     { 
-        $this->db->select("a.id,  a.apartment, a.code,  a.conditions, a.number_parking, a.created_at,CONCAT(e.code,' - ',e.manager) as 'edifice'");
+        $this->db->select("a.id,  a.apartment, a.code,  a.conditions, a.number_parking, a.created_at,CONCAT(e.code,' - ',IFNULL(t.name,e.manager)) as 'edifice'");
         $this->db->from('apartment a');       
         $this->db->join('edifice as e', 'e.id = a.edifice');
+        $this->db->join('tenant as t', 't.document = e.manager','left');
         $this->db->where('a.condominium',$condominium);
         $this->db->order_by('id', 'DESC'); 
         $query = $this->db->get(); 

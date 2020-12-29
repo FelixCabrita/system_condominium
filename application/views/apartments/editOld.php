@@ -76,4 +76,4 @@ if($permissions->U==1){
         </div>
     </div>
 </div> 
-<script src="<?php echo base_url(); ?>assets/scripts/system/editEdifice.js" type="text/javascript"></script>    
+<script src="<?php echo base_url(); ?>assets/scripts/system/editApartment.js" type="text/javascript"></script>    

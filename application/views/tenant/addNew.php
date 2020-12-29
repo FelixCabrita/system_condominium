@@ -19,7 +19,7 @@
                         <?php echo $success; ?>              
                     </div>  
             <?php } ?>
-            <form class="form-inlne" id="add"  action="<?php echo base_url() ?>nuevo_inquilinos" method="post" role="form">
+            <form class="form-inlne" id="add"  action="<?php echo base_url() ?>nuevo_clientes" method="post" role="form">
                 <div class="row">
                     <div class="form-group col-sm-4">
                         <label for="document">Documento de identidad</label>

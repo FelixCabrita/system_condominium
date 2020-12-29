@@ -31,7 +31,7 @@
                         <select name="edifice" id="edifice" class="form-control">
                             <option value ="">SELECCIONE UN EDIFICIO</option>
                             <?php  if(!empty($edificeRecords)) { foreach($edificeRecords as $record) {  ?>
-                                <option value ="<?php echo $record->code ?>" <?php echo set_value('edifice')==$record->code?"selected":"" ?>><?php echo $record->code." - ".$record->manager ?></option>
+                                <option value ="<?php echo $record->code ?>" <?php echo set_value('edifice')==$record->code?"selected":"" ?>><?php echo $record->code." - ".$record->name ?></option>
                             <?php }} ?> 
                         </select>
                         <?php echo validation_error('edifice');?> 

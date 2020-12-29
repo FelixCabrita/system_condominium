@@ -33,12 +33,12 @@ class Vigilant extends BaseController
     public function getDataEdifices($code = '')
     {
         $this->load->model('edifice_model');
-        if(empty($code)){
-            return $this->edifice_model->getListing( $this->condominium);
-        }else{
+        if (empty($code)) {
+            return $this->edifice_model->getListing($this->condominium);
+        } else {
             return $this->edifice_model->getInfoCode($code, $this->condominium);
-        } 
-    } 
+        }
+    }
 
     /**
      * This function used to load the first screen of the Vigilant
@@ -57,8 +57,8 @@ class Vigilant extends BaseController
         if (checkForPermissions('vigilant', PERMISSION_READ) != true) {
             $this->loadThis();
         } else {
-            $data['VigilantRecords'] = $this->vigilant_model->Listing( $this->condominium);
-            $data['permissions'] = $this->getPermissions()->{'vigilant'}; 
+            $data['VigilantRecords'] = $this->vigilant_model->Listing($this->condominium);
+            $data['permissions'] = $this->getPermissions()->{'vigilant'};
             $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Casilla de Vigilancia';
             $this->loadViews("vigilant/vigilant", $this->globalApp, $data, null);
         }
@@ -75,18 +75,51 @@ class Vigilant extends BaseController
             if ($document == null) {
                 redirect('casillavigilante');
             }
-            $information= $this->vigilant_model->checkExists($document, 0, $this->condominium); 
-            $data['visitorInfo'] = $information; 
+            $information = $this->vigilant_model->checkExists($document, 0, $this->condominium);
+            $data['visitorInfo'] = $information;
             if ($data['visitorInfo'] == null) {
                 redirect('casillavigilante');
             }
-             $data['VigilantRecords'] = $this->vigilant_model->Listing($this->condominium,$document); 
-            $data['permissions'] = $this->getPermissions()->{'vigilant'}; 
-            $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Visitante -> '.$information->name;
+            $data['VigilantRecords'] = $this->vigilant_model->Listing($this->condominium, $document);
+            $data['permissions'] = $this->getPermissions()->{'vigilant'};
+            $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Visitante -> ' . $information->name;
             $this->loadViews("vigilant/log", $this->globalApp, $data, null);
         }
     }
+/**
+ * This function is used to load the Vigilant list
+ */
+    public function generateReport()
+    {
+        if (checkForPermissions('vigilant', PERMISSION_READ) != true) {
+            $this->loadThis();
+        } else {
+            $start_date = ($this->security->xss_clean($this->input->post('start_date')));
+            $ending_date = ($this->security->xss_clean($this->input->post('ending_date')));
+            $type_visitor = ($this->security->xss_clean($this->input->post('type_visitor')));
+            $type_input = ($this->security->xss_clean($this->input->post('type_input')));
 
+            $data['VigilantRecords'] = $this->vigilant_model->ListingReport($this->condominium, $start_date, $ending_date, $type_visitor, $type_input);
+            $data['start_date'] = $start_date;
+            $data['ending_date'] = $ending_date;
+            $data['type_visitor'] = $type_visitor;
+            $data['type_input'] = $type_input;
+
+            $name_report = "Reporte";
+            if (!empty($start_dat)) {
+                $name_report = $name_report . " {" . $start_date . " - " . $ending_date . "}";
+            }
+            if (!empty($type_visitor)) {
+                $name_report = $name_report . " {" . checkVisitor($type_visitor) . "}";
+            }
+
+            if (!empty($type_input)) {
+                $name_report = $name_report . " {" . ($type_input == VIGILANT_INPUT ? "ENTRADA" : "SALIDA") . "}";
+            }
+            $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : '.$name_report;
+            $this->loadViews("vigilant/report", $this->globalApp, $data, null);
+        }
+    }
 
     /**
      * This function is used to load the add new form
@@ -107,10 +140,10 @@ class Vigilant extends BaseController
      */
     public function checkExists()
     {
-        
-        $code = $this->input->post("document"); 
-        $result = $this->vigilant_model->checkExists($code, 0, $this->condominium); 
-        if ($result) {echo (json_encode(array('status' => true,"visitor"=>$result)));} else {echo (json_encode(array('status' => false)));}
+
+        $code = $this->input->post("document");
+        $result = $this->vigilant_model->checkExists($code, 0, $this->condominium);
+        if ($result) {echo (json_encode(array('status' => true, "visitor" => $result)));} else {echo (json_encode(array('status' => false)));}
     }
 
     /**
@@ -125,7 +158,7 @@ class Vigilant extends BaseController
             $this->form_validation->set_rules('document', 'Documento de identidad', 'trim|required|max_length[100]');
             $this->form_validation->set_rules('name', 'Nombre completo', 'trim|required|max_length[250]');
             $this->form_validation->set_rules('edifice', 'Edificio', 'trim|required');
-            $this->form_validation->set_rules('apartment', 'Apartamento', 'trim|required'); 
+            $this->form_validation->set_rules('apartment', 'Apartamento', 'trim|required');
             if ($this->form_validation->run() == false) {
                 $this->addNew();
             } else {
@@ -133,12 +166,31 @@ class Vigilant extends BaseController
                 $name = strtoupper($this->security->xss_clean($this->input->post('name')));
                 $mobile = ($this->security->xss_clean($this->input->post('mobile')));
                 $edifice = ($this->security->xss_clean($this->input->post('edifice')));
-                $apartment =  ($this->security->xss_clean($this->input->post('apartment')));
+                $licence_plate = ($this->security->xss_clean($this->input->post('licence_plate')));
+                $apartment = ($this->security->xss_clean($this->input->post('apartment')));
                 $observation = strtoupper($this->security->xss_clean($this->input->post('observation')));
                 $status = ($this->security->xss_clean($this->input->post('status')));
-             
-                $info = array('document' => $document, 'name' => $name, 'mobile' => $mobile, 'condominium' => $this->condominium,
-                    'edifice' => $edifice, 'apartment' => $apartment, 'observation' => $observation, 'status' => $status, 'user_id' => $this->id);
+                $checkVisitor = $this->vigilant_model->checkExistsVisitor($document, $this->condominium);
+                $idVisitor = "";
+
+                if (empty($checkVisitor)) {
+                    $info = array('document' => $document, 'name' => $name, 'mobile' => $mobile, 'condominium' => $this->condominium);
+                    $idVisitor = $this->vigilant_model->addVisitor($info);
+                } else {
+                    $idVisitor = $checkVisitor->id;
+                    if (!empty($name)) {
+                        $info = array('name' => $name);
+                        $this->vigilant_model->editVisitor($info, $idVisitor, $this->condominium);
+                    }
+
+                    if (!empty($mobile)) {
+                        $info = array('mobile' => $mobile);
+                        $this->vigilant_model->editVisitor($info, $idVisitor, $this->condominium);
+                    }
+                }
+
+                $info = array('visitor' => $idVisitor, 'licence_plate' => $licence_plate, 'condominium' => $this->condominium,
+                    'edifice' => $edifice, 'apartment' => $apartment, 'observation' => $observation, 'status' => $status, 'user' => $this->id);
                 $result = $this->vigilant_model->addNew($info);
 
                 if ($result > 0) {
@@ -146,7 +198,6 @@ class Vigilant extends BaseController
                 } else {
                     $this->session->set_flashdata('error', 'Fallo la operacion');
                 }
-                
                 redirect('entrada_salida');
             }
         }

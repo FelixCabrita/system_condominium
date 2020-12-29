@@ -41,17 +41,17 @@ class Vehicles extends BaseController
 
     public function getDataTag($id = '')
     {
-        $this->load->model('tag_model'); 
+        $this->load->model('tag_model');
         return $this->tag_model->getInfo($id, $this->condominium);
-      
+
     }
 
     public function getDataTenant()
-    { 
+    {
         $this->load->model('tenant_model');
-        return $this->tenant_model->getListing($this->condominium);  
+        return $this->tenant_model->getListing($this->condominium);
     }
-    
+
     /**
      * This function is used to load the vehicles list
      */
@@ -60,14 +60,14 @@ class Vehicles extends BaseController
         if (checkForPermissions('vehicles', PERMISSION_READ) != true) {
             $this->loadThis();
         } else {
-            
-            $data['vehiclesRecords'] = $this->vehicles_model->Listing($this->rol > ROLE_VIGILANT?$this->id:"", $this->condominium);
+
+            $data['vehiclesRecords'] = $this->vehicles_model->Listing($this->rol > ROLE_VIGILANT ? $this->id : "", $this->condominium);
             $data['permissions'] = $this->getPermissions()->{'vehicles'};
             $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Lista de vehiculos';
             $this->loadViews("vehicles/vehicles", $this->globalApp, $data, null);
         }
     }
- /**
+    /**
      * This function is used to load the vehicles list
      */
     public function asignation_vehicle($id = null)
@@ -78,10 +78,10 @@ class Vehicles extends BaseController
             if ($id == null) {
                 redirect('vehiculos');
             }
-            $getDataTag = $this->getDataTag($id); 
-            $data['tag'] =  $getDataTag;
+            $getDataTag = $this->getDataTag($id);
+            $data['tag'] = $getDataTag;
             $data['vehiclesRecords'] = $this->vehicles_model->ListingforAparment($getDataTag->apartment, $this->condominium);
-            
+
             $data['permissions'] = $this->getPermissions()->{'vehicles'};
             $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Asignacion de vehiculo';
             $this->loadViews("vehicles/asignation", $this->globalApp, $data, null);
@@ -94,7 +94,7 @@ class Vehicles extends BaseController
     {
         if (checkForPermissions('vehicles', PERMISSION_CREATE) != true) {
             $this->loadThis();
-        } else { 
+        } else {
             $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Nuevo vehiculo';
             $this->loadViews("vehicles/addNew", $this->globalApp, null, null);
         }
@@ -106,11 +106,11 @@ class Vehicles extends BaseController
     public function checkExists()
     {
         $id = $this->input->post("id");
-        $licence_plate = $this->input->post("licence_plate"); 
+        $licence_plate = $this->input->post("licence_plate");
         if (empty($id)) {
-            $result = $this->vehicles_model->checkExists($licence_plate, 0,  $this->condominium);
+            $result = $this->vehicles_model->checkExists($licence_plate, 0, $this->condominium);
         } else {
-            $result = $this->vehicles_model->checkExists($licence_plate, $id,   $this->condominium);
+            $result = $this->vehicles_model->checkExists($licence_plate, $id, $this->condominium);
         }
         if (empty($result)) {echo ("true");} else {echo ("false");}
     }
@@ -128,7 +128,7 @@ class Vehicles extends BaseController
             $this->form_validation->set_rules('model', 'Apartamento donde trabajara', 'trim|required|max_length[20]');
             $this->form_validation->set_rules('year', 'Nombre completo', 'trim|required|max_length[4]');
             $this->form_validation->set_rules('brand', 'Telefono Movil', 'trim|required|max_length[20]');
-            $this->form_validation->set_rules('colour', 'Inicio a trabajar', 'trim|required|max_length[20]'); 
+            $this->form_validation->set_rules('colour', 'Inicio a trabajar', 'trim|required|max_length[20]');
             if ($this->form_validation->run() == false) {
                 $this->addNew();
             } else {
@@ -140,7 +140,7 @@ class Vehicles extends BaseController
                 $colour = (strtoupper($this->security->xss_clean($this->input->post('colour'))));
                 $condition_car = (strtoupper($this->security->xss_clean($this->input->post('condition_car'))));
 
-                $check = $this->vehicles_model->checkExists($licence_plate, 0,  $this->condominium);
+                $check = $this->vehicles_model->checkExists($licence_plate, 0, $this->condominium);
 
                 if (empty($check)) {
                     $info = array('licence_plate' => $licence_plate, 'tenant' => $id, 'model' => $model, 'year' => $year, 'brand' => $brand,
@@ -173,7 +173,7 @@ class Vehicles extends BaseController
                 redirect('vehiculos');
             }
             $data['permissions'] = $this->getPermissions()->{'vehicles'};
-            $data['vehiclesInfo'] = $this->vehicles_model->getInfo($id, $this->condominium); 
+            $data['vehiclesInfo'] = $this->vehicles_model->getInfo($id, $this->condominium);
             if ($data['vehiclesInfo'] == null) {
                 redirect('vehiculos');
             }
@@ -182,7 +182,7 @@ class Vehicles extends BaseController
             $this->loadViews("vehicles/editOld", $this->globalApp, $data, null);
         }
     }
- /**
+    /**
      * This function is used load vehicles edit information
      * @param number $vehiclesId : Optional : This is vehicles id
      */
@@ -195,7 +195,7 @@ class Vehicles extends BaseController
                 redirect('etiquetas');
             }
             $data['permissions'] = $this->getPermissions()->{'vehicles'};
-            $data['vehiclesInfo'] = $this->vehicles_model->getInfo($id, $this->condominium); 
+            $data['vehiclesInfo'] = $this->vehicles_model->getInfo($id, $this->condominium);
             if ($data['vehiclesInfo'] == null) {
                 redirect('etiquetas');
             }
@@ -219,7 +219,7 @@ class Vehicles extends BaseController
             $this->form_validation->set_rules('model', 'Apartamento donde trabajara', 'trim|required|max_length[20]');
             $this->form_validation->set_rules('year', 'Nombre completo', 'trim|required|max_length[4]');
             $this->form_validation->set_rules('brand', 'Telefono Movil', 'trim|required|max_length[20]');
-            $this->form_validation->set_rules('colour', 'Inicio a trabajar', 'trim|required|max_length[20]'); 
+            $this->form_validation->set_rules('colour', 'Inicio a trabajar', 'trim|required|max_length[20]');
             if ($this->form_validation->run() == false) {
                 $this->editOld($id);
             } else {
@@ -230,11 +230,11 @@ class Vehicles extends BaseController
                 $brand = (strtoupper($this->security->xss_clean($this->input->post('brand'))));
                 $colour = (strtoupper($this->security->xss_clean($this->input->post('colour'))));
                 $condition_car = (strtoupper($this->security->xss_clean($this->input->post('condition_car'))));
-                $check = $this->vehicles_model->checkExists($licence_plate, $id,  $this->condominium);
-               
+                $check = $this->vehicles_model->checkExists($licence_plate, $id, $this->condominium);
+
                 if (empty($check)) {
                     $info = array('licence_plate' => $licence_plate, 'tenant' => $tenant, 'model' => $model, 'year' => $year, 'brand' => $brand,
-                       'colour' => $colour, 'condition_car' => $condition_car);
+                        'colour' => $colour, 'condition_car' => $condition_car);
                     $result = $this->vehicles_model->edit($info, $id, $this->condominium);
 
                     if ($result > 0) {
@@ -262,8 +262,8 @@ class Vehicles extends BaseController
             $id = $this->input->post('id');
 
             /*
-            SE DEBE COMPROBAR SI EL inquilino TIENEN DATOS ENLAZADOS PARA PODER SER ELIMINADO
-            */
+            SE DEBE COMPROBAR SI EL cliente TIENEN DATOS ENLAZADOS PARA PODER SER ELIMINADO
+             */
 
             $result = $this->vehicles_model->delete($id, $this->condominium);
 
@@ -275,14 +275,14 @@ class Vehicles extends BaseController
     {
         if (checkForPermissions('vehicles', PERMISSION_UPDATE) != true) {
             echo (json_encode(array('status' => 'access')));
-        } else { 
+        } else {
             $vehiclesId = $this->input->post('id');
-            $isactive = $this->input->post('isactive'); 
-            $vehiclesInfo = array('status' => $isactive); 
+            $isactive = $this->input->post('isactive');
+            $vehiclesInfo = array('status' => $isactive);
             $result = $this->vehicles_model->edit($vehiclesInfo, $vehiclesId, $this->condominium);
 
             if ($result > 0) {echo (json_encode(array('status' => true)));} else {echo (json_encode(array('status' => false)));}
         }
     }
- 
+
 }

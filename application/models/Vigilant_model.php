@@ -20,13 +20,14 @@ class Vigilant_model extends CI_Model
      */
     public function Listing($condominium, $document = '')
     {
-        $this->db->select("d.id, d.name, d.document, d.observation, d.created_at, d.status, a.apartment,e.code");
+        $this->db->select("d.id, vs.name, vs.document, d.observation, d.created_at, d.licence_plate, d.status, a.apartment,e.code");
         $this->db->from('vigilant d');
         $this->db->join('edifice as e', 'e.id = d.edifice');
         $this->db->join('apartment as a', 'a.id = d.apartment');
+        $this->db->join('visitor as vs', 'vs.id = d.visitor');
         $this->db->where('d.condominium', $condominium);
         if (!empty($document)) {
-            $this->db->where("document", $document);
+            $this->db->where("vs.document", $document);
         }
         $this->db->order_by('d.created_at', 'DESC');
         $query = $this->db->get();
@@ -34,21 +35,57 @@ class Vigilant_model extends CI_Model
         return $result;
     }
 
+
+    public function ListingReport($condominium, $start_date = '', $ending_date = '', $type_visitor = '', $type_input = '')
+    {
+        $this->db->select("d.id, vs.name, vs.document, d.observation, d.created_at, d.licence_plate, d.status, a.apartment,e.code");
+        $this->db->from('vigilant d');
+        $this->db->join('edifice as e', 'e.id = d.edifice');
+        $this->db->join('apartment as a', 'a.id = d.apartment');
+        $this->db->join('visitor as vs', 'vs.id = d.visitor');
+        $this->db->where('d.condominium', $condominium);
+
+        if (!empty($type_visitor)) {
+            $this->db->where("vs.type", $type_visitor);
+        }
+        if (!empty($type_input)) {
+            $this->db->where("d.status", $type_input);
+        }
+
+        if (!empty($start_date)) {
+            $this->db->where("d.created_at >= '$start_date 00:00:00' AND d.created_at <='$ending_date 23:59:59'");
+        }
+
+
+        $this->db->order_by('d.created_at', 'DESC');
+        $query = $this->db->get();
+        $result = $query->result();
+        return $result;
+    }
+ 
+    public function checkExists($document, $id = 0, $condominium)
+    { 
+        $this->db->select("vs.name,vs.document,vs.status as 'visitorStatus',vs.observation as 'visitorObservation',vg.status,vg.edifice,vg.licence_plate,vg.apartment,vg.observation, vs.mobile,vs.type");
+        $this->db->from("visitor  as vs");
+        $this->db->join('vigilant as vg', 'vg.visitor = vs.id','left'); 
+        $this->db->where("vs.document = '" . $document . "'");
+        $this->db->where('vs.condominium', $condominium);
+        $this->db->order_by('vg.created_at ', "DESC"); 
+        $query = $this->db->get();
+        return $query->row();
+    }
+    
     /**
      * This function is used to check whether email id is already exist or not
      * @param {string} $email : This is email id
-     * @param {number} $vigilantId : This is vigilant id
+     * @param {number} $id : This is vigilant id
      * @return {mixed} $result : This is searched result
      */
-    public function checkExists($document, $id = 0, $condominium)
+    public function checkExistsVisitor($document, $condominium)
     {
-        $this->db->select("name,document,status,edifice,apartment,observation,
-        (select IFNULL(v.mobile,'') as 'mobile' from vigilant v where v.document = '" . $document . "' AND v.mobile <> ''  AND v.condominium = $condominium LIMIT 1)  as 'mobile'");
-        $this->db->from("vigilant");
-        $this->db->where("document = '" . $document . "'");
-        $this->db->where('condominium', $condominium);
-        $this->db->order_by('created_at ', "DESC");
-        $this->db->limit(1);
+        $this->db->select("id");
+        $this->db->from("visitor");  
+        $this->db->where("document",$document);  
         $query = $this->db->get();
         return $query->row();
     }
@@ -56,10 +93,10 @@ class Vigilant_model extends CI_Model
      * This function is used to add new vigilant to system
      * @return number $insert_id : This is last inserted id
      */
-    public function addNew($vigilantInfo)
+    public function addNew($Info)
     {
         $this->db->trans_start();
-        $this->db->insert('vigilant', $vigilantInfo);
+        $this->db->insert('vigilant', $Info);
 
         $insert_id = $this->db->insert_id();
 
@@ -68,9 +105,22 @@ class Vigilant_model extends CI_Model
         return $insert_id;
     }
 
+/**
+     * This function is used to add new vigilant to system
+     * @return number $insert_id : This is last inserted id
+     */
+    public function addVisitor($Info)
+    {
+        $this->db->trans_start();
+        $this->db->insert('visitor', $Info); 
+        $insert_id = $this->db->insert_id(); 
+        $this->db->trans_complete(); 
+        return $insert_id;
+    }
+
     /**
      * This function used to get vigilant information by id
-     * @param number $vigilantId : This is vigilant id
+     * @param number $id : This is vigilant id
      * @return array $result : This is vigilant information
      */
     public function getInfo($id, $condominium)
@@ -89,25 +139,39 @@ class Vigilant_model extends CI_Model
 
     /**
      * This function is used to update the vigilant information
-     * @param array $vigilantInfo : This is vigilants updated information
-     * @param number $vigilantId : This is vigilant id
+     * @param array $Info : This is vigilants updated information
+     * @param number $id : This is vigilant id
      */
-    public function edit($vigilantInfo, $vigilantId, $condominium)
+    public function edit($Info, $id, $condominium)
     {
-        $this->db->where('id', $vigilantId);
+        $this->db->where('id', $id);
         $this->db->where('condominium', $condominium);
-        $this->db->update('vigilant', $vigilantInfo);
+        $this->db->update('vigilant', $Info);
         return $this->db->affected_rows();
     }
 
     /**
+     * This function is used to update the vigilant information
+     * @param array $Info : This is vigilants updated information
+     * @param number $id : This is vigilant id
+     */
+    public function editVisitor($Info, $id, $condominium)
+    {
+        $this->db->where('id', $id);
+        $this->db->where('condominium', $condominium);
+        $this->db->update('visitor', $Info);
+        return $this->db->affected_rows();
+    }
+
+
+    /**
      * This function is used to delete the vigilant information
-     * @param number $vigilantId : This is vigilant id
+     * @param number $id : This is vigilant id
      * @return boolean $result : TRUE / FALSE
      */
-    public function delete($vigilantId, $condominium)
+    public function delete($id, $condominium)
     {
-        $this->db->where('id', $vigilantId);
+        $this->db->where('id', $id);
         $this->db->where('condominium', $condominium);
         $this->db->delete('vigilant');
         return $this->db->affected_rows();

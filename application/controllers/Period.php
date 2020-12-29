@@ -185,6 +185,9 @@ class Period extends BaseController
         if (checkForPermissions('period', PERMISSION_UPDATE) != true) {
             echo (json_encode(array('status' => 'access')));
         } else {
+            $PeriodInfo = array('status' => 0);
+            $result = $this->period_model->edit($PeriodInfo, "", $this->condominium);
+
             $PeriodId = $this->input->post('id');
             $isactive = $this->input->post('isactive');
             $PeriodInfo = array('status' => $isactive);

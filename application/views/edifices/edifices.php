@@ -4,17 +4,36 @@
     <div class="card">
         <div class="card-body">
         <div class="row page-titles" style = "background: rgba(255, 255, 255, 0);margin-bottom:3rem">
-                <div class="col-sm-9">
+                <div class="col-sm-6">
                     <h4>Listado de edificios</h4>
                 </div>
                 <?php if($permissions->C==1){ ?>
-                <div class="col-sm-3 ">
-                    
+                    <div class="col-sm-3 "> 
+                        <a href="#"  class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#importEdifices">
+                            <span class="btn-icon-right"><i class="fa fa-upload"> </i> Importar edificios </span>
+                        </a>  
+                    </div>
+                    <div class="col-sm-3 "> 
                         <button onclick ="window.location = 'agregaredificio'" type="button" class="btn btn-primary btn-lg btn-block"><span class="btn-icon-right"><i class="fa fa-plus"> </i> Agregar nuevo edificio </span></button> 
-                    
-                </div>
+                    </div>  
                 <?php } ?>
             </div>
+            <?php
+                $this->load->helper('form');
+                $error = $this->session->flashdata('error');   
+                if($error) { ?>
+                    <div class="alert alert-danger alert-dismissible fade show">
+                        <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span> </button> 
+                        <?php echo $error; ?>          
+                    </div> 
+                <?php }
+                $success = $this->session->flashdata('success');
+                if($success)  { ?> 
+                    <div class="alert alert-success alert-dismissible fade show">
+                        <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span> </button> 
+                        <?php echo $success; ?>              
+                    </div>  
+            <?php } ?>
             <div class="table-responsive">
                 <table id="example" class="display" style="min-width: 845px">
                 <thead>
@@ -35,7 +54,7 @@
                     ?>
                     <tr>  
                         <td class="text-center"style="vertical-align: middle;"><?php echo $record->code ?></td>
-                        <td class="text-center" style="vertical-align: middle;"><?php echo $record->manager ?></td>
+                        <td class="text-center" style="vertical-align: middle;"><?php echo "(".$record->manager.") ". $record->name ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php echo  $record->observation ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php echo  date_format (new DateTime($record->created_at), 'Y-m-d g:i A')  ?></td>
                          

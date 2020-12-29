@@ -9,12 +9,13 @@
  */
 
 $(document).ready(function() {
-
+    $("#document").focus();
 
 });
 
 jQuery(document).ready(function() {
-
+    $(".alertNotAccess").hide();
+    $("#document").focus();
     jQuery(document).on("click", "#search", function() {
         search_document();
     });
@@ -92,29 +93,83 @@ jQuery(document).ready(function() {
                 })
                 .then(response => response.json())
                 .then(data => {
+                    $("#send").show();
+                    $(".alertNotAccess").hide();
+
                     if (data.status) {
                         var visitor = data.visitor;
                         $("#name").val(visitor.name);
                         $("#mobile").val(visitor.mobile);
-                        if (visitor.status === '1') {
-                            $('#edifice option[value=' + visitor.edifice + ']').prop('selected', true);
-                            $.ajax({
-                                url: 'obtener_apartemantos/' + visitor.edifice,
-                                type: "GET",
-                                dataType: "json",
-                                success: function(data) {
-                                    $('select[name="apartment"]').empty();
-                                    $('select[name="apartment"]').append('<option value="">SELECCIONE UN APARTAMENTO</option>');
-                                    $.each(data, function(key, value) {
-                                        $('select[name="apartment"]').append('<option value="' + value.id + '" ' + (visitor.apartment === value.id ? "selected" : "") + ' >' + value.apartment + '</option>');
-                                    });
-                                }
-                            });
-                            $('#status option[value=' + 2 + ']').prop('selected', true);
-                            $("#observation").val(visitor.observation);
+                        if (visitor.type == 2) {
+                            $("#type").val("EMPLEADO");
                         } else {
-                            $('#status option[value=' + 1 + ']').prop('selected', true);
+                            $("#type").val("VISITANTE");
                         }
+                        if (visitor.visitorStatus === '1') {
+
+                            if (visitor.status === '1') {
+                                $('#edifice option[value=' + visitor.edifice + ']').prop('selected', true);
+                                $.ajax({
+                                    url: 'obtener_apartemantos/' + visitor.edifice,
+                                    type: "GET",
+                                    dataType: "json",
+                                    success: function(data) {
+                                        $('select[name="apartment"]').empty();
+                                        $('select[name="apartment"]').append('<option value="">SELECCIONE UN APARTAMENTO</option>');
+                                        $.each(data, function(key, value) {
+                                            $('select[name="apartment"]').append('<option value="' + value.id + '" ' + (visitor.apartment === value.id ? "selected" : "") + ' >' + value.apartment + '</option>');
+                                        });
+                                    }
+                                });
+                                $('#status option[value=' + 2 + ']').prop('selected', true);
+                                $("#observation").val(visitor.observation);
+                                $("#licence_plate").val(visitor.licence_plate);
+
+                            } else {
+                                $('#status option[value=' + 1 + ']').prop('selected', true);
+                            }
+
+                            if (visitor.type == 2) {
+                                $.ajax({
+                                    url: './obtener_empleado/' + document,
+                                    type: "GET",
+                                    dataType: "json",
+                                    success: function(data) {
+                                        console.log(data);
+                                        $('#edifice option[value=' + data.edifice + ']').prop('selected', true);
+                                        var apartment = data.apto_id;
+                                        $.ajax({
+                                            url: 'obtener_apartemantos/' + data.edifice,
+                                            type: "GET",
+                                            dataType: "json",
+                                            success: function(data) {
+                                                $('select[name="apartment"]').empty();
+                                                $('select[name="apartment"]').append('<option value="">SELECCIONE UN APARTAMENTO</option>');
+                                                $.each(data, function(key, value) {
+                                                    $('select[name="apartment"]').append('<option value="' + value.id + '" ' + (visitor.apartment === value.id ? "selected" : "") + ' >' + value.apartment + '</option>');
+                                                });
+
+                                                $('#apartment option[value=' + apartment + ']').prop('selected', true);
+                                            }
+                                        });
+
+
+                                    }
+                                });
+                            }
+                        } else {
+                            $("#send").hide();
+                            $(".alertNotAccess").show();
+                            $("#textAlert").html("El visitante " + visitor.name + " no puede acceder al condominio");
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'error',
+                                title: "El visitante " + visitor.name + " no puede acceder al condominio",
+                                text: visitor.visitorObservation
+                            });
+                        }
+
+
 
                     } else {
                         Swal.fire({

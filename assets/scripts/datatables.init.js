@@ -52,9 +52,16 @@ let dataSet = [
 
 
     var table = $('#visitante').DataTable({
-        createdRow: function(row, data, index) {
-            $(row).addClass('selected')
-        },
+        "ordering": false,
+
+        dom: 'Bfrtip',
+        buttons: [
+            'excel', 'print'
+        ]
+    });
+
+    var table = $('#directive').DataTable({
+        "ordering": false,
         dom: 'Bfrtip',
         buttons: [
             'excel', 'print'

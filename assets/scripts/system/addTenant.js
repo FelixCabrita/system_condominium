@@ -32,7 +32,7 @@ $(document).ready(function() {
             document: {
                 required: true,
                 remote: {
-                    url: baseURL + "chequeo_inquilinos",
+                    url: baseURL + "chequeo_clientes",
                     type: "post"
                 }
             }

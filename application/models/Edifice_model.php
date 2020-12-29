@@ -18,9 +18,11 @@ class Edifice_model extends CI_Model
      */
     function Listing($id,$condominium)
     { 
-        $this->db->from('edifice');     
-        $this->db->where('condominium',$condominium);
-        $this->db->order_by('id', 'DESC'); 
+        $this->db->select(" e.id, e.condominium, e.code, e.edifice, e.block, e.manager, IFNULL(t.name,'') as 'name', e.observation, e.created_at , e.status");
+        $this->db->from('edifice as e');     
+        $this->db->join('tenant as t', 'UPPER(t.document) = UPPER(e.manager)','left');
+        $this->db->where('e.condominium',$condominium);
+        $this->db->order_by('e.id', 'DESC'); 
         $query = $this->db->get(); 
         $result = $query->result();        
         return $result;
@@ -65,10 +67,11 @@ class Edifice_model extends CI_Model
 
     public function getListing($condominium)
     {  
-        $this->db->select('id,code,manager'); 
-        $this->db->from('edifice'); 
-        $this->db->where('condominium',$condominium);
-        $this->db->where("status",1);
+        $this->db->select('e.id,e.code,e.manager, IFNULL(t.name, e.manager) as name'); 
+        $this->db->from('edifice as e'); 
+        $this->db->join('tenant as t', 'UPPER(t.document) = UPPER(e.manager)','LEFT');
+        $this->db->where('e.condominium',$condominium);
+        $this->db->where("e.status",1);
         $query = $this->db->get();
         $result = $query->result();
         return $result;

@@ -3,27 +3,34 @@
 $id = $TenantInfo->id;
 $document = $TenantInfo->document;
 $name = $TenantInfo->name;    
+$type = $TenantInfo->type;   
+$count = !empty($AssignmentRecords)?COUNT($AssignmentRecords) :0;
+$countActive = !empty($AssignmentActive)?COUNT($AssignmentActive) :0;
 $this->load->helper('form'); 
 ?>
+
+<script> var type = "<?php echo $type; ?>",documentTenant="<?php echo $document; ?>"; </script>   
 <div class="app-main__inner"> 
     <div class="card">
         <div class="card-body">
             <div class="row page-titles" style = "background: rgba(255, 255, 255, 0);">
                 <div class="col-sm-6">
-                    <h4>Asignacion de departamentos</h4> 
+                    <h4>Asignacion de departamentos </h4> 
                 </div> 
                 <div class="col-sm-6 text-center"> 
-                    <h4><b><?php echo "($document) ".$name ?></b> </h4> 
+                    <h4><b><?php echo "($document) ".$name  ?></b> --
+                        <small><?php echo checkRole($type) ?></small></h4> 
                 </div> 
             </div>
             <hr>  
+            <?php if($type==ROLE_OWNER || ($type==ROLE_TENANT && $countActive==0 )){ ?>
             <div class="row page-titles" style = "background: rgba(255, 255, 255, 0); "> 
                 <div class="form-group col-sm-4">
                     <label for="edifice">Edificio</label>
                     <select name="edifice" id="edifice" class="form-control">
                         <option value ="">SELECCIONE UN EDIFICIO</option>
                         <?php  if(!empty($edificeRecords)) { foreach($edificeRecords as $record) {  ?>
-                            <option value ="<?php echo $record->id ?>"  ><?php echo $record->code." - ".$record->manager ?></option>
+                            <option value ="<?php echo $record->id ?>"  ><?php echo $record->code." - ".$record->name ?></option>
                         <?php }} ?> 
                     </select> 
                 </div>  
@@ -42,6 +49,7 @@ $this->load->helper('form');
                 </div>   
             </div>
             <hr>  
+            <?php } ?>
             <div class="table-responsive">
                 <table id="example" class="display" style="min-width: 845px">
                 <thead>
@@ -68,7 +76,7 @@ $this->load->helper('form');
                         <td class="text-center" style="vertical-align: middle;"> 
                             <?php if($record->status==STATUS_INACTIVE){ ?> <a class="btn btn-sm btn-info view_asignation" href="#" data-date="<?php echo $record->updated_at ?>"  data-observation="<?php echo $record->observation ?>" data-name="<?php echo $record->apartment_code ?>" title="Eliminar"><i class="fa fa-info"></i></a>  <?php }  ?>
                             
-                            <?php if($permissions->D==1 && $record->status==STATUS_ACTIVE){ ?> <a class="btn btn-sm btn-danger delete_asignation" href="#" data-userid="<?php echo $record->id; ?>" data-name="<?php echo $record->apartment_code ?>" title="Eliminar"><i class="fa fa-trash"></i></a>  <?php } ?>
+                            <?php if($permissions->D==1 && $record->status==STATUS_ACTIVE){ ?> <a class="btn btn-sm btn-danger delete_asignation" href="#" data-userid="<?php echo $record->id; ?>"data-tenant="<?php echo $record->tenant; ?>" data-name="<?php echo $record->apartment_code ?>" title="Eliminar"><i class="fa fa-trash"></i></a>  <?php } ?>
                         </td>
                     </tr>
                     <?php } } ?>

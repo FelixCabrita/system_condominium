@@ -64,7 +64,9 @@ class Directive extends BaseController
         if (checkForPermissions('directive', PERMISSION_READ) != true) {
             $this->loadThis();
         } else {
-            $data['DirectiveRecords'] = $this->directive_model->Listing($this->id, $this->condominium);
+            $data['DirectiveRecords'] = $this->directive_model->Listing($this->id, $this->condominium,0);
+            $data['DirectiveRecordsActive'] = $this->directive_model->Listing($this->id, $this->condominium,1);
+            $data['periodRecords'] = $this->getDataPeriod();
             $data['permissions'] = $this->getPermissions()->{'directive'};
             $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Junta directiva';
             $this->loadViews("directive/directive", $this->globalApp, $data, null);
@@ -112,8 +114,12 @@ class Directive extends BaseController
             $this->loadThis();
         } else {
             $this->load->library('form_validation');
+
+            $this->ConfigurationLibrary();
+
             $this->form_validation->set_rules('document', 'Documento', 'trim|required|max_length[50]');
             $this->form_validation->set_rules('name', 'Nombre', 'trim|required|max_length[250]');
+            $this->form_validation->set_rules('position', 'Puesto', 'trim|required|max_length[250]');
             $this->form_validation->set_rules('chargue', 'Cargo', 'trim|required|max_length[250]');
             $this->form_validation->set_rules('period', 'Periodo', 'trim|required|max_length[10]');
             $this->form_validation->set_rules('edifice', 'Edificio', 'trim|required|max_length[10]');
@@ -123,6 +129,7 @@ class Directive extends BaseController
             } else {
                 $document = (($this->security->xss_clean($this->input->post('document'))));
                 $name = ($this->security->xss_clean($this->input->post('name')));
+                $position = ($this->security->xss_clean($this->input->post('position')));  
                 $chargue = ($this->security->xss_clean($this->input->post('chargue')));
                 $period = strtoupper($this->security->xss_clean($this->input->post('period')));
                 $edifice = strtoupper($this->security->xss_clean($this->input->post('edifice')));
@@ -132,8 +139,16 @@ class Directive extends BaseController
 
                 if (empty($check)) {
 
-                    $info = array('document' => $document, 'name' => $name, 'chargue' => $chargue, 'condominium' => $this->condominium,
-                        'period' => $period, 'edifice' => $edifice, 'apartment' => $apartment);
+                    $photo_1 = PHOTO_DEFAULT;
+
+                    if ($this->upload->do_upload('file1')) {
+                        $data = $this->upload->data();
+                        $this->redimencion($data);
+                        $photo_1 = $data["file_name"];
+                    }
+
+                    $info = array('document' => $document, 'name' => $name, 'chargue' => $chargue, 'position' => $position,'condominium' => $this->condominium,
+                        'period' => $period, 'edifice' => $edifice, 'photo_1' => $photo_1, 'apartment' => $apartment);
                     $result = $this->directive_model->addNew($info);
 
                     if ($result > 0) {
@@ -183,11 +198,16 @@ class Directive extends BaseController
             $this->loadThis();
         } else {
             $this->load->library('form_validation');
+            $this->ConfigurationLibrary();
 
             $id = $this->input->post('id');
+            $photo_1 = $this->input->post('photo_1');
+
+          
 
             $this->form_validation->set_rules('document', 'Documento', 'trim|required|max_length[50]');
             $this->form_validation->set_rules('name', 'Nombre', 'trim|required|max_length[250]');
+            $this->form_validation->set_rules('position', 'Posicion', 'trim|required|max_length[250]');
             $this->form_validation->set_rules('chargue', 'Cargo', 'trim|required|max_length[250]');
             $this->form_validation->set_rules('period', 'Periodo', 'trim|required|max_length[10]');
             $this->form_validation->set_rules('edifice', 'Edificio', 'trim|required|max_length[10]');
@@ -197,15 +217,25 @@ class Directive extends BaseController
             } else {
                 $document = (($this->security->xss_clean($this->input->post('document'))));
                 $name = ($this->security->xss_clean($this->input->post('name')));
+                $position = ($this->security->xss_clean($this->input->post('position'))); 
                 $chargue = ($this->security->xss_clean($this->input->post('chargue')));
                 $period = strtoupper($this->security->xss_clean($this->input->post('period')));
                 $edifice = strtoupper($this->security->xss_clean($this->input->post('edifice')));
                 $apartment = strtoupper($this->security->xss_clean($this->input->post('apartment')));
 
-                $check = $this->directive_model->checkExists($document, $id, $this->condominium); 
+                $check = $this->directive_model->checkExists($document, $id, $this->condominium);
+
                 if (empty($result)) { 
-                    $info = array('document' => $document, 'name' => $name, 'chargue' => $chargue, 'condominium' => $this->condominium,
-                        'period' => $period, 'edifice' => $edifice, 'apartment' => $apartment);  
+
+                    if ($this->upload->do_upload('file1')) {
+                        $data = $this->upload->data();
+                        $this->redimencion($data);
+                        $photo_1 = $data["file_name"];
+                        unlink(PHOTO_PATH_D . $photo_1);
+                    } 
+
+                    $info = array('document' => $document, 'name' => $name,'position' => $position, 'chargue' => $chargue, 'condominium' => $this->condominium,
+                        'period' => $period, 'edifice' => $edifice, 'photo_1' => $photo_1, 'apartment' => $apartment);
                     $result = $this->directive_model->edit($info, $id, $this->condominium);
                     if ($result > 0) {
                         $this->session->set_flashdata('success', 'miembro creado exitosamente');
@@ -254,5 +284,42 @@ class Directive extends BaseController
 
             if ($result > 0) {echo (json_encode(array('status' => true)));} else {echo (json_encode(array('status' => false)));}
         }
+    }
+
+    public function redimencion($data)
+    {
+        $this->load->library('image_lib');
+        $config['image_library'] = 'gd2';
+        $config['source_image'] = $data['full_path'];
+       
+        $config['new_image'] =PHOTO_PATH_D;
+        $config['maintain_ratio'] = true;
+        $config['create_thumb'] = false;
+        $config['width'] = PHOTO_W_D;
+        $config['height'] = PHOTO_H_D;
+        $this->image_lib->initialize($config);
+        if (!$this->image_lib->resize()) {
+
+        }
+    }
+
+    public function UUIDv4()
+    {
+        $bytes = random_bytes(16);
+        $bytes[6] = chr((ord($bytes[6]) & 0x0f) | 0x40);
+        $bytes[8] = chr((ord($bytes[8]) & 0x3f) | 0x80);
+        $uuid = vsprintf('%s%s_%s_%s_%s_%s%s%s', str_split(bin2hex($bytes), 4));
+        return $uuid;
+    }
+
+    public function ConfigurationLibrary()
+    {
+        $this->load->helper(array('form', 'url'));
+        $this->load->helper('file');
+        $config['upload_path'] = PHOTO_PATH_D;
+        $config['allowed_types'] = 'png|jpg|jpeg';
+        $config['file_name'] = $this->UUIDv4() . "_directive";
+        $this->load->library('upload', $config);
+
     }
 }

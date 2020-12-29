@@ -61,13 +61,36 @@ class tenant_model extends CI_Model
     
     }
 
-    function getAssignment($id,$condominium)
+    function AssignmentActive($id,$condominium,$_id ='')
+    { 
+        $this->db->select("asi.id ");
+        $this->db->from('assigning_apartment as asi');   
+        $this->db->where('asi.condominium',$condominium);
+        $this->db->where('asi.tenant',$id);
+        $this->db->where('asi.status',1);
+        if(!empty($_id)){
+            $this->db->where('asi.id',$_id);
+            $query = $this->db->get(); 
+            return $query->row();
+        }else{
+            $this->db->order_by(' asi.status,asi.id', 'DESC'); 
+            $query = $this->db->get(); 
+            $result = $query->result();        
+            return $result;
+        }
+    
+    }
+
+    function getAssignment($id,$condominium, $edifice='')
     { 
         $this->db->select("asi.id, asi.edifice, asi.apartment, asi.tenant, asi.status ,e.code as 'edifice_code',a.apartment as 'apartment_code'");
         $this->db->from('assigning_apartment as asi');     
         $this->db->join('edifice as e', 'e.id = asi.edifice');
         $this->db->join('apartment as a', 'a.id = asi.apartment');
         $this->db->where('asi.condominium',$condominium);
+        if (!empty($edifice)) {
+            $this->db->where("asi.edifice",$edifice);
+        }
         $this->db->where('asi.tenant',$id);   
         $this->db->where('asi.status',1); 
         $this->db->order_by(' asi.status,asi.id', 'DESC'); 
@@ -132,8 +155,7 @@ class tenant_model extends CI_Model
         $this->db->from('tenant'); 
         $this->db->where("UPPER(document) = UPPER('$document')");
         $this->db->where('condominium',$condominium);
-        $query = $this->db->get();
-        
+        $query = $this->db->get(); 
         return $query->row();
     }
     
@@ -205,6 +227,31 @@ class tenant_model extends CI_Model
         $query = $this->db->get(); 
         return $query->result();
     } 
+
+    function checkExistsAsignationOwner($edifice, $apartment, $condominium)
+    {
+        $this->db->select("asi.id");
+        $this->db->from("assigning_apartment as asi");
+        $this->db->join('tenant as t', 't.id = asi.tenant');
+        $this->db->where("asi.edifice", $edifice);   
+        $this->db->where("asi.apartment", $apartment);   
+        $this->db->where('asi.condominium',$condominium);
+        $this->db->where('asi.status',1); 
+        $this->db->where('t.type',ROLE_OWNER); 
+        $query = $this->db->get(); 
+        return $query->result();
+    } 
+
+    function getInfoAssignment($id,$condominium)
+    { 
+        $this->db->select("asi.id, asi.edifice, asi.apartment, asi.tenant, asi.status");
+        $this->db->from('assigning_apartment as asi'); 
+        $this->db->where('asi.condominium',$condominium);
+        $this->db->where('asi.id',$id);   
+        $this->db->order_by(' asi.status,asi.id', 'DESC'); 
+        $query = $this->db->get(); 
+        return $query->row();
+    }
 }
 
   

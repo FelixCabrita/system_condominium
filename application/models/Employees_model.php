@@ -86,6 +86,18 @@ class Employees_model extends CI_Model
      * @param number $employeesId : This is employees id
      * @return array $result : This is employees information
      */
+    public function getDocument($document, $condominium)
+    {
+        $this->db->select(" em.document,  em.apartment as 'apto_id', a.apartment,e.code,e.id as 'edifice'");
+        $this->db->from('employees em');
+        $this->db->join('apartment as a', 'a.id = em.apartment');
+        $this->db->join('edifice as e', 'e.id = a.edifice'); 
+        $this->db->where('em.condominium', $condominium);
+        $this->db->where('em.document', $document);
+        $query = $this->db->get(); 
+        return $query->row();
+    }
+
     public function getInfo($id, $condominium)
     {
         $this->db->select("em.id, em.name, em.document, em.mobile, em.observation, em.started_work, em.work_type, em.created_at, em.status,em.apartment as 'apto_id', a.apartment,e.code");
@@ -94,10 +106,10 @@ class Employees_model extends CI_Model
         $this->db->join('edifice as e', 'e.id = a.edifice'); 
         $this->db->where('em.condominium', $condominium);
         $this->db->where('em.id', $id);
-        $query = $this->db->get();
-
+        $query = $this->db->get(); 
         return $query->row();
     }
+
 
     /**
      * This function is used to update the employees information

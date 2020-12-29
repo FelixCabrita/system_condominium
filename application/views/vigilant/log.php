@@ -34,9 +34,10 @@ $mobile = $visitorInfo->mobile;
                     <thead>
                         <tr> 
                             <th class="text-center">#</th> 
-                            <th class="text-center">FECHA DE EMISION </th>
+                            <th class="text-center">FECHA DE EMISION </th> 
                             <th class="text-center">TIPO</th>  
                             <th class="text-center">EDIF. - APTO.</th>  
+                            <th class="text-center">PLACA</th>  
                             <th class="text-center">OBSERVACION</th> 
                         </tr>
                     </thead>
@@ -52,7 +53,8 @@ $mobile = $visitorInfo->mobile;
                                 echo '<span class="badge badge-danger">SALIDA</span>';
                             } ?></td> 
                             <td class="text-center" style="vertical-align: middle;"><?php echo  $record->code . ' - '. $record->apartment ?></td>
-                            <td class="text-center" style="vertical-align: middle;"><?php echo  $record->observation ?></td>
+                            <td class="text-center" style="vertical-align: middle;"><?php echo  $record->licence_plate  ?></td>
+                            <td class="text-center" style="vertical-align: middle;"><?php echo  empty($record->observation)?"SIN OBSERVACION":$record->observation ?></td>
                         </tr>
                         <?php } } ?>
                     </tbody>
@@ -62,6 +64,7 @@ $mobile = $visitorInfo->mobile;
                             <th class="text-center">FECHA DE EMISION </th>
                             <th class="text-center">TIPO</th>  
                             <th class="text-center">EDIF. - APTO.</th>  
+                            <th class="text-center">PLACA</th>  
                             <th class="text-center">OBSERVACION</th> 
                         </tr>
                     </tfoot>

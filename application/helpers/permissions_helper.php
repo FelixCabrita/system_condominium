@@ -60,6 +60,23 @@ if (!function_exists('checkRole'))
     } 
 }
 
+if (!function_exists('checkVisitor'))
+{  
+    function checkVisitor($type){  
+        $text ='';
+        switch($type){
+            case VISITOR_DEFAULT:
+                $text = "VISITANTE";
+            break;
+            case VISITOR_EMPLOYEES:
+                $text = "EMPELADO";
+            break; 
+        } 
+        return $text;
+    } 
+}
+
+
 if (!function_exists('getPermission'))
 {  
     function getPermission($rol){  
