@@ -4,8 +4,8 @@
     <div class="card">
         <div class="card-body">
         <div class="row page-titles" style = "background: rgba(255, 255, 255, 0); ">
-            <div class="col-sm-6">
-                <h4>Cuentas control del rubro {<?php echo $accountcontrolInfo->id. ' - ' .$accountcontrolInfo->name?>}</h4>
+            <div class="col-sm-12">
+                <h4>Cuentas mayor de la cuenta control {<?php echo $accountcontrolInfo->id. ' - ' .$accountcontrolInfo->name?>}</h4>
             </div> 
         </div>
         <hr>  
@@ -25,14 +25,14 @@
                     <?php echo $success; ?>              
                 </div>  
         <?php } ?>
-        <form class="form-inlne" id="add"  action="<?php echo base_url() ?>nuevo_cuenta_control" method="post" role="form"> 
+        <form class="form-inlne" id="add"  action="<?php echo base_url() ?>nuevo_cuenta_mayor" method="post" role="form"> 
             <div class="row"> 
                 <div class="form-group col-sm-4">
                     <label for="code">Cuenta</label>
                     <input type="text"  class="form-control mb-2 mr-sm-5" id="code"  name="code" value="<?php echo set_value('code'); ?>"   maxlength="10" > 
-                    <input type="hidden" value="<?php echo $accountcontrolInfo->id; ?>" name="heading" id="heading" />    
+                    <input type="hidden" value="<?php echo $accountcontrolInfo->id; ?>" name="accountcontrol" id="accountcontrol" />    
                     <input type="hidden" value="<?php echo 1; ?>" name="view" id="view" />    
-                    <input type="hidden" value="<?php echo $accountcontrolInfo->account; ?>" name="code_heading" id="code_heading" />    
+                    <input type="hidden" value="<?php echo $accountcontrolInfo->account; ?>" name="code_accountcontrol" id="code_accountcontrol" />    
                     <?php echo validation_error('code');?> 
                 </div>   
                 <div class="form-group col-sm-6">
@@ -54,7 +54,7 @@
                         <th class="text-center">DESCRIPCION</th>  
                         <th class="text-center">FECHA CREACION</th> 
                         <th class="text-center">ESTADO</th> 
-                        <th class="text-center">ACCIONES</th>
+                        
                     </tr>
                 </thead>
                 <tbody> 
@@ -74,9 +74,7 @@
                         }else if($record->status==STATUS_INACTIVE){
                             echo '<span class="badge badge-danger">INACTIVO</span>';
                         } ?></td>
-                        <td class="text-center" style="vertical-align: middle;">
-                            <?php if($permissions->U==1){ ?><a class="btn btn-sm btn-primary changeStatusDocumentType"  href="#" data-titulo="<?php echo $record->name; ?>" data-isactive="<?php echo $record->status; ?>" data-userid="<?php echo $record->id; ?>" title="Cambio de estado"><i class="fa fa-eye"></i></a>   <?php } ?>                           
-                        </td>
+                        
                     </tr>
                     <?php
                         }
@@ -88,8 +86,7 @@
                         <th class="text-center">CODIGO</th>
                         <th class="text-center">DESCRIPCION</th>  
                         <th class="text-center">FECHA CREACION</th> 
-                        <th class="text-center">ESTADO</th> 
-                        <th class="text-center">ACCIONES</th>
+                        <th class="text-center">ESTADO</th>  
                     </tr>
                 </tfoot>
             </table>
@@ -102,5 +99,5 @@
 <script src="<?php echo base_url() ?>assets/scripts/bootstrap-notify-init.js"></script>
 <script src="<?php echo base_url() ?>assets/scripts/datatables/js/jquery.dataTables.min.js"></script>
 <script src="<?php echo base_url() ?>assets/scripts/datatables.init.js"></script>  
-<script src="<?php echo base_url(); ?>assets/scripts/system/addAccountControl.js" type="text/javascript"></script>  
+<script src="<?php echo base_url(); ?>assets/scripts/system/addAccountHigher.js" type="text/javascript"></script>  
 

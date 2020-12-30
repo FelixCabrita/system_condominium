@@ -67,7 +67,10 @@
                         } ?></td>
                         <td class="text-center" style="vertical-align: middle;">
                             <?php if($permissions->U==1){ ?><a class="btn btn-sm btn-primary changeStatusAccountControl"  href="#" data-titulo="<?php echo $record->name; ?>" data-isactive="<?php echo $record->status; ?>" data-userid="<?php echo $record->id; ?>" title="Cambio de estado"><i class="fa fa-eye"></i></a> 
-                            <a class="btn btn-sm btn-info" href="<?php echo base_url().'editarcuenta_control/'.$record->id; ?>" title="Editar"><i class="fa fa-paint-brush"></i></a> <?php }else { ?> <a class="btn btn-sm btn-info" href="<?php echo base_url().'editarmodulos/'.$record->id; ?>" title="VER INFORMACION"><i class="fa fa-info"></i></a>  <?php } ?>                           
+                            <a class="btn btn-sm btn-info" href="<?php echo base_url().'editarcuenta_control/'.$record->id; ?>" title="Editar"><i class="fa fa-paint-brush"></i></a> <?php }  ?>                           
+                            <?php if($permissions->C==1){ ?>  
+                                <a class="btn btn-sm btn-success" href="<?php echo base_url().'asignacion_cuenta_mayor/'.$record->account; ?>" title="AGREGAR CUENTA MAYOR"><i class="fa fa-plus"></i></a>
+                            <?php } ?>  
                         </td>
                     </tr>
                     <?php

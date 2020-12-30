@@ -4,7 +4,7 @@
     <div class="card">
         <div class="card-body">
         <div class="row page-titles" style = "background: rgba(255, 255, 255, 0); ">
-            <div class="col-sm-6">
+            <div class="col-sm-12">
                 <h4>Documentos del modulo {<?php echo $moduleInfo->code. ' - ' .$moduleInfo->name?>}</h4>
             </div> 
         </div>
@@ -53,8 +53,7 @@
                         <th class="text-center">CODIGO</th>
                         <th class="text-center">DESCRIPCION</th>  
                         <th class="text-center">FECHA CREACION</th> 
-                        <th class="text-center">ESTADO</th> 
-                        <th class="text-center">ACCIONES</th>
+                        <th class="text-center">ESTADO</th>  
                     </tr>
                 </thead>
                 <tbody> 
@@ -73,10 +72,7 @@
                             echo '<span class="badge badge-success">ACTIVO</span>';
                         }else if($record->status==STATUS_INACTIVE){
                             echo '<span class="badge badge-danger">INACTIVO</span>';
-                        } ?></td>
-                        <td class="text-center" style="vertical-align: middle;">
-                            <?php if($permissions->U==1){ ?><a class="btn btn-sm btn-primary changeStatusDocumentType"  href="#" data-titulo="<?php echo $record->name; ?>" data-isactive="<?php echo $record->status; ?>" data-userid="<?php echo $record->id; ?>" title="Cambio de estado"><i class="fa fa-eye"></i></a>   <?php } ?>                           
-                        </td>
+                        } ?></td> 
                     </tr>
                     <?php
                         }
@@ -88,8 +84,7 @@
                         <th class="text-center">CODIGO</th>
                         <th class="text-center">DESCRIPCION</th>  
                         <th class="text-center">FECHA CREACION</th> 
-                        <th class="text-center">ESTADO</th> 
-                        <th class="text-center">ACCIONES</th>
+                        <th class="text-center">ESTADO</th>  
                     </tr>
                 </tfoot>
             </table>

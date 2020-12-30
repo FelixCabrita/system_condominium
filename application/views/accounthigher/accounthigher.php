@@ -40,19 +40,14 @@
                     <tr> 
                         <th class="text-center">CODIGO</th>
                         <th class="text-center">DESCRIPCION</th> 
-                        <th class="text-center">CUENTA MAYOR</th> 
+                        <th class="text-center">CUENTA CONTROL</th> 
                         <th class="text-center">FECHA CREACION</th> 
                         <th class="text-center">ESTADO</th> 
                         <th class="text-center">ACCIONES</th>
                     </tr>
                 </thead>
                 <tbody> 
-                    <?php
-                    if(!empty($accounthigherRecords))
-                    {
-                        foreach($accounthigherRecords as $record)
-                        {
-                    ?>
+                    <?php  if(!empty($accounthigherRecords))  { foreach($accounthigherRecords as $record) {  ?>
                     <tr>  
                         <td class="text-center"style="vertical-align: middle;"><?php echo $record->code ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php echo $record->name ?></td>
@@ -66,20 +61,20 @@
                             echo '<span class="badge badge-danger">INACTIVO</span>';
                         } ?></td>
                         <td class="text-center" style="vertical-align: middle;">
-                            <?php if($permissions->U==1){ ?><a class="btn btn-sm btn-primary changeStatusDocumentType"  href="#" data-titulo="<?php echo $record->name; ?>" data-isactive="<?php echo $record->status; ?>" data-userid="<?php echo $record->id; ?>" title="Cambio de estado"><i class="fa fa-eye"></i></a> 
-                            <a class="btn btn-sm btn-info" href="<?php echo base_url().'editarcuenta_mayor/'.$record->id; ?>" title="Editar"><i class="fa fa-paint-brush"></i></a> <?php }else { ?> <a class="btn btn-sm btn-info" href="<?php echo base_url().'editarmodulos/'.$record->id; ?>" title="VER INFORMACION"><i class="fa fa-info"></i></a>  <?php } ?>                           
+                            <?php if($permissions->U==1){ ?><a class="btn btn-sm btn-primary changeStatusAccountHigher"  href="#" data-titulo="<?php echo $record->name; ?>" data-isactive="<?php echo $record->status; ?>" data-userid="<?php echo $record->id; ?>" title="Cambio de estado"><i class="fa fa-eye"></i></a> 
+                            <a class="btn btn-sm btn-info" href="<?php echo base_url().'editarcuenta_mayor/'.$record->id; ?>" title="Editar"><i class="fa fa-paint-brush"></i></a> <?php }?>                           
+                            <?php if($permissions->C==1){ ?>  
+                                <a class="btn btn-sm btn-success" href="<?php echo base_url().'asignacion_cuenta_detalle/'.$record->code; ?>" title="AGREGAR CUENTA DETALLE"><i class="fa fa-plus"></i></a>
+                            <?php } ?>
                         </td>
                     </tr>
-                    <?php
-                        }
-                    }
-                    ?>
+                    <?php } } ?>
                 </tbody>
                 <tfoot>
                     <tr> 
                         <th class="text-center">CODIGO</th>
                         <th class="text-center">DESCRIPCION</th> 
-                        <th class="text-center">CUENTA MAYOR</th> 
+                        <th class="text-center">CUENTA CONTROL</th> 
                         <th class="text-center">FECHA CREACION</th> 
                         <th class="text-center">ESTADO</th> 
                         <th class="text-center">ACCIONES</th>

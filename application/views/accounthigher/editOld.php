@@ -1,8 +1,8 @@
 <?php
-$id = $accountcontrolInfo->id;
-$name = $accountcontrolInfo->name;
-$code = $accountcontrolInfo->account;  
-$heading = $accountcontrolInfo->heading;  
+$id = $accounthigherInfo->id;
+$name = $accounthigherInfo->name;
+$code = $accounthigherInfo->code;  
+$account_control = $accounthigherInfo->account_control;  
 $this->load->helper('form');
 $readonly = "readonly";
 if($permissions->U==1){
@@ -12,7 +12,7 @@ if($permissions->U==1){
 <div class="app-main__inner">  
     <div class="card form-card">
         <div class="card-body"> 
-            <h4 class="card-title mb-4"> <i class="fa fa-users"></i> Cuenta control <br>
+            <h4 class="card-title mb-4"> <i class="fa fa-users"></i> Cuenta mayor <br>
             <?php if($permissions->U==1){ ?> <small> Agregar / <b>Editar</b></small></h4><?php } ?> 
             <?php
                 $error = $this->session->flashdata('error');   
@@ -30,30 +30,23 @@ if($permissions->U==1){
                     </div>  
             <?php } ?>
             <?php if($permissions->U==1){ ?>
-            <form class="form-inlne"  action="<?php echo base_url() ?>editando_cuenta_control" method="post" id="edit" role="form"><?php } ?>
-                <div class="row">
-
-                    <?php if(empty($readonly)){ ?>
+            <form class="form-inlne"  action="<?php echo base_url() ?>editando_cuenta_mayor" method="post" id="edit" role="form"><?php } ?>
+                <div class="row"> 
                     <div class="form-group col-sm-4">
-                        <label for="heading">Rubro</label>
-                        <select name="heading" id="heading" class="form-control">  
-                            <?php  if(!empty($headingRecords)) { foreach($headingRecords as $record) {  ?>
-                                <option value ="<?php echo $record->id ?>" <?php echo $heading==$record->id?"selected":"" ?> ><?php echo $record->code." - ".$record->name ?></option>
+                        <label for="accountcontrol">Cuenta Control</label>
+                        <select name="accountcontrol" id="accountcontrol" class="form-control">  
+                            <?php  if(!empty($accountcontrolRecords)) { foreach($accountcontrolRecords as $record) {  ?>
+                                <option value ="<?php echo $record->id ?>" <?php echo $account_control==$record->id?"selected":"" ?> ><?php echo $record->account." - ".$record->name ?></option>
                             <?php }} ?> 
                         </select>
-                    </div>   
-                    <?php } else{?> 
-                        <div class="form-group col-sm-4">
-                        <label for="module">Codigo</label>
-                            <input type="text"  class="form-control mb-2 mr-sm-5" id="module"  name="module" value="<?php echo $record->code." - ".$record->name; ?>" <?php echo $readonly; ?> > 
-                    </div>  
-                    <?php } ?> 
-
+                    </div>    
+                   
+ 
                     <div class="form-group col-sm-4">
                         <label for="code">Codigo</label>
                         <input type="text"  class="form-control mb-2 mr-sm-5" id="code"  name="code" value="<?php echo $code; ?>" <?php echo $readonly; ?> maxlength="10" > 
                         <input type="hidden" value="<?php echo $id; ?>" name="id" id="id" />    
-                        <?php echo validation_error('name');?> 
+                        <?php echo validation_error('code');?> 
                     </div>   
                     <div class="form-group col-sm-4">
                         <label for="name">Nombre</label>
@@ -71,4 +64,4 @@ if($permissions->U==1){
         </div>
     </div>
 </div> 
-<script src="<?php echo base_url(); ?>assets/scripts/system/editAccountControl.js" type="text/javascript"></script>    
+<script src="<?php echo base_url(); ?>assets/scripts/system/editAccountHigher.js" type="text/javascript"></script>    

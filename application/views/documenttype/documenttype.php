@@ -67,7 +67,7 @@
                         } ?></td>
                         <td class="text-center" style="vertical-align: middle;">
                             <?php if($permissions->U==1){ ?><a class="btn btn-sm btn-primary changeStatusDocumentType"  href="#" data-titulo="<?php echo $record->name; ?>" data-isactive="<?php echo $record->status; ?>" data-userid="<?php echo $record->id; ?>" title="Cambio de estado"><i class="fa fa-eye"></i></a> 
-                            <a class="btn btn-sm btn-info" href="<?php echo base_url().'editartipodocumento/'.$record->id; ?>" title="Editar"><i class="fa fa-paint-brush"></i></a> <?php }else { ?> <a class="btn btn-sm btn-info" href="<?php echo base_url().'editarmodulos/'.$record->id; ?>" title="VER INFORMACION"><i class="fa fa-info"></i></a>  <?php } ?>                           
+                            <a class="btn btn-sm btn-info" href="<?php echo base_url().'editartipodocumento/'.$record->id; ?>" title="Editar"><i class="fa fa-paint-brush"></i></a> <?php } ?>                           
                         </td>
                     </tr>
                     <?php

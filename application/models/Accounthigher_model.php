@@ -40,6 +40,8 @@ class Accounthigher_model extends CI_Model
         if(!empty($account_control)){
             $this->db->where("ah.account_control", $account_control);
         }
+        
+        $this->db->where('ah.status',1);
         $this->db->order_by('ah.status', 'DESC'); 
         $query = $this->db->get();
         $result = $query->result();

@@ -39,15 +39,22 @@ class Accounthigher extends BaseController
         $this->loadViews("dashboard", $this->globalApp, null, null);
     }
 
-    public function getDataHeading($code = '')
+    public function getDataAccountControl($code = '')
     {
         $this->load->model('accountcontrol_model');
         if(empty($code)){
-            return $this->accountcontrol_model->getListing( $this->condominium);
+            return $this->accountcontrol_model->getListing('', $this->condominium);
         }else{
             return $this->accountcontrol_model->getInfoCode($code, $this->condominium);
         } 
     }
+ public function getDataAccountControlId($code = '')
+    {
+        $this->load->model('accountcontrol_model'); 
+        return $this->accountcontrol_model->getInfo($code, $this->condominium);
+        
+    }
+    
 
     /**
      * This function is used to load the accounthigher list
@@ -57,7 +64,7 @@ class Accounthigher extends BaseController
         if (checkForPermissions('bills', PERMISSION_READ) != true) {
             $this->loadThis();
         } else {
-            $accountcontrolInfo =!empty($accountcontrol)? $this->getDataHeading($accountcontrol):"";
+            $accountcontrolInfo =!empty($accountcontrol)? $this->getDataAccountControl($accountcontrol):"";
             $data['accountcontrolInfo'] =$accountcontrolInfo;
             $data['accounthigherRecords'] = $this->accounthigher_model->Listing(!empty($accountcontrolInfo)?$accountcontrolInfo->id:"", $this->condominium); 
             $data['permissions'] = $this->getPermissions()->{'bills'};
@@ -87,7 +94,7 @@ class Accounthigher extends BaseController
             $this->loadThis();
         } else {
             $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Nuevo Cuenta mayor';
-            $data['accountcontrolRecords'] = $this->getDataHeading();
+            $data['accountcontrolRecords'] = $this->getDataAccountControl();
             $this->loadViews("accounthigher/addNew", $this->globalApp, $data, null);
         }
     }
@@ -120,25 +127,26 @@ class Accounthigher extends BaseController
             $view =  $this->input->post('view') ;
 
             $this->load->library('form_validation');
-            $this->form_validation->set_rules('accountcontrol', 'Rubro', 'trim|required|max_length[11]');
+            $this->form_validation->set_rules('accountcontrol', 'Cuenta control', 'trim|required|max_length[11]');
             $this->form_validation->set_rules('name', 'Nombre de cuenta', 'trim|required|max_length[200]');
-            $this->form_validation->set_rules('code', 'Cuenta', 'trim|required|max_length[10]');
+            $this->form_validation->set_rules('code', 'Codigo', 'trim|required|max_length[10]');
             if ($this->form_validation->run() == false) {
                 if(!isset($view)){
                     $this->addNew();
                 }else{
-                     $code_accountcontrol =  $this->input->post('code_accountcontrol') ;
+                    $code_accountcontrol =  $this->input->post('code_accountcontrol') ;
                     redirect('asignacion_cuenta_mayor/'. $code_accountcontrol );
                 }
                
             } else { 
                 $accountcontrol = (strtoupper($this->security->xss_clean($this->input->post('accountcontrol'))));
                 $name = (strtoupper($this->security->xss_clean($this->input->post('name'))));
-                $account = strtoupper($this->security->xss_clean($this->input->post('code')));
+                $code = strtoupper($this->security->xss_clean($this->input->post('code')));
 
-                $check = $this->accounthigher_model->checkExists($account, 0, $this->condominium);
-                if (empty($check)) {
-                    $info = array('account' => $account,'accountcontrol' => $accountcontrol, 'name' => $name, 'condominium' => $this->condominium);
+                $check = $this->accounthigher_model->checkExists($code, 0, $this->condominium);
+                if (empty($check)) { 
+                    $checkAccountcontrol= $this->getDataAccountControlId($accountcontrol);
+                    $info = array('account_control' => $checkAccountcontrol->id,'heading' => $checkAccountcontrol->heading,'code' => $code, 'name' => $name, 'condominium' => $this->condominium);
                     $result = $this->accounthigher_model->addNew($info);
 
                     if ($result > 0) {
@@ -175,7 +183,7 @@ class Accounthigher extends BaseController
             }
             $data['permissions'] = $this->getPermissions()->{'bills'};
             $data['accounthigherInfo'] = $this->accounthigher_model->getInfo($id, $this->condominium);
-            $data['accountcontrolRecords'] = $this->getDataHeading();
+            $data['accountcontrolRecords'] = $this->getDataAccountControl();
             if ($data['accounthigherInfo'] == null) {
                 redirect('cuenta_mayor');
             }
@@ -198,7 +206,7 @@ class Accounthigher extends BaseController
             $id = $this->input->post('id');
             $this->form_validation->set_rules('name', 'Nombre de la cuenta', 'trim|required|max_length[200]');
             $this->form_validation->set_rules('code', 'Cuenta', 'trim|required|max_length[10]');
-            $this->form_validation->set_rules('accountcontrol', 'Rubro', 'trim|required|max_length[10]');
+            $this->form_validation->set_rules('accountcontrol', 'Cuenta control', 'trim|required|max_length[10]');
             if ($this->form_validation->run() == false) {
                 $this->editOld($id);
             } else {
@@ -207,7 +215,8 @@ class Accounthigher extends BaseController
                 $accountcontrol = strtoupper($this->security->xss_clean($this->input->post('accountcontrol')));
                 $check = $this->accounthigher_model->checkExists($code, $id, $this->condominium);
                 if (empty($check)) {
-                    $info = array('account' => $code, 'accountcontrol' => $accountcontrol,'name' => $name);
+                    $checkAccountcontrol= $this->getDataAccountControlId($accountcontrol);
+                    $info = array('account_control' => $checkAccountcontrol->id,'heading' => $checkAccountcontrol->heading,'code' => $code,  'name' => $name);
                     $result = $this->accounthigher_model->edit($info, $id, $this->condominium);
                     if ($result > 0) {
                         $this->session->set_flashdata('success', 'Cuenta mayor actualizado exitosamente');
@@ -330,8 +339,8 @@ class Accounthigher extends BaseController
                     if (!empty($code)) { 
                         $check = $this->accounthigher_model->checkExists($code, 0, $this->condominium);
                         if (empty($check)) {
-                            $checkAccountcontrol= $this->getDataHeading($accountcontrol);
-                            $info = array('account_control' => $checkAccountcontrol->id,'headig' => $checkAccountcontrol->heading,'code' => $code, 'name' => $name, 'condominium' => $this->condominium);
+                            $checkAccountcontrol= $this->getDataAccountControl($accountcontrol);
+                            $info = array('account_control' => $checkAccountcontrol->id,'heading' => $checkAccountcontrol->heading,'code' => $code, 'name' => $name, 'condominium' => $this->condominium);
                             $result = $this->accounthigher_model->addNew($info);
                         }
                     }

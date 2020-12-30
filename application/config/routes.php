@@ -345,5 +345,19 @@ $route['editando_cuenta_mayor'] = 'accounthigher/edit';
 $route['eliminar_cuenta_mayor'] = 'accounthigher/delete'; 
 $route['cambio_estado_cuenta_mayor'] = 'accounthigher/changeStatus';  
 $route['importacion_cuenta_mayor'] = 'accounthigher/importData'; 
+
+/*ACCOUNT DETAIL*/
+$route['cuenta_detalle'] = 'accountdetail/listing';
+$route['asignacion_cuenta_detalle'] = 'accountdetail/listing';
+$route['asignacion_cuenta_detalle/(:any)'] = 'accountdetail/listing/$1';
+$route['agregarcuenta_detalle'] = 'accountdetail/addNew'; 
+$route['chequeo_cuenta_detalle'] = 'accountdetail/checkExists';
+$route['nuevo_cuenta_detalle'] = 'accountdetail/addNewData'; 
+$route['editarcuenta_detalle'] = "accountdetail/editOld";
+$route['editarcuenta_detalle/(:num)'] = "accountdetail/editOld/$1";
+$route['editando_cuenta_detalle'] = 'accountdetail/edit'; 
+$route['eliminar_cuenta_detalle'] = 'accountdetail/delete'; 
+$route['cambio_estado_cuenta_detalle'] = 'accountdetail/changeStatus';  
+$route['importacion_cuenta_detalle'] = 'accountdetail/importData'; 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

@@ -33,7 +33,7 @@ if($permissions->U==1){
             <form class="form-inlne"  action="<?php echo base_url() ?>editando_cuenta_control" method="post" id="edit" role="form"><?php } ?>
                 <div class="row">
 
-                    <?php if(empty($readonly)){ ?>
+                  
                     <div class="form-group col-sm-4">
                         <label for="heading">Rubro</label>
                         <select name="heading" id="heading" class="form-control">  
@@ -42,12 +42,7 @@ if($permissions->U==1){
                             <?php }} ?> 
                         </select>
                     </div>   
-                    <?php } else{?> 
-                        <div class="form-group col-sm-4">
-                        <label for="module">Codigo</label>
-                            <input type="text"  class="form-control mb-2 mr-sm-5" id="module"  name="module" value="<?php echo $record->code." - ".$record->name; ?>" <?php echo $readonly; ?> > 
-                    </div>  
-                    <?php } ?> 
+                   
 
                     <div class="form-group col-sm-4">
                         <label for="code">Codigo</label>

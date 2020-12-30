@@ -18,7 +18,7 @@ class Apartment_model extends CI_Model
      */
     function Listing($id,$condominium)
     { 
-        $this->db->select("a.id,  a.apartment, a.code,  a.conditions, a.number_parking, a.created_at,CONCAT(e.code,' - ',IFNULL(t.name,e.manager)) as 'edifice'");
+        $this->db->select("a.id,  a.apartment, a.code,  a.conditions, a.number_parking, a.created_at,CONCAT(e.code,' - ',IFNULL(t.name,e.manager)) as 'edifice',e.code as 'code_edifice'");
         $this->db->from('apartment a');       
         $this->db->join('edifice as e', 'e.id = a.edifice');
         $this->db->join('tenant as t', 't.document = e.manager','left');
@@ -32,9 +32,10 @@ class Apartment_model extends CI_Model
 
     public function getListing($edifice,$condominium)
     {  
-        $this->db->select('a.id,a.code,  a.apartment'); 
+        $this->db->select("a.id,a.code,  a.apartment,e.code as 'code_edifice'"); 
         $this->db->from('apartment as a');  
-        $this->db->where("status",1);
+        $this->db->join('edifice as e', 'e.id = a.edifice');
+        $this->db->where("a.status",1);
         $this->db->where('a.condominium',$condominium);
         if (!empty($edifice)) {
             $this->db->where("a.edifice",$edifice);
@@ -47,7 +48,7 @@ class Apartment_model extends CI_Model
     /**
      * This function is used to check whether email id is already exist or not
      * @param {string} $email : This is email id
-     * @param {number} $ApartmentId : This is Apartment id
+     * @param {number} $code : This is Apartment id
      * @return {mixed} $result : This is searched result
      */
     function checkExists($code, $id = 0,$condominium)
@@ -81,16 +82,32 @@ class Apartment_model extends CI_Model
     
     /**
      * This function used to get Apartment information by id
-     * @param number $ApartmentId : This is Apartment id
+     * @param number $code : This is Apartment id
      * @return array $result : This is Apartment information
      */
-    function getInfo($ApartmentId,$condominium)
+    function getInfo($code,$condominium)
     { 
         $this->db->select("a.id,  a.apartment, a.code,  a.conditions, a.number_parking, a.created_at,e.code as 'code_edifice',CONCAT(e.code,' - ',e.manager) as 'edifice'");
         $this->db->from('apartment a');       
         $this->db->join('edifice as e', 'e.id = a.edifice');
         $this->db->where('a.condominium',$condominium);
-        $this->db->where('a.id', $ApartmentId); 
+        $this->db->where('a.id', $code); 
+        $query = $this->db->get();
+        
+        return $query->row();
+    }
+    /**
+     * This function used to get Apartment information by id
+     * @param number $code : This is Apartment id
+     * @return array $result : This is Apartment information
+     */
+    function getInfoCode($code,$condominium)
+    { 
+        $this->db->select("a.id,  a.apartment, a.code,  a.conditions, a.number_parking, a.created_at,e.code as 'code_edifice',CONCAT(e.code,' - ',e.manager) as 'edifice'");
+        $this->db->from('apartment a');       
+        $this->db->join('edifice as e', 'e.id = a.edifice');
+        $this->db->where('a.condominium',$condominium);
+        $this->db->where('a.code', $code); 
         $query = $this->db->get();
         
         return $query->row();
@@ -100,11 +117,11 @@ class Apartment_model extends CI_Model
     /**
      * This function is used to update the Apartment information
      * @param array $ApartmentInfo : This is Apartments updated information
-     * @param number $ApartmentId : This is Apartment id
+     * @param number $code : This is Apartment id
      */
-    function edit($ApartmentInfo, $ApartmentId,$condominium)
+    function edit($ApartmentInfo, $code,$condominium)
     {
-        $this->db->where('id', $ApartmentId);
+        $this->db->where('id', $code);
         $this->db->where('condominium',$condominium);
         $this->db->update('apartment', $ApartmentInfo); 
         return $this->db->affected_rows();
@@ -112,12 +129,12 @@ class Apartment_model extends CI_Model
      
     /**
      * This function is used to delete the Apartment information
-     * @param number $ApartmentId : This is Apartment id
+     * @param number $code : This is Apartment id
      * @return boolean $result : TRUE / FALSE
      */
-    function delete($ApartmentId,$condominium)
+    function delete($code,$condominium)
     {
-        $this->db->where('id', $ApartmentId); 
+        $this->db->where('id', $code); 
         $this->db->where('condominium',$condominium);
         $this->db->delete('apartment'); 
         return $this->db->affected_rows();

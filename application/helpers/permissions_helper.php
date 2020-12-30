@@ -92,7 +92,7 @@ if (!function_exists('getPermission'))
                 $permission =PERMISSION_DEFAULT;
             break;
             case ROLE_ACCOUNTING:
-                $permission =PERMISSION_DEFAULT;
+                $permission =PERMISSION_ACCOUNTING;
             break;
             case ROLE_VIGILANT:
                 $permission =PERMISSION_VIGILANT;

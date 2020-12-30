@@ -1,7 +1,7 @@
 <div class="app-main__inner">  
     <div class="card form-card">
         <div class="card-body"> 
-            <h4 class="card-title mb-4"> <i class="fa fa-users"></i> Cuenta control <br>
+            <h4 class="card-title mb-4"> <i class="fa fa-users"></i> Cuenta Mayor <br>
                 <small> <b>Agregar</b> / Editar</small></h4>
             <?php
                 $this->load->helper('form');
@@ -19,14 +19,14 @@
                         <?php echo $success; ?>              
                     </div>  
             <?php } ?>
-            <form class="form-inlne" id="add"  action="<?php echo base_url() ?>nuevo_cuenta_control" method="post" role="form">
+            <form class="form-inlne" id="add"  action="<?php echo base_url() ?>nuevo_cuenta_mayor" method="post" role="form">
                
                 <div class="row">
                     <div class="form-group col-sm-4">
-                        <label for="heading">Rubros</label>
-                        <select name="heading" id="heading" class="form-control">  
-                            <?php  if(!empty($headingRecords)) { foreach($headingRecords as $record) {  ?>
-                                <option value ="<?php echo $record->id ?>" ><?php echo $record->id." - ".$record->name ?></option>
+                        <label for="accountcontrol">Cuenta Control</label>
+                        <select name="accountcontrol" id="accountcontrol" class="form-control">  
+                            <?php  if(!empty($accountcontrolRecords)) { foreach($accountcontrolRecords as $record) {  ?>
+                                <option value ="<?php echo $record->id ?>" ><?php echo $record->account." - ".$record->name ?></option>
                             <?php }} ?> 
                         </select>
                     </div>  
@@ -36,7 +36,7 @@
                         <?php echo validation_error('code');?> 
                     </div>   
                     <div class="form-group col-sm-4">
-                        <label for="name">Descripcion</label>
+                        <label for="name">Nombre</label>
                         <input type="text"  class="form-control mb-2 mr-sm-5" id="name"  name="name" value="<?php echo set_value('name'); ?>"   maxlength="200" > 
                         <?php echo validation_error('name');?> 
                     </div>   
@@ -48,4 +48,4 @@
         </div>
     </div> 
 </div>  
-<script src="<?php echo base_url(); ?>assets/scripts/system/addAccountControl.js" type="text/javascript"></script>  
+<script src="<?php echo base_url(); ?>assets/scripts/system/addAccountHigher.js" type="text/javascript"></script>  

@@ -33,6 +33,10 @@ function importaccount() {
     document.forms["importaccount"].submit();
 }
 
+function importaccountdetail() {
+    document.forms["importaccountdetail"].submit();
+}
+
 jQuery(document).ready(function() {
 
     jQuery(document).on("click", ".activ", function() {
@@ -2043,6 +2047,114 @@ jQuery(document).ready(function() {
                             position: 'top-end',
                             icon: 'error',
                             title: "Por alguna razon no podemos " + (isactive == 1 ? "desactivar" : "activar") + " esta cuenta control",
+                            showConfirmButton: false,
+                            timer: 2000
+                        })))
+                    .catch(() => {
+                        Swal.insertQueueStep({
+                            icon: 'error',
+                            title: 'acceso denegado..!'
+                        })
+                    })
+            }
+        }])
+    });
+
+    jQuery(document).on("click", ".changeStatusAccountHigher", function() {
+        var userId = $(this).data("userid"),
+            isactive = $(this).data("isactive"),
+            hitURL = baseURL + "cambio_estado_cuenta_mayor";
+
+        const data = new FormData();
+        data.append('id', userId);
+        data.append('isactive', (isactive == 1 ? 0 : 1));
+
+        Swal.queue([{
+            title: "¿Desea " + (isactive == 1 ? "desactivar" : "activar") + " esta cuenta mayor?",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'SI!',
+            cancelButtonText: 'No, cancelar!',
+            text: 'Cambiara el estado de esta cuenta mayor, podras reversar esta accion.',
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return fetch(hitURL, {
+                        method: 'POST',
+                        body: data
+                    })
+                    .then(response => response.json())
+                    .then(data => (data.status ?
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: "Cuenta mayor " + (isactive == 1 ? "desactivado" : "activado") + "  con exito",
+                            showConfirmButton: false,
+                            timer: 2000
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                window.location = baseURL + "cuenta_mayor"
+                            }
+                        }) :
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: "Por alguna razon no podemos " + (isactive == 1 ? "desactivar" : "activar") + " esta cuenta mayor",
+                            showConfirmButton: false,
+                            timer: 2000
+                        })))
+                    .catch(() => {
+                        Swal.insertQueueStep({
+                            icon: 'error',
+                            title: 'acceso denegado..!'
+                        })
+                    })
+            }
+        }])
+    });
+
+    jQuery(document).on("click", ".changeStatusAccountDetail", function() {
+        var userId = $(this).data("userid"),
+            isactive = $(this).data("isactive"),
+            hitURL = baseURL + "cambio_estado_cuenta_detalle";
+
+        const data = new FormData();
+        data.append('id', userId);
+        data.append('isactive', (isactive == 1 ? 0 : 1));
+
+        Swal.queue([{
+            title: "¿Desea " + (isactive == 1 ? "desactivar" : "activar") + " esta cuenta detalle?",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'SI!',
+            cancelButtonText: 'No, cancelar!',
+            text: 'Cambiara el estado de esta cuenta detalle, podras reversar esta accion.',
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return fetch(hitURL, {
+                        method: 'POST',
+                        body: data
+                    })
+                    .then(response => response.json())
+                    .then(data => (data.status ?
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: "Cuenta detalle " + (isactive == 1 ? "desactivado" : "activado") + "  con exito",
+                            showConfirmButton: false,
+                            timer: 2000
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                window.location = baseURL + "cuenta_detalle"
+                            }
+                        }) :
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: "Por alguna razon no podemos " + (isactive == 1 ? "desactivar" : "activar") + " esta cuenta detalle",
                             showConfirmButton: false,
                             timer: 2000
                         })))

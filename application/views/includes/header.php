@@ -378,6 +378,32 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="importaccountdetails" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">IMPORTAR DATOS DE CUENTAS DETALLE</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+         <form  id="importaccountdetail" action="<?php echo base_url()  ?>importacion_cuenta_detalle" method="post" role="form"  enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="userfile">Selecciona tu excel (xlsx|xls)</label>
+                <input type="file" class="form-control-file" id="userfile" name="userfile" accept=".xlsx,.xls">
+            </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+      <a href="<?php echo base_url()  ?>/assets/format/cuenta_detalle.xlsx" target="_blank" class="btn btn-success" >Descargar formato</a>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" onclick="importaccountdetail()">Procesar</button>
+      </div>
+    </div>
+  </div>
+</div>
         <div class="app-main">
             <div class="app-sidebar sidebar-shadow">
                 <div class="app-header__logo">
@@ -523,7 +549,7 @@
                                             </a>
                                         </li>
                                         <li> 
-                                            <a href="<?php echo base_url(); ?>juntadirectiva">
+                                            <a href="<?php echo base_url(); ?>cuenta_detalle">
                                                 <i class="metismenu-icon pe-7s-user"></i> CUENTA DETALLE 
                                             </a>
                                         </li>

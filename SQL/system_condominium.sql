@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-12-2020 a las 14:28:41
+-- Tiempo de generación: 30-12-2020 a las 21:53:51
 -- Versión del servidor: 10.1.30-MariaDB
 -- Versión de PHP: 7.1.14
 
@@ -21,6 +21,64 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `system_condominium`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `account_control`
+--
+
+DROP TABLE IF EXISTS `account_control`;
+CREATE TABLE `account_control` (
+  `id` int(11) NOT NULL,
+  `condominium` int(11) NOT NULL,
+  `account` varchar(20) COLLATE utf8_spanish_ci NOT NULL,
+  `name` varchar(250) COLLATE utf8_spanish_ci NOT NULL,
+  `heading` int(11) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT '1',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `account_detail`
+--
+
+DROP TABLE IF EXISTS `account_detail`;
+CREATE TABLE `account_detail` (
+  `id` int(11) NOT NULL,
+  `condominium` int(11) NOT NULL,
+  `heading` int(11) NOT NULL,
+  `account_control` int(11) NOT NULL,
+  `account_higher` int(11) NOT NULL,
+  `apartment` int(11) NOT NULL,
+  `code` varchar(100) COLLATE utf8_spanish_ci NOT NULL,
+  `name` varchar(250) COLLATE utf8_spanish_ci NOT NULL,
+  `status` int(11) NOT NULL DEFAULT '1',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `account_higher`
+--
+
+DROP TABLE IF EXISTS `account_higher`;
+CREATE TABLE `account_higher` (
+  `id` int(11) NOT NULL,
+  `condominium` int(11) NOT NULL,
+  `heading` int(11) NOT NULL,
+  `account_control` int(11) NOT NULL,
+  `code` varchar(100) COLLATE utf8_spanish_ci NOT NULL,
+  `name` varchar(250) COLLATE utf8_spanish_ci NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `status` int(11) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 -- --------------------------------------------------------
 
@@ -54,7 +112,8 @@ INSERT INTO `apartment` (`id`, `condominium`, `apartment`, `code`, `edifice`, `c
 (6, 4, '301', 'A10301', 10, 'EN ALQUILER', 'Q5', '2020-12-29 01:21:11', '2020-12-29 01:21:11', 1),
 (7, 4, '302', 'A10302', 10, 'OCUPADO', 'Q6', '2020-12-29 01:21:11', '2020-12-29 02:38:15', 1),
 (8, 4, '401', 'A10401', 10, 'OCUPADO', 'Q7', '2020-12-29 01:21:11', '2020-12-29 01:21:11', 1),
-(9, 4, '402', 'A10402', 10, 'OCUPADO', 'Q8-Q10', '2020-12-29 01:21:11', '2020-12-29 01:36:26', 1);
+(9, 4, '402', 'A10402', 10, 'OCUPADO', 'Q8-Q10', '2020-12-29 01:21:11', '2020-12-29 01:36:26', 1),
+(10, 4, '10', 'A1110', 11, 'OCUPADO', '1D', '2020-12-29 10:39:05', '2020-12-29 10:39:05', 1);
 
 -- --------------------------------------------------------
 
@@ -175,6 +234,24 @@ INSERT INTO `directive` (`id`, `condominium`, `name`, `apartment`, `edifice`, `d
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `document_type`
+--
+
+DROP TABLE IF EXISTS `document_type`;
+CREATE TABLE `document_type` (
+  `id` int(11) NOT NULL,
+  `condominium` int(11) NOT NULL,
+  `module` int(11) NOT NULL,
+  `code` varchar(10) COLLATE utf8_spanish_ci NOT NULL,
+  `name` varchar(200) COLLATE utf8_spanish_ci NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `status` int(11) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `edifice`
 --
 
@@ -242,6 +319,23 @@ INSERT INTO `employees` (`id`, `condominium`, `edifice`, `apartment`, `document`
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `heading`
+--
+
+DROP TABLE IF EXISTS `heading`;
+CREATE TABLE `heading` (
+  `id` int(11) NOT NULL,
+  `condominium` int(11) NOT NULL,
+  `name` varchar(250) COLLATE utf8_spanish_ci NOT NULL,
+  `code` varchar(100) COLLATE utf8_spanish_ci NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `status` int(11) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `incidents`
 --
 
@@ -285,6 +379,23 @@ CREATE TABLE `last_login` (
   `platform` varchar(128) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `createdDtm` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `module`
+--
+
+DROP TABLE IF EXISTS `module`;
+CREATE TABLE `module` (
+  `id` int(11) NOT NULL,
+  `condominium` int(11) NOT NULL,
+  `code` varchar(10) COLLATE utf8_spanish_ci NOT NULL,
+  `name` varchar(200) COLLATE utf8_spanish_ci NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `status` int(11) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 -- --------------------------------------------------------
 
@@ -487,9 +598,9 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `condominium`, `username`, `password`, `permissions`, `name`, `mobile`, `status`, `type`, `created_at`, `updated_at`) VALUES
 (1, 4, 'userdemo@gmail.com', '$2y$10$BpOFw90m.L.LA6ODmL4oi.eH9juSs8f0w/sfAHnj7xzFy7TCU.XOK', '{ \"users\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"apartments\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 },\"visitor\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"edifices\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"tenants\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"tags\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"services\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"reservations\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"period\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"directive\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"setting\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"incidents\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"vigilant\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"commonarea\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"Payments\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"bills\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"vehicles\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"employees\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"shopping\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"condominium_items\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"condominium\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"pay\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 } }', 'Felix Cabrita', '', 1, 1, '2020-11-19 11:35:11', '2020-12-27 10:38:02'),
 (2, 2, 'octonovemarketing@gmail.com', '$2y$10$nmZCvCPpuliyFRpOnv/ix.KH4Qs8c6UEbrEujCp7aRzhCFcAAFpFm', '{ \"users\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"visitor\": { \"C\":1, \"R\": 1, \"U\": 0, \"D\": 0 }\"apartments\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"edifices\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"tenants\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"tags\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"services\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"reservations\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"period\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"directive\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"setting\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"incidents\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 0 }, \"vigilant\": { \"C\": 1, \"R\":1, \"U\": 0, \"D\": 0 }, \"commonarea\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"Payments\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"bills\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"vehicles\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0  }, \"employees\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"shopping\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"condominium_items\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"condominium\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"pay\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 } }', 'Cabritei', '04147599825', 1, 5, '2020-12-22 04:36:04', '2020-12-27 10:37:50'),
-(3, 4, 'contabilidad@gmail.com', '$2y$10$YVPsChp.ni5MwTuiEKu2iuF8SS.60IwCMJEvXgb7ya2S2dM0NJ.ga', '{ \"users\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"apartments\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 },\"visitor\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"edifices\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"tenants\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"tags\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"services\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"reservations\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"period\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"directive\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"setting\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"incidents\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"vigilant\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"commonarea\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"Payments\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"bills\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"vehicles\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"employees\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"shopping\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"condominium_items\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"condominium\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"pay\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 } }', 'Juana', '8', 1, 4, '2020-12-29 01:45:08', '2020-12-29 01:45:08'),
 (4, 4, 'caja@gmail.com', '$2y$10$bR20Q8ZBiu73TBQ53DxVceAN3qhyOm.m6mjNlx6UCvF.CaNHq0Hqm', '{ \"users\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"apartments\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 },\"visitor\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"edifices\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"tenants\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"tags\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"services\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"reservations\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"period\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"directive\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"setting\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"incidents\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"vigilant\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"commonarea\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"Payments\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"bills\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"vehicles\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"employees\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"shopping\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"condominium_items\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"condominium\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"pay\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 } }', 'Caja', '3', 1, 3, '2020-12-29 01:45:34', '2020-12-29 01:45:34'),
-(5, 4, 'vigilante@gmail.com', '$2y$10$ZJjlRi9cF7T2KFVFqNWR9uFtyTvUmG2orhMnMmuZddVpGniEdY4SC', '{ \"users\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"visitor\": { \"C\":1, \"R\": 1, \"U\": 0, \"D\": 0 }\"apartments\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"edifices\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"tenants\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"tags\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"services\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"reservations\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"period\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"directive\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"setting\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"incidents\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 0 }, \"vigilant\": { \"C\": 1, \"R\":1, \"U\": 0, \"D\": 0 }, \"commonarea\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"Payments\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"bills\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"vehicles\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0  }, \"employees\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"shopping\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"condominium_items\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"condominium\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"pay\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 } }', 'Vigilante', '43', 1, 5, '2020-12-29 01:46:09', '2020-12-29 01:46:09');
+(5, 4, 'vigilante@gmail.com', '$2y$10$ZJjlRi9cF7T2KFVFqNWR9uFtyTvUmG2orhMnMmuZddVpGniEdY4SC', '{ \"users\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"visitor\": { \"C\":1, \"R\": 1, \"U\": 0, \"D\": 0 }\"apartments\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"edifices\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"tenants\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"tags\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"services\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"reservations\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"period\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"directive\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"setting\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"incidents\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 0 }, \"vigilant\": { \"C\": 1, \"R\":1, \"U\": 0, \"D\": 0 }, \"commonarea\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"Payments\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"bills\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"vehicles\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0  }, \"employees\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"shopping\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"condominium_items\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"condominium\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"pay\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 } }', 'Vigilante', '43', 1, 5, '2020-12-29 01:46:09', '2020-12-29 01:46:09'),
+(6, 4, 'felix-segundo@hotmail.com', '$2y$10$9HS4UKLBJ5zWS6cKYx8dXuK41/ygG43kfGANwUhUdd2QKO7w0w8rW', '{ \"users\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 },\"visitor\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"apartments\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"edifices\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"tenants\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"tags\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"services\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"reservations\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 0 }, \"period\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"directive\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"setting\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"incidents\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 0 }, \"vigilant\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"commonarea\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"Payments\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"bills\": {  \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"vehicles\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"employees\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0  }, \"shopping\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"condominium_items\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"condominium\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"pay\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 0 } }', 'Sevillana', '04147599825', 1, 4, '2020-12-30 14:28:59', '2020-12-30 14:28:59');
 
 -- --------------------------------------------------------
 
@@ -586,6 +697,24 @@ INSERT INTO `visitor` (`id`, `condominium`, `document`, `name`, `mobile`, `type`
 --
 
 --
+-- Indices de la tabla `account_control`
+--
+ALTER TABLE `account_control`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `account_detail`
+--
+ALTER TABLE `account_detail`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `account_higher`
+--
+ALTER TABLE `account_higher`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `apartment`
 --
 ALTER TABLE `apartment`
@@ -617,6 +746,12 @@ ALTER TABLE `directive`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `document_type`
+--
+ALTER TABLE `document_type`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `edifice`
 --
 ALTER TABLE `edifice`
@@ -630,6 +765,12 @@ ALTER TABLE `employees`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `heading`
+--
+ALTER TABLE `heading`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `incidents`
 --
 ALTER TABLE `incidents`
@@ -639,6 +780,12 @@ ALTER TABLE `incidents`
 -- Indices de la tabla `last_login`
 --
 ALTER TABLE `last_login`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `module`
+--
+ALTER TABLE `module`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -710,10 +857,28 @@ ALTER TABLE `visitor`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `account_control`
+--
+ALTER TABLE `account_control`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `account_detail`
+--
+ALTER TABLE `account_detail`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `account_higher`
+--
+ALTER TABLE `account_higher`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `apartment`
 --
 ALTER TABLE `apartment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `assigning_apartment`
@@ -740,6 +905,12 @@ ALTER TABLE `directive`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT de la tabla `document_type`
+--
+ALTER TABLE `document_type`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `edifice`
 --
 ALTER TABLE `edifice`
@@ -752,6 +923,12 @@ ALTER TABLE `employees`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT de la tabla `heading`
+--
+ALTER TABLE `heading`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `incidents`
 --
 ALTER TABLE `incidents`
@@ -762,6 +939,12 @@ ALTER TABLE `incidents`
 --
 ALTER TABLE `last_login`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `module`
+--
+ALTER TABLE `module`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `period`
@@ -803,7 +986,7 @@ ALTER TABLE `tenant`
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `vehicles`
