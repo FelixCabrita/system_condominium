@@ -281,12 +281,12 @@ class Tenant extends BaseController
     public function getApartmentsAssignation()
     {
         $role = $this->input->post('role');
-        $id = $this->input->post('id');  
-        $edifice = $this->input->post('edifice'); 
-        $this->load->model('tenant_model'); 
-        $result =$this->tenant_model->getAssignment($id, $this->condominium, $edifice); 
-        if ($result > 0) {echo (json_encode(array('status' => true,'asig'=>$result)));} else {echo (json_encode(array('status' => false)));}
-         
+        $id = $this->input->post('id');
+        $edifice = $this->input->post('edifice');
+        $this->load->model('tenant_model');
+        $result = $this->tenant_model->getAssignment($id, $this->condominium, $edifice);
+        if ($result > 0) {echo (json_encode(array('status' => true, 'asig' => $result)));} else {echo (json_encode(array('status' => false)));}
+
     }
     public function set_asignation()
     {
@@ -355,13 +355,11 @@ class Tenant extends BaseController
         }
     }
 
-
     public function getDataAsignation($tenant)
     {
-        $this->load->model('apartment_model'); 
-        echo json_encode($this->apartment_model->getListing($edifice,$this->condominium)); 
+        $this->load->model('apartment_model');
+        echo json_encode($this->apartment_model->getListing($edifice, $this->condominium));
     }
-
 
     public function importData()
     {
@@ -382,77 +380,81 @@ class Tenant extends BaseController
         if (!empty($data['upload_data']['file_name'])) {
             $import_xls_file = $data['upload_data']['file_name'];
         } else {
-            $import_xls_file = 0;
+            $import_xls_file ='';
         }
-        $inputFileName = $path . $import_xls_file;
-        try {
-            $inputFileType = PHPExcel_IOFactory::identify($inputFileName);
-            $objReader = PHPExcel_IOFactory::createReader($inputFileType);
-            $objPHPExcel = $objReader->load($inputFileName);
-        } catch (Exception $e) {
-            $this->session->set_flashdata('error', 'Error loading file "' . pathinfo($inputFileName, PATHINFO_BASENAME)
-                . '": ' . $e->getMessage());
-        }
-        $allDataInSheet = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
-
-        $arrayCount = count($allDataInSheet);
-        $flag = 0; //Existencia    PRECIO1    PRECIO2    PRECIO3    GRUPO    MARCA    IMPUESTO    COD_BARRA    ACTIVO
-
-        $createArray = array('DOCUMENTO', 'NOMBRE', 'TIPO_USUARIO', 'TELEFONO_MOVIL', 'TELEFONO_RESIDENCIA', 'CORREO_ELECTRONICO', 'TIENE_USUARIO');
-        $makeArray = array('DOCUMENTO' => 'DOCUMENTO', 'NOMBRE' => 'NOMBRE', 'TIPO_USUARIO' => 'TIPO_USUARIO', 'TELEFONO_MOVIL' => 'TELEFONO_MOVIL',
-            'TELEFONO_RESIDENCIA' => 'TELEFONO_RESIDENCIA', 'CORREO_ELECTRONICO' => 'CORREO_ELECTRONICO', 'TIENE_USUARIO' => 'TIENE_USUARIO');
-        $SheetDataKey = array();
-        foreach ($allDataInSheet as $dataInSheet) {
-            foreach ($dataInSheet as $key => $value) {
-                if (in_array(trim($value), $createArray)) {
-                    $value = preg_replace('/\s+/', '', $value);
-                    $SheetDataKey[trim($value)] = $key;
-                } else {
-
-                }
+        if (!empty($import_xls_file)) { 
+            $inputFileName = $path . $import_xls_file;
+            try {
+                $inputFileType = PHPExcel_IOFactory::identify($inputFileName);
+                $objReader = PHPExcel_IOFactory::createReader($inputFileType);
+                $objPHPExcel = $objReader->load($inputFileName);
+            } catch (Exception $e) {
+                $this->session->set_flashdata('error', 'Error loading file "' . pathinfo($inputFileName, PATHINFO_BASENAME)
+                    . '": ' . $e->getMessage());
             }
-        }
-        $data = array_diff_key($makeArray, $SheetDataKey);
+            $allDataInSheet = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
 
-        if (empty($data)) {
-            $flag = 1;
-        }
-        if ($flag == 1) {
-            for ($i = 2; $i <= $arrayCount; $i++) {
-                $addresses = array();
-                //'DOCUMENTO', 'NOMBRE', 'TIPO_USUARIO', 'TELEFONO_MOVIL'
-                $document = $SheetDataKey['DOCUMENTO'];
-                $name = $SheetDataKey['NOMBRE'];
-                $type = $SheetDataKey['TIPO_USUARIO'];
-                $mobile = $SheetDataKey['TELEFONO_MOVIL'];
-                $landline_phone = $SheetDataKey['TELEFONO_RESIDENCIA'];
-                $email = $SheetDataKey['CORREO_ELECTRONICO'];
-                $user = $SheetDataKey['TIENE_USUARIO'];
+            $arrayCount = count($allDataInSheet);
+            $flag = 0; //Existencia    PRECIO1    PRECIO2    PRECIO3    GRUPO    MARCA    IMPUESTO    COD_BARRA    ACTIVO
 
-                $document = filter_var(trim($allDataInSheet[$i][$document]), FILTER_SANITIZE_STRING);
-                $name = filter_var(trim($allDataInSheet[$i][$name]), FILTER_SANITIZE_STRING);
-                $type = filter_var(trim($allDataInSheet[$i][$type]), FILTER_SANITIZE_STRING);
-                $mobile = filter_var(trim($allDataInSheet[$i][$mobile]), FILTER_SANITIZE_STRING);
-                $landline_phone = filter_var(trim($allDataInSheet[$i][$landline_phone]), FILTER_SANITIZE_STRING);
-                $email = filter_var(trim($allDataInSheet[$i][$email]), FILTER_SANITIZE_STRING);
-                $user = filter_var(trim($allDataInSheet[$i][$user]), FILTER_SANITIZE_STRING);
-                $type = $this->type_client_import($type);
-                $check = $this->tenant_model->checkExists($document, 0, $this->condominium);
-                if (!empty($document)) {
-                    if (empty($check)) {
-                        $password = $user == 'SI' ? getHashedPassword($document) : "";
-                        $info = array('document' => $document, 'name' => $name, 'type' => $type, 'password' => $password, 'mobile' => $mobile, 'condominium' => $this->condominium,
-                            'landline_phone' => $landline_phone, 'email' => $email);
-                        $result = $this->tenant_model->addNew($info);
+            $createArray = array('DOCUMENTO', 'NOMBRE', 'TIPO_USUARIO', 'TELEFONO_MOVIL', 'TELEFONO_RESIDENCIA', 'CORREO_ELECTRONICO', 'TIENE_USUARIO');
+            $makeArray = array('DOCUMENTO' => 'DOCUMENTO', 'NOMBRE' => 'NOMBRE', 'TIPO_USUARIO' => 'TIPO_USUARIO', 'TELEFONO_MOVIL' => 'TELEFONO_MOVIL',
+                'TELEFONO_RESIDENCIA' => 'TELEFONO_RESIDENCIA', 'CORREO_ELECTRONICO' => 'CORREO_ELECTRONICO', 'TIENE_USUARIO' => 'TIENE_USUARIO');
+            $SheetDataKey = array();
+            foreach ($allDataInSheet as $dataInSheet) {
+                foreach ($dataInSheet as $key => $value) {
+                    if (in_array(trim($value), $createArray)) {
+                        $value = preg_replace('/\s+/', '', $value);
+                        $SheetDataKey[trim($value)] = $key;
+                    } else {
+
                     }
                 }
+            }
+            $data = array_diff_key($makeArray, $SheetDataKey);
+
+            if (empty($data)) {
+                $flag = 1;
+            }
+            if ($flag == 1) {
+                for ($i = 2; $i <= $arrayCount; $i++) {
+                    $addresses = array();
+                    //'DOCUMENTO', 'NOMBRE', 'TIPO_USUARIO', 'TELEFONO_MOVIL'
+                    $document = $SheetDataKey['DOCUMENTO'];
+                    $name = $SheetDataKey['NOMBRE'];
+                    $type = $SheetDataKey['TIPO_USUARIO'];
+                    $mobile = $SheetDataKey['TELEFONO_MOVIL'];
+                    $landline_phone = $SheetDataKey['TELEFONO_RESIDENCIA'];
+                    $email = $SheetDataKey['CORREO_ELECTRONICO'];
+                    $user = $SheetDataKey['TIENE_USUARIO'];
+
+                    $document = filter_var(trim($allDataInSheet[$i][$document]), FILTER_SANITIZE_STRING);
+                    $name = filter_var(trim($allDataInSheet[$i][$name]), FILTER_SANITIZE_STRING);
+                    $type = filter_var(trim($allDataInSheet[$i][$type]), FILTER_SANITIZE_STRING);
+                    $mobile = filter_var(trim($allDataInSheet[$i][$mobile]), FILTER_SANITIZE_STRING);
+                    $landline_phone = filter_var(trim($allDataInSheet[$i][$landline_phone]), FILTER_SANITIZE_STRING);
+                    $email = filter_var(trim($allDataInSheet[$i][$email]), FILTER_SANITIZE_STRING);
+                    $user = filter_var(trim($allDataInSheet[$i][$user]), FILTER_SANITIZE_STRING);
+                    $type = $this->type_client_import($type);
+                    $check = $this->tenant_model->checkExists($document, 0, $this->condominium);
+                    if (!empty($document)) {
+                        if (empty($check)) {
+                            $password = $user == 'SI' ? getHashedPassword($document) : "";
+                            $info = array('document' => $document, 'name' => $name, 'type' => $type, 'password' => $password, 'mobile' => $mobile, 'condominium' => $this->condominium,
+                                'landline_phone' => $landline_phone, 'email' => $email);
+                            $result = $this->tenant_model->addNew($info);
+                        }
+                    }
+
+                }
+                $this->session->set_flashdata('success', 'Clientes Importados con exito');
+
+            } else {
+                $this->session->set_flashdata('error', 'Error al importar el archivo');
 
             }
-            $this->session->set_flashdata('success', 'Clientes Importados con exito');
-
         } else {
             $this->session->set_flashdata('error', 'Error al importar el archivo');
-
         }
         redirect('clientes');
 

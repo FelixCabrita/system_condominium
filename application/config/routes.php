@@ -169,7 +169,7 @@ $route['editarareascomunes/(:num)'] = "commonarea/editOld/$1";
 $route['editando_areascomunes'] = 'commonarea/edit'; 
 $route['eliminar_areascomunes'] = 'commonarea/delete'; 
 $route['cambio_estado_areascomunes'] = 'commonarea/changeStatus';  
-
+ 
 /*TENANT*/
 $route['clientes'] = 'tenant/listing'; 
 $route['agregarclientes'] = 'tenant/addNew'; 
@@ -276,6 +276,60 @@ $route['asignar_visitante'] = "visitor/asignation_vehicle";
 $route['asignar_visitante/(:num)'] = "visitor/asignation_vehicle/$1";
 $route['editando_visitantes'] = 'visitor/edit'; 
 $route['eliminar_visitantes'] = 'visitor/delete'; 
-$route['cambio_estado_visitantes'] = 'visitor/changeStatus';  
+$route['cambio_estado_visitantes'] = 'visitor/changeStatus'; 
+
+/*MODULE*/
+$route['modulos'] = 'module/listing';
+$route['agregarmodulos'] = 'module/addNew'; 
+$route['chequeo_modulos'] = 'module/checkExists';
+$route['nuevo_modulos'] = 'module/addNewData'; 
+$route['editarmodulos'] = "module/editOld";
+$route['editarmodulos/(:num)'] = "module/editOld/$1";
+$route['editando_modulos'] = 'module/edit'; 
+$route['eliminar_modulos'] = 'module/delete'; 
+$route['cambio_estado_modulos'] = 'module/changeStatus';  
+$route['importacion_modulos'] = 'module/importData'; 
+
+/*DOCUMENT TYPE*/
+$route['tipodocumento'] = 'documenttype/listing';
+$route['asignacion_documentos'] = 'documenttype/listing';
+$route['asignacion_documentos/(:any)'] = 'documenttype/listing/$1';
+$route['agregartipodocumento'] = 'documenttype/addNew'; 
+$route['chequeo_tipodocumento'] = 'documenttype/checkExists';
+$route['nuevo_tipodocumento'] = 'documenttype/addNewData'; 
+$route['editartipodocumento'] = "documenttype/editOld";
+$route['editartipodocumento/(:num)'] = "documenttype/editOld/$1";
+$route['editando_tipodocumento'] = 'documenttype/edit'; 
+$route['eliminar_tipodocumento'] = 'documenttype/delete'; 
+$route['cambio_estado_tipodocumento'] = 'documenttype/changeStatus';  
+$route['importacion_tipodocumento'] = 'documenttype/importData'; 
+
+/*HEADING*/
+$route['rubros'] = 'heading/listing';
+$route['asignacion_rubros'] = 'heading/listing';
+$route['asignacion_rubros/(:any)'] = 'heading/listing/$1';
+$route['agregarrubro'] = 'heading/addNew'; 
+$route['chequeo_rubro'] = 'heading/checkExists';
+$route['nuevo_rubro'] = 'heading/addNewData'; 
+$route['editarrubro'] = "heading/editOld";
+$route['editarrubro/(:num)'] = "heading/editOld/$1";
+$route['editando_rubro'] = 'heading/edit'; 
+$route['eliminar_rubro'] = 'heading/delete'; 
+$route['cambio_estado_rubro'] = 'heading/changeStatus';  
+$route['importacion_rubro'] = 'heading/importData'; 
+
+/*ACCOUNT CONTROL*/
+$route['cuenta_control'] = 'Accountcontrol/listing';
+$route['asignacion_cuenta_control'] = 'Accountcontrol/listing';
+$route['asignacion_cuenta_control/(:any)'] = 'Accountcontrol/listing/$1';
+$route['agregarcuenta_control'] = 'Accountcontrol/addNew'; 
+$route['chequeo_cuenta_control'] = 'Accountcontrol/checkExists';
+$route['nuevo_cuenta_control'] = 'Accountcontrol/addNewData'; 
+$route['editarcuenta_control'] = "Accountcontrol/editOld";
+$route['editarcuenta_control/(:num)'] = "Accountcontrol/editOld/$1";
+$route['editando_cuenta_control'] = 'Accountcontrol/edit'; 
+$route['eliminar_cuenta_control'] = 'Accountcontrol/delete'; 
+$route['cambio_estado_cuenta_control'] = 'Accountcontrol/changeStatus';  
+$route['importacion_cuenta_control'] = 'Accountcontrol/importData'; 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

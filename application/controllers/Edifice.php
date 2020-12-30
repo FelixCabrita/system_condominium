@@ -211,23 +211,24 @@ class Edifice extends BaseController
     public function importData() {
         $this->load->library('excel');     
         $this->load->helper(array('form', 'url'));   
-            $path = "./assets/excel/";
-            $config['upload_path'] = $path;
-            $config['allowed_types'] = 'xlsx|xls';
-            $config['remove_spaces'] = TRUE;
-            $this->load->library('upload', $config);
-            if (!$this->upload->do_upload('userfile')) {
-                $error = array('error' => $this->upload->display_errors());
-                $this->session->set_flashdata('error',$this->upload->display_errors());
-            } else {
-                $data = array('upload_data' => $this->upload->data());
-            }
-            
-            if (!empty($data['upload_data']['file_name'])) {
-                $import_xls_file = $data['upload_data']['file_name'];
-            } else {
-                $import_xls_file = 0;
-            }
+        $path = "./assets/excel/";
+        $config['upload_path'] = $path;
+        $config['allowed_types'] = 'xlsx|xls';
+        $config['remove_spaces'] = TRUE;
+        $this->load->library('upload', $config);
+        if (!$this->upload->do_upload('userfile')) {
+            $error = array('error' => $this->upload->display_errors());
+            $this->session->set_flashdata('error',$this->upload->display_errors());
+        } else {
+            $data = array('upload_data' => $this->upload->data());
+        }
+        
+        if (!empty($data['upload_data']['file_name'])) {
+            $import_xls_file = $data['upload_data']['file_name'];
+        } else {
+            $import_xls_file ='';
+        }
+        if (!empty($import_xls_file)) { 
             $inputFileName = $path . $import_xls_file;
             try {
                 $inputFileType = PHPExcel_IOFactory::identify($inputFileName);
@@ -256,7 +257,7 @@ class Edifice extends BaseController
                 }
             }
             $data = array_diff_key($makeArray, $SheetDataKey);
-           
+        
             if (empty($data)) {
                 $flag = 1;
             }
@@ -283,15 +284,18 @@ class Edifice extends BaseController
                             $result = $this->edifice_model->addNew($info);  
                         } 
                     }
-                   
+                
                 }   
                 $this->session->set_flashdata('success', 'Edificios Importados con exito');
-              
+            
             } else {
                 $this->session->set_flashdata('error', 'Error al importar el archivo');
-               
+            
             } 
-           redirect('edificios');
+        } else {
+            $this->session->set_flashdata('error', 'Error al importar el archivo');
+        }
+        redirect('edificios');
         
     }
 }

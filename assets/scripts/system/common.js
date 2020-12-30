@@ -12,6 +12,22 @@ function importClients() {
 function importApartment() {
     document.forms["importApartment"].submit();
 }
+
+function importModule() {
+    document.forms["importModule"].submit();
+}
+
+function importDocument() {
+    document.forms["importDocument"].submit();
+}
+
+function importheading() {
+    document.forms["importheading"].submit();
+}
+
+function importaccount() {
+    document.forms["importaccount"].submit();
+}
 jQuery(document).ready(function() {
 
 
@@ -1752,6 +1768,234 @@ jQuery(document).ready(function() {
             title: "Observaciones {" + name + "}",
             html: observations
         })
+    });
+
+
+
+    //CONTABILITY
+
+    jQuery(document).on("click", ".changeStatusModule", function() {
+        var userId = $(this).data("userid"),
+            isactive = $(this).data("isactive"),
+            hitURL = baseURL + "cambio_estado_modulos";
+
+        const data = new FormData();
+        data.append('id', userId);
+        data.append('isactive', (isactive == 1 ? 0 : 1));
+
+        Swal.queue([{
+            title: "¿Desea " + (isactive == 1 ? "desactivar" : "activar") + " este modulo?",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'SI!',
+            cancelButtonText: 'No, cancelar!',
+            text: 'Cambiara el estado de este modulo , podras reversar esta accion.',
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return fetch(hitURL, {
+                        method: 'POST',
+                        body: data
+                    })
+                    .then(response => response.json())
+                    .then(data => (data.status ?
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: "Modulo " + (isactive == 1 ? "desactivado" : "activado") + "  con exito",
+                            showConfirmButton: false,
+                            timer: 2000
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                window.location = baseURL + "modulos"
+                            }
+                        }) :
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: "Por alguna razon no podemos " + (isactive == 1 ? "desactivar" : "activar") + " este modulo",
+                            showConfirmButton: false,
+                            timer: 2000
+                        })))
+                    .catch(() => {
+                        Swal.insertQueueStep({
+                            icon: 'error',
+                            title: 'acceso denegado..!'
+                        })
+                    })
+            }
+        }])
+    });
+
+    jQuery(document).on("click", ".changeStatusDocumentType", function() {
+        var userId = $(this).data("userid"),
+            isactive = $(this).data("isactive"),
+            hitURL = baseURL + "cambio_estado_tipodocumento";
+
+        const data = new FormData();
+        data.append('id', userId);
+        data.append('isactive', (isactive == 1 ? 0 : 1));
+
+        Swal.queue([{
+            title: "¿Desea " + (isactive == 1 ? "desactivar" : "activar") + " este tipo de documento?",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'SI!',
+            cancelButtonText: 'No, cancelar!',
+            text: 'Cambiara el estado de este tipo de documento , podras reversar esta accion.',
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return fetch(hitURL, {
+                        method: 'POST',
+                        body: data
+                    })
+                    .then(response => response.json())
+                    .then(data => (data.status ?
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: "Tipo de documento " + (isactive == 1 ? "desactivado" : "activado") + "  con exito",
+                            showConfirmButton: false,
+                            timer: 2000
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                window.location = baseURL + "tipodocumento"
+                            }
+                        }) :
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: "Por alguna razon no podemos " + (isactive == 1 ? "desactivar" : "activar") + " este tipo de documento",
+                            showConfirmButton: false,
+                            timer: 2000
+                        })))
+                    .catch(() => {
+                        Swal.insertQueueStep({
+                            icon: 'error',
+                            title: 'acceso denegado..!'
+                        })
+                    })
+            }
+        }])
+    });
+
+    jQuery(document).on("click", ".changeDataHeading", function() {
+        var userId = $(this).data("userid"),
+            name = $(this).data("name")
+        hitURL = baseURL + "editando_rubro";
+
+        const data = new FormData();
+        data.append('id', userId);
+
+        Swal.queue([{
+            title: "¿Desea cambiar el nombre del rubro '" + name + "'?",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'SI!',
+            cancelButtonText: 'No, cancelar!',
+            input: 'text',
+            inputPlaceholder: 'Ingresa el nuevo nombre del rubro',
+            showLoaderOnConfirm: true,
+            inputValidator: (value) => {
+                if (!value) {
+                    return 'Debes colocar un nombre!'
+                }
+            },
+            preConfirm: () => {
+                data.append('name', $('.swal2-input').val());
+
+                return fetch(hitURL, {
+                        method: 'POST',
+                        body: data
+                    })
+                    .then(response => response.json())
+                    .then(data => (data.status ?
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: "Se ha Realizado la actualziacion del rubro",
+                            showConfirmButton: false,
+                            timer: 2000
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                window.location = baseURL + "rubros"
+                            }
+                        }) :
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: data.error,
+                            showConfirmButton: false,
+                            timer: 2000
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                window.location = baseURL + "rubros"
+                            }
+                        })
+                    ))
+
+            }
+        }])
+    });
+
+    jQuery(document).on("click", ".changeStatusheading", function() {
+        var userId = $(this).data("userid"),
+            isactive = $(this).data("isactive"),
+            hitURL = baseURL + "cambio_estado_rubro";
+
+        const data = new FormData();
+        data.append('id', userId);
+        data.append('isactive', (isactive == 1 ? 0 : 1));
+
+        Swal.queue([{
+            title: "¿Desea " + (isactive == 1 ? "desactivar" : "activar") + " este rubro?",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'SI!',
+            cancelButtonText: 'No, cancelar!',
+            text: 'Cambiara el estado de este rubro, podras reversar esta accion.',
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return fetch(hitURL, {
+                        method: 'POST',
+                        body: data
+                    })
+                    .then(response => response.json())
+                    .then(data => (data.status ?
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: "Rubro " + (isactive == 1 ? "desactivado" : "activado") + "  con exito",
+                            showConfirmButton: false,
+                            timer: 2000
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                window.location = baseURL + "rubros"
+                            }
+                        }) :
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: "Por alguna razon no podemos " + (isactive == 1 ? "desactivar" : "activar") + " este rubro",
+                            showConfirmButton: false,
+                            timer: 2000
+                        })))
+                    .catch(() => {
+                        Swal.insertQueueStep({
+                            icon: 'error',
+                            title: 'acceso denegado..!'
+                        })
+                    })
+            }
+        }])
     });
 
     jQuery(document).on("click", ".searchList", function() {

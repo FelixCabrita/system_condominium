@@ -128,6 +128,7 @@ class Apartment extends BaseController
                
                 if (empty($check)) {
                     $dataEdifice = $this->getDataEdifices($edifice);
+                    
                     $info = array('apartment' => $apartment, 'edifice' => $dataEdifice->id, 'number_parking' => $number_parking, 'condominium' => $this->condominium,
                      'conditions' => $conditions, 'code' => $code);
                     $result = $this->apartment_model->addNew($info);
@@ -257,8 +258,9 @@ class Apartment extends BaseController
             if (!empty($data['upload_data']['file_name'])) {
                 $import_xls_file = $data['upload_data']['file_name'];
             } else {
-                $import_xls_file = 0;
+                $import_xls_file = '';
             }
+            if (!empty($import_xls_file)) { 
             $inputFileName = $path . $import_xls_file;
             try {
                 $inputFileType = PHPExcel_IOFactory::identify($inputFileName);
@@ -326,6 +328,9 @@ class Apartment extends BaseController
                 $this->session->set_flashdata('error', 'Error al importar el archivo');
                
             } 
+        } else {
+            $this->session->set_flashdata('error', 'Error al importar el archivo');
+        }
            redirect('apartamentos');
         
     }

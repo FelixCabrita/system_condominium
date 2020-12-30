@@ -118,7 +118,10 @@
                 </div>
             </div>
         </div>
-        <!-- Modal -->
+
+
+
+<!-- Modal --> 
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -166,8 +169,8 @@
             </div>
         </div>
     </div>
-</div>  
-<!-- Modal -->
+</div>   
+
 <div class="modal fade" id="importEdifices" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -193,7 +196,7 @@
     </div>
   </div>
 </div>
-<!-- Modal -->
+ 
 <div class="modal fade" id="importApartmentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -219,9 +222,8 @@
       </div>
     </div>
   </div>
-</div>
-
-<!-- Modal -->
+</div> 
+ 
 <div class="modal fade" id="importClientss" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -247,6 +249,111 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="importModules" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">IMPORTAR DATOS DE MODULOS</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+         <form  id="importModule" action="<?php echo base_url()  ?>importacion_modulos" method="post" role="form"  enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="userfile">Selecciona tu excel (xlsx|xls)</label>
+                <input type="file" class="form-control-file" id="userfile" name="userfile" accept=".xlsx,.xls">
+            </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+      <a href="<?php echo base_url()  ?>/assets/format/module.xlsx" target="_blank" class="btn btn-success" >Descargar formato</a>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" onclick="importModule()">Procesar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="importheadings" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">IMPORTAR DATOS DE RUBROS</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+         <form  id="importheading" action="<?php echo base_url()  ?>importacion_rubro" method="post" role="form"  enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="userfile">Selecciona tu excel (xlsx|xls)</label>
+                <input type="file" class="form-control-file" id="userfile" name="userfile" accept=".xlsx,.xls">
+            </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+      <a href="<?php echo base_url()  ?>/assets/format/rubros.xlsx" target="_blank" class="btn btn-success" >Descargar formato</a>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" onclick="importheading()">Procesar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="importDocuments" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">IMPORTAR DATOS DE TIPOS DE DOCUMENTOS</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+         <form  id="importDocument" action="<?php echo base_url()  ?>importacion_tipodocumento" method="post" role="form"  enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="userfile">Selecciona tu excel (xlsx|xls)</label>
+                <input type="file" class="form-control-file" id="userfile" name="userfile" accept=".xlsx,.xls">
+            </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+      <a href="<?php echo base_url()  ?>/assets/format/DocumentType.xlsx" target="_blank" class="btn btn-success" >Descargar formato</a>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" onclick="importDocument()">Procesar</button>
+      </div>
+    </div>
+  </div>
+</div>  
+<div class="modal fade" id="importaccounts" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">IMPORTAR DATOS DE CUENTAS CONTROL</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+         <form  id="importaccount" action="<?php echo base_url()  ?>importacion_cuenta_control" method="post" role="form"  enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="userfile">Selecciona tu excel (xlsx|xls)</label>
+                <input type="file" class="form-control-file" id="userfile" name="userfile" accept=".xlsx,.xls">
+            </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+      <a href="<?php echo base_url()  ?>/assets/format/account_control.xlsx" target="_blank" class="btn btn-success" >Descargar formato</a>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" onclick="importaccount()">Procesar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
         <div class="app-main">
             <div class="app-sidebar sidebar-shadow">
                 <div class="app-header__logo">
@@ -358,7 +465,47 @@
                                     <i class="metismenu-icon pe-7s-user"></i> JUNTA DIRECTIVA 
                                 </a>
                             </li> 
-                            <?php }  ?>  
+                            <?php }  ?>   
+                            <?php if (checkForPermissions('bills', PERMISSION_READ) == true) { ?>  
+                                <li class="app-sidebar__heading">CONTABILIDAD</li> 
+                                <li>  <a href="<?php echo base_url(); ?>modulos">
+                                        <i class="metismenu-icon pe-7s-user"></i> MODULO 
+                                    </a>
+                                </li>
+                                 <li  > 
+                                    <a href="<?php echo base_url(); ?>tipodocumento">
+                                        <i class="metismenu-icon pe-7s-user"></i> TIPO DE DOCUMENTOS 
+                                    </a>
+                                </li>   
+                                <li>
+                                    <a href="#">
+                                        <i class="metismenu-icon pe-7s-diamond"></i> MANTENIMIENTO DE CUENTAS
+                                        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                                    </a>
+                                    <ul >
+                                        <li> 
+                                            <a href="<?php echo base_url(); ?>rubros">
+                                                <i class="metismenu-icon pe-7s-user"></i> RUBROS 
+                                            </a>
+                                        </li>
+                                        <li> 
+                                            <a href="<?php echo base_url(); ?>cuenta_control">
+                                                <i class="metismenu-icon pe-7s-user"></i> CUENTA CONTROL 
+                                            </a>
+                                        </li>
+                                        <li> 
+                                            <a href="<?php echo base_url(); ?>juntadirectiva">
+                                                <i class="metismenu-icon pe-7s-user"></i> CUENTA MAYOR 
+                                            </a>
+                                        </li>
+                                        <li> 
+                                            <a href="<?php echo base_url(); ?>juntadirectiva">
+                                                <i class="metismenu-icon pe-7s-user"></i> CUENTA DETALLE 
+                                            </a>
+                                        </li>
+                                    </ul> 
+                                <li> 
+                            <?php } ?>  
                             <?php echo $rol<ROLE_VIGILANT?'<li class="app-sidebar__heading">RESERVA DE AREA COMUN</li>':"" ?>  
                              <?php if (checkForPermissions('reservations', PERMISSION_READ) == true) { ?> 
                              <li> 
