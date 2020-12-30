@@ -25,7 +25,7 @@ class Accountcontrol_model extends CI_Model
         if(!empty($heading)){
             $this->db->where("acc.heading", $heading);
         }
-        $this->db->order_by('acc.id', 'DESC'); 
+        $this->db->order_by('acc.status', 'DESC'); 
         $query = $this->db->get(); 
         $result = $query->result();        
         return $result;
@@ -40,7 +40,7 @@ class Accountcontrol_model extends CI_Model
         if(!empty($heading)){
             $this->db->where("acc.heading", $heading);
         }
-        $this->db->order_by('acc.id', 'DESC'); 
+        $this->db->order_by('acc.status', 'DESC'); 
         $query = $this->db->get();
         $result = $query->result();
         return $result;
@@ -95,7 +95,14 @@ class Accountcontrol_model extends CI_Model
         
         return $query->row();
     }
-  
+    function getInfoCode($code,$condominium)
+    { 
+        $this->db->from('account_control'); 
+        $this->db->where('account', $code);
+        $this->db->where('condominium',$condominium);
+        $query = $this->db->get(); 
+        return $query->row();
+    }
     /**
      * This function is used to update the account_control information
      * @param array $account_controlInfo : This is account_controls updated information

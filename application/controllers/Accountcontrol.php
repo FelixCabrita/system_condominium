@@ -336,7 +336,7 @@ class Accountcontrol extends BaseController
                     }
 
                 }
-                $this->session->set_flashdata('success', 'Modulos Importados con exito');
+                $this->session->set_flashdata('success', 'Cuentas control Importados con exito');
 
             } else {
                 $this->session->set_flashdata('error', 'Error al importar el archivo');

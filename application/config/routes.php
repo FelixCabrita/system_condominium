@@ -319,17 +319,31 @@ $route['cambio_estado_rubro'] = 'heading/changeStatus';
 $route['importacion_rubro'] = 'heading/importData'; 
 
 /*ACCOUNT CONTROL*/
-$route['cuenta_control'] = 'Accountcontrol/listing';
-$route['asignacion_cuenta_control'] = 'Accountcontrol/listing';
-$route['asignacion_cuenta_control/(:any)'] = 'Accountcontrol/listing/$1';
-$route['agregarcuenta_control'] = 'Accountcontrol/addNew'; 
-$route['chequeo_cuenta_control'] = 'Accountcontrol/checkExists';
-$route['nuevo_cuenta_control'] = 'Accountcontrol/addNewData'; 
-$route['editarcuenta_control'] = "Accountcontrol/editOld";
-$route['editarcuenta_control/(:num)'] = "Accountcontrol/editOld/$1";
-$route['editando_cuenta_control'] = 'Accountcontrol/edit'; 
-$route['eliminar_cuenta_control'] = 'Accountcontrol/delete'; 
-$route['cambio_estado_cuenta_control'] = 'Accountcontrol/changeStatus';  
-$route['importacion_cuenta_control'] = 'Accountcontrol/importData'; 
+$route['cuenta_control'] = 'accountcontrol/listing';
+$route['asignacion_cuenta_control'] = 'accountcontrol/listing';
+$route['asignacion_cuenta_control/(:any)'] = 'accountcontrol/listing/$1';
+$route['agregarcuenta_control'] = 'accountcontrol/addNew'; 
+$route['chequeo_cuenta_control'] = 'accountcontrol/checkExists';
+$route['nuevo_cuenta_control'] = 'accountcontrol/addNewData'; 
+$route['editarcuenta_control'] = "accountcontrol/editOld";
+$route['editarcuenta_control/(:num)'] = "accountcontrol/editOld/$1";
+$route['editando_cuenta_control'] = 'accountcontrol/edit'; 
+$route['eliminar_cuenta_control'] = 'accountcontrol/delete'; 
+$route['cambio_estado_cuenta_control'] = 'accountcontrol/changeStatus';  
+$route['importacion_cuenta_control'] = 'accountcontrol/importData'; 
+
+/*ACCOUNT HIGHER*/
+$route['cuenta_mayor'] = 'accounthigher/listing';
+$route['asignacion_cuenta_mayor'] = 'accounthigher/listing';
+$route['asignacion_cuenta_mayor/(:any)'] = 'accounthigher/listing/$1';
+$route['agregarcuenta_mayor'] = 'accounthigher/addNew'; 
+$route['chequeo_cuenta_mayor'] = 'accounthigher/checkExists';
+$route['nuevo_cuenta_mayor'] = 'accounthigher/addNewData'; 
+$route['editarcuenta_mayor'] = "accounthigher/editOld";
+$route['editarcuenta_mayor/(:num)'] = "accounthigher/editOld/$1";
+$route['editando_cuenta_mayor'] = 'accounthigher/edit'; 
+$route['eliminar_cuenta_mayor'] = 'accounthigher/delete'; 
+$route['cambio_estado_cuenta_mayor'] = 'accounthigher/changeStatus';  
+$route['importacion_cuenta_mayor'] = 'accounthigher/importData'; 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

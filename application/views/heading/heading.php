@@ -83,7 +83,7 @@
                             <?php if($permissions->U==1){ ?><a class="btn btn-sm btn-primary changeStatusheading"  href="#" data-titulo="<?php echo $record->name; ?>" data-isactive="<?php echo $record->status; ?>" data-userid="<?php echo $record->id; ?>" title="Cambio de estado"><i class="fa fa-eye"></i></a> 
                             <a class="btn btn-sm btn-info changeDataHeading" href="#" data-name="<?php echo $record->name; ?>" data-userid="<?php echo $record->id; ?>" title="Editar"><i class="fa fa-paint-brush"></i></a>  <?php } ?>  
                             <?php if($permissions->C==1){ ?>  
-                                <a class="btn btn-sm btn-success" href="<?php echo base_url().'asignacion_documentos/'.$record->id; ?>" title="Agregar documentos"><i class="fa fa-plus"></i></a>
+                                <a class="btn btn-sm btn-success" href="<?php echo base_url().'asignacion_cuenta_control/'.$record->id; ?>" title="Agregar documentos"><i class="fa fa-plus"></i></a>
                             <?php } ?>                         
                         </td>
                     </tr>
