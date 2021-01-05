@@ -35,7 +35,7 @@ if($permissions->U==1){
                 <div class="row">
                     <div class="form-group col-sm-6">
                         <label for="code">Codigo</label>
-                        <input type="text"  class="form-control mb-2 mr-sm-5" readonly value="<?php echo $code; ?>"    maxlength="20" > 
+                        <input type="text"  class="form-control mb-2 mr-sm-5" name="code" id="code" readonly value="<?php echo $code; ?>"    maxlength="20" > 
                         <input type="hidden" value="<?php echo $id; ?>" name="id" id="id" />    
                     </div> 
                     <div class="form-group col-sm-6">

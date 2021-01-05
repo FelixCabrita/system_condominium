@@ -102,6 +102,8 @@ $route['editando_condominio'] = 'condominium/edit';
 $route['eliminar_condominio'] = 'condominium/delete';
 $route['cambio_estado'] = 'condominium/changeStatus';
 $route['cambio_condominio'] = 'condominium/changeCondominium';
+$route['establcer_parametros'] = 'condominium/parameter';
+$route['cambiando_parametros'] = 'condominium/changue_parameter';
 
 /*EDIFICE*/
 $route['edificios'] = 'edifice/listing';
@@ -303,7 +305,7 @@ $route['editando_tipodocumento'] = 'documenttype/edit';
 $route['eliminar_tipodocumento'] = 'documenttype/delete'; 
 $route['cambio_estado_tipodocumento'] = 'documenttype/changeStatus';  
 $route['importacion_tipodocumento'] = 'documenttype/importData'; 
-
+$route['obtener_tipo_documento/(:num)'] = 'documenttype/getDataDocumentType/$1'; 
 /*HEADING*/
 $route['rubros'] = 'heading/listing';
 $route['asignacion_rubros'] = 'heading/listing';
@@ -331,7 +333,7 @@ $route['editando_cuenta_control'] = 'accountcontrol/edit';
 $route['eliminar_cuenta_control'] = 'accountcontrol/delete'; 
 $route['cambio_estado_cuenta_control'] = 'accountcontrol/changeStatus';  
 $route['importacion_cuenta_control'] = 'accountcontrol/importData'; 
-
+$route['obtener_cuenta_control/(:num)'] = 'accountcontrol/getDataAccountControl/$1'; 
 /*ACCOUNT HIGHER*/
 $route['cuenta_mayor'] = 'accounthigher/listing';
 $route['asignacion_cuenta_mayor'] = 'accounthigher/listing';
@@ -359,5 +361,24 @@ $route['editando_cuenta_detalle'] = 'accountdetail/edit';
 $route['eliminar_cuenta_detalle'] = 'accountdetail/delete'; 
 $route['cambio_estado_cuenta_detalle'] = 'accountdetail/changeStatus';  
 $route['importacion_cuenta_detalle'] = 'accountdetail/importData'; 
+
+/*BILLS*/
+$route["caja"] = 'bills/listing';
+$route['busqueda_cliente'] = 'bills/searchClient'; 
+$route['pagar_facturas'] = 'bills/save_payment'; 
+$route['calculando_abono'] = 'bills/calculate_bill_month'; 
+$route['reporte_diario'] = 'bills/report_bills_date'; 
+$route["entrada_de_diario"] = 'bills/report_daily';  
+$route["guarda_entrada_diario"] = 'bills/save_daily';  
+/*REPORT PAY*/
+$route["reportesdepago"] = 'reportpay/listing'; 
+$route["crearreportepago"] = 'reportpay/generate_report'; 
+$route["busqueda_deudas"] = 'reportpay/searchClient'; 
+$route["reportar_facturas"] = 'reportpay/save_payment'; 
+$route["eliminar_reporte_pago"] = 'reportpay/delete'; 
+$route["reporte"] = 'reportpay/report'; 
+$route["reporte/(:any)"] = 'reportpay/report/$1';
+$route["cambio_estatus_reporte_pago"] = 'reportpay/changestatus';  
+
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

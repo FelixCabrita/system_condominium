@@ -20,7 +20,7 @@ class Documenttype_model extends CI_Model
     { 
         $this->db->select('dt.id, dt.module, dt.code, dt.name, dt.status,dt.created_at,m.code as \'code_module\' ');    
         $this->db->from('document_type as dt');    
-        $this->db->join('module as m', 'm.id = dt.module'); 
+        $this->db->join('module as m', 'm.id = dt.module  AND m.condominium = dt.condominium'); 
         $this->db->where('dt.condominium',$condominium);
         if(!empty($module)){
             $this->db->where("dt.module", $module);
@@ -35,7 +35,7 @@ class Documenttype_model extends CI_Model
     {  
         $this->db->select('dt.id, dt.module, dt.code, dt.name, dt.created_at,m.code as \'code_module\' ');    
         $this->db->from('document_type as dt');    
-        $this->db->join('module as m', 'm.id = dt.module'); 
+        $this->db->join('module as m', 'm.id = dt.module  AND m.condominium = dt.condominium'); 
         $this->db->where('dt.condominium',$condominium);
         if(!empty($module)){
             $this->db->where("dt.module", $module);

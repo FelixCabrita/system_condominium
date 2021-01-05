@@ -20,7 +20,7 @@ class Accounthigher_model extends CI_Model
     { 
         $this->db->select('ah.id, ah.condominium, ah.code, ah.name, ah.account_control, ah.status, ah.created_at,acc.account as \'code_control\', acc.name as \'name_control\' ');    
         $this->db->from('account_higher as ah');    
-        $this->db->join('account_control as acc', 'acc.id = ah.account_control'); 
+        $this->db->join('account_control as acc', 'acc.id = ah.account_control AND acc.condominium = ah.condominium'); 
         $this->db->where('ah.condominium',$condominium);
         if(!empty($account_control)){
             $this->db->where("ah.account_control", $account_control);
@@ -35,7 +35,7 @@ class Accounthigher_model extends CI_Model
     {  
         $this->db->select('ah.id, ah.condominium, ah.code, ah.name, ah.account_control, ah.status, ah.created_at,acc.account as \'code_control\', acc.name as \'name_control\' ');    
         $this->db->from('account_higher as ah');    
-        $this->db->join('account_control as acc', 'acc.id = ah.account_control'); 
+        $this->db->join('account_control as acc', 'acc.id = ah.account_control AND acc.condominium = ah.condominium'); 
         $this->db->where('ah.condominium',$condominium);
         if(!empty($account_control)){
             $this->db->where("ah.account_control", $account_control);

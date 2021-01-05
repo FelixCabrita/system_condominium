@@ -49,6 +49,13 @@ class Accountcontrol extends BaseController
         } 
     }
 
+
+    public function getDataAccountControl($heading)
+    { 
+        echo json_encode($this->accountcontrol_model->getListing($heading,$this->condominium)); 
+    }
+    
+
     /**
      * This function is used to load the accountcontrol list
      */

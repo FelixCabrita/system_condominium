@@ -20,8 +20,8 @@ class Apartment_model extends CI_Model
     { 
         $this->db->select("a.id,  a.apartment, a.code,  a.conditions, a.number_parking, a.created_at,CONCAT(e.code,' - ',IFNULL(t.name,e.manager)) as 'edifice',e.code as 'code_edifice'");
         $this->db->from('apartment a');       
-        $this->db->join('edifice as e', 'e.id = a.edifice');
-        $this->db->join('tenant as t', 't.document = e.manager','left');
+        $this->db->join('edifice as e', 'e.id = a.edifice AND e.condominium = a.condominium');
+        $this->db->join('tenant as t', 't.document = e.manager AND t.condominium = e.condominium','left');
         $this->db->where('a.condominium',$condominium);
         $this->db->order_by('id', 'DESC'); 
         $query = $this->db->get(); 
@@ -34,7 +34,7 @@ class Apartment_model extends CI_Model
     {  
         $this->db->select("a.id,a.code,  a.apartment,e.code as 'code_edifice'"); 
         $this->db->from('apartment as a');  
-        $this->db->join('edifice as e', 'e.id = a.edifice');
+        $this->db->join('edifice as e', 'e.id = a.edifice  AND e.condominium = a.condominium');
         $this->db->where("a.status",1);
         $this->db->where('a.condominium',$condominium);
         if (!empty($edifice)) {
@@ -89,7 +89,7 @@ class Apartment_model extends CI_Model
     { 
         $this->db->select("a.id,  a.apartment, a.code,  a.conditions, a.number_parking, a.created_at,e.code as 'code_edifice',CONCAT(e.code,' - ',e.manager) as 'edifice'");
         $this->db->from('apartment a');       
-        $this->db->join('edifice as e', 'e.id = a.edifice');
+        $this->db->join('edifice as e', 'e.id = a.edifice  AND e.condominium = a.condominium');
         $this->db->where('a.condominium',$condominium);
         $this->db->where('a.id', $code); 
         $query = $this->db->get();
@@ -105,7 +105,7 @@ class Apartment_model extends CI_Model
     { 
         $this->db->select("a.id,  a.apartment, a.code,  a.conditions, a.number_parking, a.created_at,e.code as 'code_edifice',CONCAT(e.code,' - ',e.manager) as 'edifice'");
         $this->db->from('apartment a');       
-        $this->db->join('edifice as e', 'e.id = a.edifice');
+        $this->db->join('edifice as e', 'e.id = a.edifice  AND e.condominium = a.condominium');
         $this->db->where('a.condominium',$condominium);
         $this->db->where('a.code', $code); 
         $query = $this->db->get();

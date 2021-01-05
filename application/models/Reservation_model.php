@@ -21,10 +21,10 @@ class Reservation_model extends CI_Model
         $this->db->select("r.id, r.apartment, r.commonarea, r.quantity_persons, r.start_time, r.ending_time, r.reservation_date, r.status, r.created_at
         , a.code as 'apartment_code',c.max_person ,r.observations");
         $this->db->from('reservation r');       
-        $this->db->join('commonarea as c', 'c.id = r.commonarea'); 
-        $this->db->join('apartment as a', 'a.id = r.apartment');  
+        $this->db->join('commonarea as c', 'c.id = r.commonarea  AND c.condominium = r.condominium'); 
+        $this->db->join('apartment as a', 'a.id = r.apartment  AND a.condominium = r.condominium');  
         if(!empty($id)){
-            $this->db->join('assigning_apartment as asi', 'asi.apartment = r.apartment'); 
+            $this->db->join('assigning_apartment as asi', 'asi.apartment = r.apartment  AND asi.condominium = r.condominium'); 
             $this->db->where("asi.tenant", $id);
         }
         $this->db->where('r.condominium',$condominium);
@@ -39,8 +39,8 @@ class Reservation_model extends CI_Model
     {  
         $this->db->select("'select' as name, r.start_time, r.ending_time, r.reservation_date as 'date',  a.code as 'code',c.name as 'commonarea'");
         $this->db->from('reservation r');       
-        $this->db->join('commonarea as c', 'c.id = r.commonarea');
-        $this->db->join('apartment as a', 'a.id = r.apartment');  
+        $this->db->join('commonarea as c', 'c.id = r.commonarea  AND c.condominium = r.condominium');
+        $this->db->join('apartment as a', 'a.id = r.apartment  AND a.condominium = r.condominium');  
         $this->db->where('r.condominium',$condominium);
         $this->db->where('r.status > -1');
         $this->db->order_by('r.status, r.id', 'DESC'); 

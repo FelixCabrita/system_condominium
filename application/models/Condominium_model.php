@@ -80,6 +80,15 @@ class Condominium_model extends CI_Model
         return $query->row();
     }
 
+    public function getParameter($id)
+    {   
+        $this->db->select("cc.generate_credit,cc.generate_debit,cc.debit_card,cc.debit_cash,cc.debit_check,cc.debit_transfer,cc.credit_input ");  
+        $this->db->from('condominium as cc');  
+        $this->db->where('cc.id', $id);
+        $query = $this->db->get(); 
+        return $query->row();
+    }
+
     /**
      * This function is used to update the Condominium information
      * @param array $Info : This is condominium updated information

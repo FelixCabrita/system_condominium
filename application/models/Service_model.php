@@ -26,7 +26,17 @@ class Service_model extends CI_Model
         return $result;
     }
 
-    
+    function getListing($condominium)
+    { 
+        $this->db->from('services');     
+        $this->db->where('condominium',$condominium);
+        $this->db->where('status',1);
+        $this->db->order_by('id', 'DESC'); 
+        $query = $this->db->get(); 
+        $result = $query->result();        
+        return $result;
+    }
+
  
     /**
      * This function is used to check whether email id is already exist or not
@@ -113,6 +123,20 @@ class Service_model extends CI_Model
         $this->db->where('condominium',$condominium);
         $this->db->delete('services'); 
         return $this->db->affected_rows();
+    }   
+    
+    function create_service($date_load,$id,$condominium)
+    {
+        $this->db->query("CREATE DEFINER=".USER_BD."@`localhost` 
+        EVENT ".$id."_SERVICE"." ON SCHEDULE EVERY 1 MONTH STARTS '$date_load 15:15:00' ON COMPLETION NOT PRESERVE ENABLE DO 
+        CALL `setBills`($id,$condominium);"); 
+     
+    } 
+    
+    function delete_service($id)
+    {
+        $this->db->query("DROP EVENT IF EXISTS ".$id."_SERVICE"); 
+     
     } 
 }
 

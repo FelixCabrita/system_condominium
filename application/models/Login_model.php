@@ -17,7 +17,8 @@
      */
     function LoginUser($email, $password)
     {  
-        $this->db->select("u.id,IFNULL(u.condominium,'0') as 'condominium' ,u.username,u.password,u.permissions,u.name,u.status,u.type, IFNULL(c.name,'SIN CONDOMINIO') as 'condominium_name'"); 
+        $this->db->select("u.id,IFNULL(u.condominium,'0') as 'condominium',u.username,u.password,u.permissions,u.generates_report,u.name,u.status,u.type,
+         IFNULL(c.name,'SIN CONDOMINIO') as 'condominium_name',IFNULL(c.generate_debit,'0') as 'generate_debit',IFNULL(c.generate_credit,'0') as 'generate_credit'"); 
         $this->db->join('condominium as c', 'c.id = u.condominium','left');
         $this->db->from('users as u'); 
         $this->db->where('username', $email); 
@@ -38,7 +39,8 @@
 
     function LoginTenant($email, $password)
     {  
-        $this->db->select("t.id, t.condominium, t.document, t.name, t.mobile,  t.password, t.type, t.created_at, t.status"); 
+        $this->db->select("t.id, t.condominium, t.document, t.name, t.mobile,
+        IFNULL(c.name,'SIN CONDOMINIO') as 'condominium_name',  t.password, t.type, t.created_at, t.status"); 
         $this->db->join('condominium as c', 'c.id = t.condominium');
         $this->db->from('tenant as t'); 
         $this->db->where('t.document', $email); 

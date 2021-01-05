@@ -22,29 +22,20 @@
             <form class="form-inlne" id="add"  action="<?php echo base_url() ?>nuevo_cuenta_detalle" method="post" role="form">
                
                 <div class="row">
-                    <div class="form-group col-sm-6">
+                    <div class="form-group col-sm-4">
                         <label for="accounthigher">Cuenta mayor</label>
                         <select name="accounthigher" id="accounthigher" class="form-control">  
                             <?php  if(!empty($accounthigherRecords)) { foreach($accounthigherRecords as $record) {  ?>
                                 <option value ="<?php echo $record->id ?>" ><?php echo $record->code." - ".$record->name ?></option>
                             <?php }} ?> 
                         </select>
-                    </div> 
-                    <div class="form-group col-sm-6">
-                        <label for="apartment">Apartamento</label>
-                        <select name="apartment" id="apartment" class="form-control">  
-                            <option value ="" >Ninguno</option>
-                            <?php  if(!empty($apartmentRecords)) { foreach($apartmentRecords as $record) {  ?>
-                                <option value ="<?php echo $record->id ?>" data-edifice="<?php echo  $record->code_edifice ?>" data-apartment="<?php echo  $record->apartment ?>"><?php echo $record->code  ?></option>
-                            <?php }} ?> 
-                        </select>
                     </div>  
-                    <div class="form-group col-sm-6">
+                    <div class="form-group col-sm-4">
                         <label for="code">Codigo</label>
                         <input type="text"  class="form-control mb-2 mr-sm-5" id="code"  name="code" value="<?php echo set_value('code'); ?>"   maxlength="10" > 
                         <?php echo validation_error('code');?> 
                     </div>   
-                    <div class="form-group col-sm-6">
+                    <div class="form-group col-sm-4">
                         <label for="name">Nombre</label>
                         <input type="text"  class="form-control mb-2 mr-sm-5" id="name"  name="name" value="<?php echo set_value('name'); ?>"   maxlength="200" > 
                         <?php echo validation_error('name');?> 

@@ -20,7 +20,7 @@ class Accountcontrol_model extends CI_Model
     { 
         $this->db->select('acc.id, acc.condominium, acc.account, acc.name, acc.heading, acc.status, acc.created_at,h.code as \'code_heading\', h.name as \'name_heading\' ');    
         $this->db->from('account_control as acc');    
-        $this->db->join('heading as h', 'h.id = acc.heading'); 
+        $this->db->join('heading as h', 'h.id = acc.heading AND h.condominium = acc.condominium'); 
         $this->db->where('acc.condominium',$condominium);
         if(!empty($heading)){
             $this->db->where("acc.heading", $heading);
@@ -31,11 +31,11 @@ class Accountcontrol_model extends CI_Model
         return $result;
     }
 
-    public function getListing($module='',$condominium)
+    public function getListing($heading='',$condominium)
     {  
-        $this->db->select('acc.id, acc.condominium, acc.account, acc.name, acc.heading, acc.status, acc.created_at,h.code as \'code_heading\', h.name as \'name_heading\' ');    
+        $this->db->select(' acc.id, acc.condominium, acc.account, acc.name, acc.heading, acc.status, acc.created_at,h.code as \'code_heading\', h.name as \'name_heading\' ');    
         $this->db->from('account_control as acc');    
-        $this->db->join('heading as h', 'h.id = acc.heading'); 
+        $this->db->join('heading as h', 'h.id = acc.heading AND h.condominium = acc.condominium'); 
         $this->db->where('acc.condominium',$condominium);
         if(!empty($heading)){
             $this->db->where("acc.heading", $heading);

@@ -50,7 +50,7 @@ CUBEVALUE		= VALORE.CUBO			##	Restituisce un valore aggregato da un cubo.
 ##	Database functions				Funzioni di database
 ##
 DAVERAGE		= DB.MEDIA			##	Restituisce la media di voci del database selezionate
-DCOUNT			= DB.CONTA.NUMERI		##	Conta le celle di un database contenenti numeri
+DCOUNT			= DB.CONTA.NUMERI		##	Conta le celle di un database contenanti numeri
 DCOUNTA			= DB.CONTA.VALORI		##	Conta le celle non vuote in un database
 DGET			= DB.VALORI			##	Estrae da un database un singolo record che soddisfa i criteri specificati
 DMAX			= DB.MAX			##	Restituisce il valore massimo dalle voci selezionate in un database

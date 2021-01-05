@@ -30,6 +30,8 @@ class Module extends BaseController
         $this->globalApp['condominiumRecords'] = $this->condominium_model->getListing();
     }
 
+   
+
     /**
      * This function used to load the first screen of the module
      */
@@ -144,6 +146,7 @@ class Module extends BaseController
         }
     }
 
+    
     /**
      * This function is used to edit the module information
      */

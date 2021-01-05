@@ -15,19 +15,11 @@ $(document).ready(function() {
         rules: {
             name: {
                 required: true
-            },
-            amount: {
-                required: true,
-                number: true
             }
         },
         messages: {
             name: {
                 required: "Este campo es necesario"
-            },
-            amount: {
-                required: "Este campo es necesario",
-                number: "Esta caja de texto solo admite numeros y el simbolo (.) como separador decimal"
             }
         }
     });

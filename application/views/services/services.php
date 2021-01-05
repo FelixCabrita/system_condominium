@@ -22,7 +22,8 @@
                         <th class="text-center">CODIGO </th>
                         <th class="text-center">NOMBRE</th>
                         <th class="text-center">MONTO</th>
-                        <th class="text-center">FECHA DE CARGA</th> 
+                        <th class="text-center">FECHA DE GENERACION</th>   
+                        <th class="text-center">ULTIMA VEZ GENERADA</th> 
                         <th class="text-center">ESTADO</th> 
                         <th class="text-center">ACCIONES</th>
                     </tr>
@@ -38,7 +39,8 @@
                         <td class="text-center"style="vertical-align: middle;"><?php echo $record->code ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php echo $record->name ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php echo  $record->amount ?></td>
-                        <td class="text-center" style="vertical-align: middle;"><?php echo  $record->date_load=='1970-01-01'?"SIN FECHA":$record->date_load  ?></td>
+                        <td class="text-center" style="vertical-align: middle;"><?php echo  $record->date_load=='1970-01-01'?"SIN FECHA":$record->date_load  ?></td>      
+                        <td class="text-center" style="vertical-align: middle;"><?php echo  $record->last_upload_date=='0000-00-00'?"AUN NO GENERADA":$record->last_upload_date  ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php 
                         if($record->status==STATUS_ACTIVE){
                             echo '<span class="badge badge-success">ACTIVO</span>';
@@ -62,6 +64,7 @@
                         <th class="text-center">NOMBRE</th>
                         <th class="text-center">MONTO</th>
                         <th class="text-center">FECHA DE CARGA</th> 
+                        <th class="text-center">ULTIMA VEZ GENERADA</th> 
                         <th class="text-center">ESTADO</th> 
                         <th class="text-center">ACCIONES</th>
                     </tr>

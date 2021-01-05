@@ -3,8 +3,7 @@
 
 $name = $visitorInfo->name;
 $document = $visitorInfo->document;
-$mobile = $visitorInfo->mobile;
-
+$mobile = $visitorInfo->mobile; 
 ?>
 <div class="app-main__inner"> 
     <div class="card">

@@ -1,0 +1,158 @@
+<?php if(!defined('BASEPATH')) exit('No direct script access allowed');
+
+/**
+ * Class : Bills_model (Bills_model Model)
+ * Bills_model model class to get to handle Bills_model related data 
+ * @author : OCTONOVE
+ * @version : 1.0
+ * @since : 23 Diciembre 2020
+ */
+class Bills_model extends CI_Model
+{  
+  
+    function searchAsignationApartmentClient($id,$condominium)
+    { 
+        $this->db->select("b.id, b.apartment, b.description,b.amount, b.status, b.created_at,a.code,DATE(b.created_at) as emision ");
+        $this->db->from('bills as b');          
+        $this->db->join('assigning_apartment as asi', 'asi.apartment = b.apartment  AND asi.condominium = b.condominium');
+        $this->db->join('apartment as a', 'a.id = b.apartment AND a.condominium = b.condominium');
+        $this->db->where('b.condominium',$condominium);
+        $this->db->where('asi.tenant',$id);   
+        $this->db->where('b.status',0);  
+        $query = $this->db->get(); 
+        $result = $query->result();        
+        return $result; 
+    }
+
+    function checkBillApartment($apartment,$service,$condominium)
+    { 
+        $this->db->select("b.id, b.apartment, b.description,b.amount, b.status, b.created_at, DATE(b.created_at) as emision ");
+        $this->db->from('bills as b');
+        $this->db->where('b.apartment',$apartment);  
+        $this->db->where('b.type',$service); 
+        $this->db->where('b.condominium',$condominium);
+        $this->db->where('YEAR(b.created_at) = YEAR(now())');  
+        $this->db->where('MONTH(b.created_at) = MONTH(now())');  
+        $query = $this->db->get(); 
+        $result = $query->result();        
+        return $result; 
+    }
+ 
+    function searchClient($document,$condominium)
+    { 
+        $this->db->from('tenant'); 
+        $this->db->where("UPPER(document) = UPPER('$document')");
+        $this->db->where('condominium',$condominium);
+        $query = $this->db->get(); 
+        return $query->row();
+    }
+
+    function addMonth($mounth)
+    { 
+        $this->db->SELECT("  DATE(DATE_ADD(now(), INTERVAL $mounth MONTH)) as 'date', UPPER(MONTHNAME(DATE_ADD(now(), INTERVAL $mounth MONTH))) as 'title'");  
+        $query = $this->db->get(); 
+        return $query->row();
+    }
+
+
+    function getInfo($id,$condominium)
+    { 
+        $this->db->from('tenant'); 
+        $this->db->where("id",$id);
+        $this->db->where('condominium',$condominium);
+        $query = $this->db->get(); 
+        return $query->row();
+    }
+    
+    
+
+     /**
+     * This function is used to update the account_higher information
+     * @param array $account_higherInfo : This is account_highers updated information
+     * @param number $account_higherId : This is account_higher id
+     */
+    function save_payment($info, $ids,$condominium)
+    {
+        $this->db->where("id IN ($ids)");
+        $this->db->where('condominium',$condominium);
+        $this->db->update('bills', $info); 
+        return $this->db->affected_rows();
+    }
+
+    function created_payment($info)
+    {  
+        $this->db->trans_start();
+        $this->db->insert('bills', $info); 
+        $insert_id = $this->db->insert_id();
+        
+        $this->db->trans_complete();
+        
+        return $insert_id;
+    }
+
+
+    function getIdMaxDaily($condominium)
+    {  
+        $this->db->select("MAX(id) as max");
+        $this->db->from('daily');  
+        $this->db->where('condominium',$condominium);
+        $query = $this->db->get(); 
+        return $query->row(); 
+    }
+
+
+    function created_daily($info)
+    {  
+        $this->db->trans_start();
+        $this->db->insert('daily', $info); 
+        $insert_id = $this->db->insert_id();
+        
+        $this->db->trans_complete();
+        
+        return $insert_id;
+    }
+
+    function created_daily_detail($info)
+    {  
+        $this->db->trans_start();
+        $this->db->insert('daily_detail', $info); 
+        $insert_id = $this->db->insert_id();
+        
+        $this->db->trans_complete();
+        
+        return $insert_id;
+    }
+
+
+     /**
+     * This function is used to update the tenant information
+     * @param array $Info : This is tenants updated information
+     * @param number $Id : This is tenant id
+     */
+    function save_balace_tenant($Info, $Id,$condominium)
+    {
+        $this->db->where('id', $Id);
+        $this->db->where('condominium',$condominium);
+        $this->db->update('tenant', $Info); 
+        return $this->db->affected_rows();
+    }
+     
+    function report_bills_date($date, $condominium)
+    { 
+        $this->db->select("b.id, b.apartment,b.type,a.code,CONCAT(t.document,' - ', t.name) as 'client',
+         b.description,b.amount, b.status, b.created_at,
+          DATE(b.created_at) as created,  b.payment_date ");
+        $this->db->from('bills as b'); 
+        $this->db->join('apartment as a', 'a.id = b.apartment AND a.condominium = b.condominium');
+        $this->db->join('tenant as t', 't.id = b.tenant AND t.condominium = b.condominium');
+        $this->db->where('b.condominium',$condominium);  
+        $this->db->where('DATE(b.created_at) = DATE(now())');  
+        $query = $this->db->get(); 
+        $result = $query->result();        
+        return $result; 
+    }
+ 
+
+}
+
+  

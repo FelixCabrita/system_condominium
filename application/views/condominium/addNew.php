@@ -21,16 +21,24 @@
             <?php } ?>
             <form class="form-inlne" id="addCondominium" action="<?php echo base_url() ?>nuevo_condominio" method="post" role="form">
                 <div class="row">
-                    <div class="form-group col-sm-6">
+                    <div class="form-group col-sm-4">
                         <label for="fname">Nombre</label>
                         <input type="text"  class="form-control mb-2 mr-sm-5" id="fname"  name="fname" value="<?php echo set_value('fname'); ?>"   maxlength="100" > 
                         <?php echo validation_error('fname');?> 
                     </div> 
                         
-                    <div class="form-group col-sm-6">
+                    <div class="form-group col-sm-4">
                         <label for="address">Direccion</label>
                         <input type="text"   class="form-control mb-2 mr-sm-5" id="address"  value="<?php echo set_value('address'); ?>" name="address">
                         <?php echo validation_error('address');?> 
+                    </div> 
+                    <div class="form-group col-sm-4">
+                        <label for="masive">Notificar mensualmente por correo deuda de clientes</label> 
+                        <select name="masive" id="masive" class="form-control">
+                            <option value ="0">NO</option> 
+                            <option value ="1">SI</option> 
+                        </select> 
+                        <?php echo validation_error('masive');?>  
                     </div> 
                 </div> 
                 <div class="row">

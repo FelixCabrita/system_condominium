@@ -16,10 +16,6 @@ $(document).ready(function() {
             name: {
                 required: true
             },
-            amount: {
-                required: true,
-                number: true
-            },
             code: {
                 required: true,
                 remote: {
@@ -31,10 +27,6 @@ $(document).ready(function() {
         messages: {
             name: {
                 required: "Este campo es necesario"
-            },
-            amount: {
-                required: "Este campo es necesario",
-                number: "Esta caja de texto solo admite numeros y el simbolo (.) como separador decimal"
             },
             code: {
                 required: "Este campo es necesario",

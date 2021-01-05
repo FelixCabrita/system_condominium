@@ -80,7 +80,6 @@
                                         </a>
                                         <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right">
                                             <a type="button"  href="<?php echo base_url() . 'profile' ?>"  tabindex="0" class="dropdown-item">Perfil</a>
-                                            <a type="button" tabindex="0" class="dropdown-item">Configuraciones</a>
                                             <div tabindex="-1" class="dropdown-divider"></div>
                                             <a type="button"  href="<?php echo base_url() . 'logout' ?>" tabindex="0" class="dropdown-item">Cerrar sesion</a>
                                         </div>
@@ -275,8 +274,7 @@
     </div>
   </div>
 </div>
-
-
+ 
 <div class="modal fade" id="importheadings" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -327,7 +325,8 @@
       </div>
     </div>
   </div>
-</div>  
+</div> 
+
 <div class="modal fade" id="importaccounts" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -353,6 +352,7 @@
     </div>
   </div>
 </div>
+
 <div class="modal fade" id="importaccounthighers" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -404,6 +404,39 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="payment_type" tabindex="-1" role="dialog" aria-labelledby="payment_type" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="payment_type">TIPOS DE PAGO</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+         <div class="row">
+            <div class="col-sm-6" style="margin-bottom:2px"> 
+                <a href="#" class ="btn btn-info card payment_bills" data-dismiss="modal" data-payment="3"> <img style="width: 100%;" src = "<?php echo base_url(); ?>/assets/images/ICON/icon_card_payment.png"> <spam style="color:black"><b>TARJETA</b></spam></a>
+            </div>
+            <div class="col-sm-6" style="margin-bottom:2px">
+                <a href="#" class ="btn btn-info  card payment_bills" data-dismiss="modal" data-payment="2"> <img style="width: 100%;" src = "<?php echo base_url(); ?>/assets/images/ICON/icon_check_payment.jpg"><spam style="color:black"><b>CHEQUE</b></spam></a>
+            </div>
+            
+            <div class="col-sm-6" style="margin-bottom:2px"> 
+                <a href="#" class ="btn btn-info card payment_bills" data-dismiss="modal" data-payment="1"> <img style="width: 100%;" src = "<?php echo base_url(); ?>/assets/images/ICON/icon_transfer_payment.png"> <spam style="color:black"><b>TRANFERENCIA</b></spam></a>
+            </div>
+            <div class="col-sm-6" style="margin-bottom:2px">
+                <a href="#" class ="btn btn-info card payment_bills " data-dismiss="modal"  data-payment="0"> <img style="width: 100%;" src = "<?php echo base_url(); ?>/assets/images/ICON/icon_cash_payment.png"><spam style="color:black"><b>EFECTIVO</b></spam></a>
+            </div>
+         </div>
+      </div>
+      <div class="modal-footer"> 
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
         <div class="app-main">
             <div class="app-sidebar sidebar-shadow">
                 <div class="app-header__logo">
@@ -445,7 +478,11 @@
                                     <i class="metismenu-icon pe-7s-graph3"></i> Dashboard
                                 </a>
                             </li>
-                            <?php echo $rol<ROLE_VIGILANT?'<li class="app-sidebar__heading">ADMINISTRACION</li>':"" ?> 
+                            
+                            <?php 
+                            if($rol<ROLE_VIGILANT){
+                            
+                            echo $rol<ROLE_VIGILANT?'<li class="app-sidebar__heading">ADMINISTRACION</li>':"" ?> 
                             <?php  if($rol==ROLE_ADMIN){ ?>
                                 <li> 
                                     <a href="<?php echo base_url(); ?>condominios">
@@ -555,7 +592,40 @@
                                         </li>
                                     </ul> 
                                 <li> 
-                            <?php } ?>  
+                                <li> 
+                                    <a href="<?php echo base_url(); ?>establcer_parametros">
+                                        <i class="metismenu-icon pe-7s-user"></i>ESTABLECER PARAMETROS
+                                    </a>
+                                </li>  
+                                <li> 
+                                    <a href="<?php echo base_url(); ?>entrada_de_diario">
+                                        <i class="metismenu-icon pe-7s-user"></i>ENTRADA DE DIARIO
+                                    </a>
+                                </li>  
+                            <?php } ?> 
+                            <?php if (checkForPermissions('pay', PERMISSION_READ) == true) { ?>  
+                                <li class="app-sidebar__heading">CAJA</li> 
+                                <li>  <a href="<?php echo base_url(); ?>caja">
+                                        <i class="metismenu-icon pe-7s-user"></i> PAGAR 
+                                    </a>
+                                </li> 
+                                <?php if($generates_report==1){ ?>
+                                <li  > 
+                                    <a href="<?php echo base_url(); ?>reporte_diario">
+                                        <i class="metismenu-icon pe-7s-user"></i>REPORTE DIARIO
+                                    </a>
+                                </li>  
+                            <?php }  } }?>  
+                            
+                            <?php if (checkForPermissions('Payments', PERMISSION_READ) == true) { 
+                                 echo $rol<ROLE_VIGILANT?'<li class="app-sidebar__heading">Pagos</li>':"" 
+                                ?>   
+                                <li>  <a href="<?php echo base_url(); ?>reportesdepago">
+                                        <i class="metismenu-icon pe-7s-user"></i>REPORTE DE PAGO
+                                    </a>
+                                </li> 
+                             
+                            <?php }  ?>  
                             <?php echo $rol<ROLE_VIGILANT?'<li class="app-sidebar__heading">RESERVA DE AREA COMUN</li>':"" ?>  
                              <?php if (checkForPermissions('reservations', PERMISSION_READ) == true) { ?> 
                              <li> 
@@ -584,12 +654,13 @@
                                     <i class="metismenu-icon pe-7s-user"></i> VISITANTES
                                 </a> 
                             </li> 
+                            <?php if($generates_report==1){ ?>
                              <li> 
                                 <a href="#"  data-toggle="modal" data-target="#exampleModal">
                                     <i class="metismenu-icon pe-7s-user"></i> REPORTES
                                 </a> 
                             </li>  
-                            <?php } ?>
+                            <?php }} ?>
                             <?php echo $rol<ROLE_VIGILANT?' <li class="app-sidebar__heading">CLIENTES</li>':"" ?>   
                            
                             <?php   if (checkForPermissions('employees', PERMISSION_READ) == true) { ?> 

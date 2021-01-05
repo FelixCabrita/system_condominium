@@ -4,7 +4,10 @@ $name = $condominiumInfo->name;
 $address = $condominiumInfo->address;   
 $mobile = $condominiumInfo->mobile;
 $rcn = $condominiumInfo->rcn;    
-$email = $condominiumInfo->email;    
+$email = $condominiumInfo->email;   
+ 
+$masive = $condominiumInfo->masive;   
+
 $this->load->helper('form');
 $readonly = "readonly";
 if($permissions->U==1){
@@ -34,16 +37,25 @@ if($permissions->U==1){
             <?php if($permissions->U==1){ ?>
             <form class="form-inlne"  action="<?php echo base_url() ?>editando_condominio" method="post" id="editando_condominio" role="form"><?php } ?>
                 <div class="row">
-                    <div class="form-group col-sm-6">
+                    <div class="form-group col-sm-4">
                         <label for="fname">Nombre</label>
                         <input type="text"  class="form-control mb-2 mr-sm-5" id="fname"  name="fname" value="<?php echo $name; ?>" <?php echo $readonly; ?> maxlength="100" >
                         <input type="hidden" value="<?php echo $id; ?>" name="id" id="id" />    
                         <?php echo validation_error('fname');?> 
                     </div> 
-                    <div class="form-group col-sm-6">
+                    <div class="form-group col-sm-4">
                         <label for="address">Direccion</label>
                         <input type="text"   class="form-control mb-2 mr-sm-5" id="address"   name="address" value="<?php echo $address; ?>" <?php echo $readonly; ?>>
                         <?php echo validation_error('address');?> 
+                    </div> 
+
+                    <div class="form-group col-sm-4">
+                        <label for="masive">Notificar mensualmente por correo deuda de clientes</label> 
+                        <select name="masive" id="masive" class="form-control">
+                            <option value ="0" <?php echo  $masive==0?"SELECTED":"" ?>>NO</option> 
+                            <option value ="1" <?php echo  $masive==1?"SELECTED":"" ?>>SI</option> 
+                        </select> 
+                        <?php echo validation_error('masive');?>  
                     </div> 
                 </div> 
                 <div class="row">
@@ -64,6 +76,8 @@ if($permissions->U==1){
                         <?php echo validation_error('email');?> 
                     </div> 
                 </div> 
+
+             
                 <?php if($permissions->U==1){ ?>
                 
                 <div class="form-group">

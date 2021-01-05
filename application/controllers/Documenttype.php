@@ -30,6 +30,13 @@ class Documenttype extends BaseController
         $this->globalApp['condominiumRecords'] = $this->condominium_model->getListing();
     }
 
+    public function getDataDocumentType($module)
+    {
+        $this->load->model('documenttype_model'); 
+        echo json_encode($this->documenttype_model->getListing($module,$this->condominium)); 
+    }
+    
+
     /**
      * This function used to load the first screen of the documenttype
      */

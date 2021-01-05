@@ -22,9 +22,9 @@ class Vigilant_model extends CI_Model
     {
         $this->db->select("d.id, vs.name, vs.document, d.observation, d.created_at, d.licence_plate, d.status, a.apartment,e.code");
         $this->db->from('vigilant d');
-        $this->db->join('edifice as e', 'e.id = d.edifice');
-        $this->db->join('apartment as a', 'a.id = d.apartment');
-        $this->db->join('visitor as vs', 'vs.id = d.visitor');
+        $this->db->join('edifice as e', 'e.id = d.edifice AND e.condominium = d.condominium');
+        $this->db->join('apartment as a', 'a.id = d.apartment AND a.condominium = d.condominium');
+        $this->db->join('visitor as vs', 'vs.id = d.visitor  AND vs.condominium = d.condominium');
         $this->db->where('d.condominium', $condominium);
         if (!empty($document)) {
             $this->db->where("vs.document", $document);
@@ -40,9 +40,9 @@ class Vigilant_model extends CI_Model
     {
         $this->db->select("d.id, vs.name, vs.document, d.observation, d.created_at, d.licence_plate, d.status, a.apartment,e.code");
         $this->db->from('vigilant d');
-        $this->db->join('edifice as e', 'e.id = d.edifice');
-        $this->db->join('apartment as a', 'a.id = d.apartment');
-        $this->db->join('visitor as vs', 'vs.id = d.visitor');
+        $this->db->join('edifice as e', 'e.id = d.edifice AND e.condominium = d.condominium');
+        $this->db->join('apartment as a', 'a.id = d.apartment AND a.condominium = d.condominium');
+        $this->db->join('visitor as vs', 'vs.id = d.visitor  AND vs.condominium = d.condominium');
         $this->db->where('d.condominium', $condominium);
 
         if (!empty($type_visitor)) {
@@ -67,7 +67,7 @@ class Vigilant_model extends CI_Model
     { 
         $this->db->select("vs.name,vs.document,vs.status as 'visitorStatus',vs.observation as 'visitorObservation',vg.status,vg.edifice,vg.licence_plate,vg.apartment,vg.observation, vs.mobile,vs.type");
         $this->db->from("visitor  as vs");
-        $this->db->join('vigilant as vg', 'vg.visitor = vs.id','left'); 
+        $this->db->join('vigilant as vg', 'vg.visitor = vs.id  AND vg.condominium = vs.condominium','left'); 
         $this->db->where("vs.document = '" . $document . "'");
         $this->db->where('vs.condominium', $condominium);
         $this->db->order_by('vg.created_at ', "DESC"); 
@@ -128,8 +128,8 @@ class Vigilant_model extends CI_Model
         $this->db->select("d.id, d.name, d.edifice, d.document, d.chargue, d.period, d.created_at, d.status, d.apartment,
                             concat(e.code,' - ',e.manager) as 'edifice_code', a.apartment as 'apartment_code'");
         $this->db->from('vigilant d');
-        $this->db->join('edifice as e', 'e.id = d.edifice');
-        $this->db->join('apartment as a', 'a.id = d.apartment');
+        $this->db->join('edifice as e', 'e.id = d.edifice  AND e.condominium = d.condominium');
+        $this->db->join('apartment as a', 'a.id = d.apartment  AND a.condominium = d.condominium');
         $this->db->where('d.condominium', $condominium);
         $this->db->where('d.id', $id);
         $query = $this->db->get();

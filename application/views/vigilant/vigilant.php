@@ -11,7 +11,11 @@
                 <div class="col-sm-3 "> 
                     <button onclick ="window.location = 'entrada_salida'" type="button" class="btn btn-primary btn-lg btn-block"><span class="btn-icon-right"><i class="fa fa-plus"> </i> Agregar entrada o salida </span></button> 
                 </div>
-                <?php } ?>
+                <?php } 
+                if($generates_report==0){
+                    echo "<style>.dt-buttons{display:none}</style>";
+                }
+                ?>
             </div> 
             <div class="table-responsive">
                 <table id="example" class="display" style="min-width: 845px">
@@ -21,7 +25,8 @@
                             <th class="text-center">VISITANTE</th>
                             <th class="text-center">FECHA DE EMISION </th>
                             <th class="text-center">TIPO</th>  
-                            <th class="text-center">EDIF. - APTO.</th>    <th class="text-center">PLACA</th>  
+                            <th class="text-center">EDIF. - APTO.</th>    
+                            <th class="text-center">PLACA</th>  
                             <th class="text-center">OBSERVACION</th> 
                         </tr>
                     </thead>
@@ -51,7 +56,8 @@
                             <th class="text-center">VISITANTE</th>
                             <th class="text-center">FECHA DE EMISION </th>
                             <th class="text-center">TIPO</th>  
-                            <th class="text-center">EDIF. - APTO.</th>     <th class="text-center">PLACA</th>  
+                            <th class="text-center">EDIF. - APTO.</th>     
+                            <th class="text-center">PLACA</th>  
                             <th class="text-center">OBSERVACION</th>
                         </tr>
                     </tfoot>

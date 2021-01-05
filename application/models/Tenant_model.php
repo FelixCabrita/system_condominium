@@ -44,8 +44,8 @@ class tenant_model extends CI_Model
         $this->db->select("asi.id, asi.edifice, asi.apartment, asi.tenant, asi.status, asi.created_at, asi.updated_at, asi.observation
                           ,e.code as 'edifice_code',a.apartment as 'apartment_code'");
         $this->db->from('assigning_apartment as asi');     
-        $this->db->join('edifice as e', 'e.id = asi.edifice');
-        $this->db->join('apartment as a', 'a.id = asi.apartment');
+        $this->db->join('edifice as e', 'e.id = asi.edifice  AND e.condominium = asi.condominium');
+        $this->db->join('apartment as a', 'a.id = asi.apartment  AND a.condominium = asi.condominium');
         $this->db->where('asi.condominium',$condominium);
         $this->db->where('asi.tenant',$id);
         if(!empty($_id)){
@@ -85,8 +85,8 @@ class tenant_model extends CI_Model
     { 
         $this->db->select("asi.id, asi.edifice, asi.apartment, asi.tenant, asi.status ,e.code as 'edifice_code',a.apartment as 'apartment_code'");
         $this->db->from('assigning_apartment as asi');     
-        $this->db->join('edifice as e', 'e.id = asi.edifice');
-        $this->db->join('apartment as a', 'a.id = asi.apartment');
+        $this->db->join('edifice as e', 'e.id = asi.edifice  AND e.condominium = asi.condominium');
+        $this->db->join('apartment as a', 'a.id = asi.apartment  AND a.condominium = asi.condominium');
         $this->db->where('asi.condominium',$condominium);
         if (!empty($edifice)) {
             $this->db->where("asi.edifice",$edifice);
@@ -232,7 +232,7 @@ class tenant_model extends CI_Model
     {
         $this->db->select("asi.id");
         $this->db->from("assigning_apartment as asi");
-        $this->db->join('tenant as t', 't.id = asi.tenant');
+        $this->db->join('tenant as t', 't.id = asi.tenant  AND t.condominium = asi.condominium');
         $this->db->where("asi.edifice", $edifice);   
         $this->db->where("asi.apartment", $apartment);   
         $this->db->where('asi.condominium',$condominium);

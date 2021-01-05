@@ -20,7 +20,7 @@ class Edifice_model extends CI_Model
     { 
         $this->db->select(" e.id, e.condominium, e.code, e.edifice, e.block, e.manager, IFNULL(t.name,'') as 'name', e.observation, e.created_at , e.status");
         $this->db->from('edifice as e');     
-        $this->db->join('tenant as t', 'UPPER(t.document) = UPPER(e.manager)','left');
+        $this->db->join('tenant as t', 'UPPER(t.document) = UPPER(e.manager)  AND t.condominium = e.condominium','left');
         $this->db->where('e.condominium',$condominium);
         $this->db->order_by('e.id', 'DESC'); 
         $query = $this->db->get(); 
@@ -69,7 +69,7 @@ class Edifice_model extends CI_Model
     {  
         $this->db->select('e.id,e.code,e.manager, IFNULL(t.name, e.manager) as name'); 
         $this->db->from('edifice as e'); 
-        $this->db->join('tenant as t', 'UPPER(t.document) = UPPER(e.manager)','LEFT');
+        $this->db->join('tenant as t', 'UPPER(t.document) = UPPER(e.manager) AND t.condominium = e.condominium','LEFT');
         $this->db->where('e.condominium',$condominium);
         $this->db->where("e.status",1);
         $query = $this->db->get();

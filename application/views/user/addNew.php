@@ -26,13 +26,20 @@
                         <input type="text"  class="form-control mb-2 mr-sm-5" id="fname"  name="fname" value="<?php echo set_value('fname'); ?>"   maxlength="128" > 
                         <?php echo validation_error('fname');?> 
                     </div> 
-                    <div class="form-group col-sm-6">
+                    <div class="form-group col-sm-3">
                         <label for="type" >Tipo de usuario</label>
                         <select name="type" id="type" class="form-control">
                             <option value ="<?php echo ROLE_MANAGER ?>" <?php echo set_value('type')==ROLE_MANAGER?"selected":"" ?>>ADMINISTRADOR</option>
                             <option value ="<?php echo ROLE_VENDOR ?>"  <?php echo set_value('type')==ROLE_VENDOR?"selected":"" ?>>CAJA</option>  
                             <option value ="<?php echo ROLE_ACCOUNTING ?>" <?php echo set_value('type')==ROLE_ACCOUNTING?"selected":"" ?>>CONTABILIDAD</option>
                             <option value ="<?php echo ROLE_VIGILANT ?>"  <?php echo set_value('type')==ROLE_VIGILANT?"selected":"" ?>>VIGILANTE</option>  
+                        </select>
+                    </div>   
+                    <div class="form-group col-sm-3">
+                        <label for="generates_report" >Genera reporte?</label>
+                        <select name="generates_report" id="tygenerates_reportpe" class="form-control">
+                            <option value ="0" <?php echo set_value('generates_report')==0?"selected":"" ?>>NO</option>
+                            <option value ="1"  <?php echo set_value('generates_report')==1?"selected":"" ?>>SI</option>   
                         </select>
                     </div> 
                 </div>  

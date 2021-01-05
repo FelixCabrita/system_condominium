@@ -20,9 +20,9 @@ class Directive_model extends CI_Model
     { 
         $this->db->select("d.id, d.name, d.edifice, d.position,  d.document, d.chargue, p.name as 'period', d.created_at, d.status, a.apartment,e.code,d.photo_1");
         $this->db->from('directive d');       
-        $this->db->join('edifice as e', 'e.id = d.edifice');
-        $this->db->join('apartment as a', 'a.id = d.apartment');
-        $this->db->join('period as p', 'p.id = d.period');
+        $this->db->join('edifice as e', 'e.id = d.edifice  AND e.condominium = d.condominium');
+        $this->db->join('apartment as a', 'a.id = d.apartment  AND a.condominium = d.condominium');
+        $this->db->join('period as p', 'p.id = d.period  AND p.condominium = d.condominium');
         $this->db->where('d.condominium',$condominium);
         if($status!=0){
             $this->db->where('p.status',$status);
@@ -78,8 +78,8 @@ class Directive_model extends CI_Model
         $this->db->select("d.id, d.name, d.edifice, d.document, d.chargue, d.period, d.created_at, d.status,d.position, d.apartment,
                             concat(e.code,' - ',e.manager) as 'edifice_code', a.apartment as 'apartment_code',d.photo_1");
         $this->db->from('directive d');       
-        $this->db->join('edifice as e', 'e.id = d.edifice');
-        $this->db->join('apartment as a', 'a.id = d.apartment');
+        $this->db->join('edifice as e', 'e.id = d.edifice  AND e.condominium = d.condominium' );
+        $this->db->join('apartment as a', 'a.id = d.apartment  AND a.condominium = d.condominium');
         $this->db->where('d.condominium',$condominium);
         $this->db->where('d.id', $id); 
         $query = $this->db->get();

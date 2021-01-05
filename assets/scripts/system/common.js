@@ -2167,6 +2167,114 @@ jQuery(document).ready(function() {
             }
         }])
     });
+
+    jQuery(document).on("click", ".deleteReportPay", function() {
+        var userId = $(this).data("userid"),
+            name = $(this).data("name"),
+            photo = $(this).data("photo"),
+            hitURL = baseURL + "eliminar_reporte_pago";
+
+        const data = new FormData();
+        data.append('id', userId);
+        data.append('photo', photo);
+
+        Swal.queue([{
+            title: "¿Desea a eliminar este reporte de pago #" + name + "?",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'SI!',
+            cancelButtonText: 'No, cancelar!',
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return fetch(hitURL, {
+                        method: 'POST',
+                        body: data
+                    })
+                    .then(response => response.json())
+                    .then(data => (data.status ?
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: "Reporte eliminado con exito",
+                            showConfirmButton: false,
+                            timer: 2000
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                window.location = baseURL + "reportesdepago"
+                            }
+                        }) :
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: "Por alguna razon no podemos eliminar este reporte de pago",
+                            showConfirmButton: false,
+                            timer: 2000
+                        })))
+                    .catch(() => {
+                        Swal.insertQueueStep({
+                            icon: 'error',
+                            title: 'acceso denegado..!'
+                        })
+                    })
+            }
+        }])
+    });
+
+    jQuery(document).on("click", ".changeStatusReportPay", function() {
+        var userId = $(this).data("userid"),
+            isactive = $(this).data("isactive"),
+            hitURL = baseURL + "cambio_estatus_reporte_pago";
+
+        const data = new FormData();
+        data.append('id', userId);
+        data.append('isactive', isactive);
+
+        Swal.queue([{
+            title: "¿Desea " + (isactive == 1 ? "aprobar" : "rechazar") + " este reporte de pago?",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'SI!',
+            cancelButtonText: 'No, cancelar!',
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return fetch(hitURL, {
+                        method: 'POST',
+                        body: data
+                    })
+                    .then(response => response.json())
+                    .then(data => (data.status ?
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: "Reporte de pago " + (isactive == 1 ? "aprobado" : "rechazado") + "  con exito",
+                            showConfirmButton: false,
+                            timer: 2000
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+
+                            }
+                        }) :
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: "Por alguna razon no podemos " + (isactive == 1 ? "aprobar" : "rechazar") + " este reporte de pago?",
+                            showConfirmButton: false,
+                            timer: 2000
+                        })))
+                    .catch(() => {
+                        Swal.insertQueueStep({
+                            icon: 'error',
+                            title: 'acceso denegado..!'
+                        })
+                    })
+            }
+        }])
+    });
+
     jQuery(document).on("click", ".searchList", function() {
 
     });

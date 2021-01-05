@@ -69,7 +69,7 @@ class Vigilant extends BaseController
      */
     public function log($document)
     {
-        if (checkForPermissions('vigilant', PERMISSION_READ) != true) {
+        if (checkForPermissions('vigilant', PERMISSION_READ) != true || $this->generates_report==0) {
             $this->loadThis();
         } else {
             if ($document == null) {
@@ -91,7 +91,7 @@ class Vigilant extends BaseController
  */
     public function generateReport()
     {
-        if (checkForPermissions('vigilant', PERMISSION_READ) != true) {
+        if (checkForPermissions('vigilant', PERMISSION_READ) != true || $this->generates_report==0) {
             $this->loadThis();
         } else {
             $start_date = ($this->security->xss_clean($this->input->post('start_date')));

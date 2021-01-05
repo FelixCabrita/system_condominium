@@ -22,8 +22,8 @@ class Employees_model extends CI_Model
     {
         $this->db->select("em.id, em.name, em.document, em.observation, em.started_work, em.work_type, em.created_at, em.status, a.apartment,e.code");
         $this->db->from('employees em');
-        $this->db->join('apartment as a', 'a.id = em.apartment');
-        $this->db->join('edifice as e', 'e.id = a.edifice'); 
+        $this->db->join('apartment as a', 'a.id = em.apartment AND a.condominium = em.condominium');
+        $this->db->join('edifice as e', 'e.id = a.edifice  AND e.condominium = a.condominium'); 
         $this->db->where('em.condominium', $condominium);
         if(!empty($apartment)){
             $this->db->where("em.apartment", $apartment);
@@ -90,8 +90,8 @@ class Employees_model extends CI_Model
     {
         $this->db->select(" em.document,  em.apartment as 'apto_id', a.apartment,e.code,e.id as 'edifice'");
         $this->db->from('employees em');
-        $this->db->join('apartment as a', 'a.id = em.apartment');
-        $this->db->join('edifice as e', 'e.id = a.edifice'); 
+        $this->db->join('apartment as a', 'a.id = em.apartment AND a.condominium = em.condominium');
+        $this->db->join('edifice as e', 'e.id = a.edifice  AND e.condominium = a.condominium');
         $this->db->where('em.condominium', $condominium);
         $this->db->where('em.document', $document);
         $query = $this->db->get(); 
@@ -102,8 +102,8 @@ class Employees_model extends CI_Model
     {
         $this->db->select("em.id, em.name, em.document, em.mobile, em.observation, em.started_work, em.work_type, em.created_at, em.status,em.apartment as 'apto_id', a.apartment,e.code");
         $this->db->from('employees em');
-        $this->db->join('apartment as a', 'a.id = em.apartment');
-        $this->db->join('edifice as e', 'e.id = a.edifice'); 
+        $this->db->join('apartment as a', 'a.id = em.apartment AND a.condominium = em.condominium');
+        $this->db->join('edifice as e', 'e.id = a.edifice  AND e.condominium = a.condominium');
         $this->db->where('em.condominium', $condominium);
         $this->db->where('em.id', $id);
         $query = $this->db->get(); 

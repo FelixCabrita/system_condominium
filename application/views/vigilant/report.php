@@ -12,6 +12,10 @@ if (!empty($type_visitor)) {
 if (!empty($type_input)) {
     $name_report = $name_report . " {" . ($type_input == VIGILANT_INPUT ? "ENTRADA" : "SALIDA") . "}";
 }
+
+if($generates_report==0){
+    echo "<style>.dt-buttons{display:none}</style>";
+}
 ?>
 <div class="app-main__inner"> 
     <div class="card">

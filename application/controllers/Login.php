@@ -60,7 +60,10 @@ class Login extends BaseController
                     'permissions' => $UserData->permissions,
                     'name' => $UserData->name,
                     'rol' => $UserData->type, 'apartment' => 0,
-                    'condominium' => $UserData->condominium,
+                    'condominium' => $UserData->condominium, 
+                    'generate_credit' => $UserData->generate_credit, 
+                    'generate_debit' => $UserData->generate_debit,   
+                    'generates_report' => $UserData->generates_report,
                     'condominium_text' => $UserData->condominium_name,
                     'isLoggedIn' => true,
                 );
@@ -73,27 +76,25 @@ class Login extends BaseController
                 $TenantValidCode = $this->validPanelUser($TenantData);
                 if ($TenantValidCode == USER_VALID_CODE) {
                     $sessionArray =
-                        array(
-                            'id' => $TenantData->id,
-                            'username' => $TenantData->document,
-                            'permissions' => PERMISSION_TENANT,
-                            'name' => $TenantData->name,
-                            'rol' =>  $TenantData->type,
-                            'condominium' => $TenantData->condominium,
-                            'condominium_text' => $TenantData->condominium_name,
-                            'isLoggedIn' => true,
-                        ); 
+                    array(
+                        'id' => $TenantData->id,
+                        'username' => $TenantData->document,
+                        'permissions' => PERMISSION_TENANT,
+                        'name' => $TenantData->name,
+                        'rol' => $TenantData->type,
+                        'condominium' => $TenantData->condominium,
+                        'condominium_text' => $TenantData->condominium_name,
+                        'isLoggedIn' => true,
+                    );
                     $this->session->set_userdata($sessionArray);
                     unset($sessionArray['id'], $sessionArray['isLoggedIn']);
                     $this->index();
-                } 
-                   
-                
+                }
+
                 $this->displayLoginFormError($UserValidCode);
                 $this->index();
             }
 
-           
         } else {
             $this->index();
         }
