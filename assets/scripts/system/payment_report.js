@@ -141,6 +141,7 @@ jQuery(document).ready(function() {
                         apartment_code,
                         strDate,
                         payment_mode,
+                        service,
                         '<a class="btn btn-sm btn-danger deleteBillsPayment" href="#" title="Eliminar"><i class="fa fa-trash"></i></a>'
                     ]).draw(false);
                     calculate();
@@ -197,6 +198,7 @@ jQuery(document).ready(function() {
                                                 apartment_code,
                                                 strDate,
                                                 value.payment_prox,
+                                                service,
                                                 '<a class="btn btn-sm btn-danger deleteBillsPayment" href="#" title="Eliminar"><i class="fa fa-trash"></i></a>'
                                             ]).draw(false);
                                         }

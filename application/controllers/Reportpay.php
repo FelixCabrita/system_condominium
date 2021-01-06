@@ -94,11 +94,11 @@ class Reportpay extends BaseController
             $apartment = $this->security->xss_clean($this->input->post('apartment'));
             $dataService = $this->getDataService($service);
             $dataReportpay = $this->reportpay_model->checkBillApartment($apartment, $service, $this->condominium);
-            $countreportpay = !empty($dataReportpay) ? 1 : 0;
+            $dateMax = $dataReportpay->date;
             $reportpay_month = array();
 
             for ($i = 0; $i < $quantity; $i++) {
-                $getMonth = $this->reportpay_model->addMonth($i + $countreportpay);
+                $getMonth = $this->reportpay_model->addMonth($i,$dateMax);
                 $temp = array('id' => -2, 'description' => $getMonth->title . " - " . $dataService->name, 'amount' => $dataService->amount, 'payment_prox' => $getMonth->date);
                 array_push($reportpay_month, $temp);
             }
@@ -126,7 +126,7 @@ class Reportpay extends BaseController
             $this->loadThis();
         } else {
             $data['permissions'] = $this->getPermissions()->{'Payments'};
-            $data['reportpayRecords'] = $this->reportpay_model->listing($this->condominium);
+            $data['reportpayRecords'] = $this->reportpay_model->listing($this->condominium,$this->rol>ROLE_VIGILANT?$this->id:"");
             $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Lista de reportes de pago';
             $this->loadViews("reportpay/reportpay", $this->globalApp, $data, null);
         }
@@ -156,7 +156,7 @@ class Reportpay extends BaseController
 
     public function save_payment()
     {
-        if (checkForPermissions('Payments', PERMISSION_UPDATE) != true) {
+        if (checkForPermissions('Payments', PERMISSION_CREATE) != true) {
             echo (json_encode(array('status' => 'access')));
         } else {
             $this->ConfigurationLibrary();
@@ -310,21 +310,19 @@ class Reportpay extends BaseController
 
     public function delete()
     {
-        if (checkForPermissions('services', PERMISSION_DELETE) != true) {
-            echo (json_encode(array('status' => 'access')));
+    
+        $id = $this->input->post('id');
+        $photo = $this->input->post('photo');
+
+        $result = $this->reportpay_model->delete($id, $this->condominium);
+        $result = $this->reportpay_model->delete_detail($id, $this->condominium);
+
+        if ($result) {
+            echo (json_encode(array('status' => true)));
         } else {
-            $id = $this->input->post('id');
-            $photo = $this->input->post('photo');
-
-            $result = $this->reportpay_model->delete($id, $this->condominium);
-            $result = $this->reportpay_model->delete_detail($id, $this->condominium);
-
-            if ($result) {
-                echo (json_encode(array('status' => true)));
-            } else {
-                echo (json_encode(array('status' => false)));
-            }
+            echo (json_encode(array('status' => false)));
         }
+        
     }
 
     public function changestatus()

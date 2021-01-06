@@ -46,7 +46,7 @@ $(document).ready(function() {
         $('#reportdaily').DataTable().rows(currentRow).remove().draw();
         calculate();
     });
-
+    calculate();
 
     function calculate() {
         var data = table.rows().data().toArray();
@@ -61,7 +61,7 @@ $(document).ready(function() {
         $("#credit_total").val((credit).toFixed(2));
         $("#balance").val((balance).toFixed(2));
     }
-
+    getDocumentType();
     $("#module").change(function() {
         getDocumentType();
     });
@@ -78,24 +78,32 @@ $(document).ready(function() {
             credit = parseFloat($("#credit").val()),
             debit = parseFloat($("#debit").val()),
             note = ($("#note").val()) == '' ? "NINGUNA" : $("#note").val();
-        table.row.add([
-            account,
-            namme_account,
-            debit,
-            credit,
-            note,
-            '<a class="btn btn-sm btn-danger deleteBillsPayment" href="#" title="Eliminar"><i class="fa fa-trash"></i></a>'
-        ]).draw(false);
-        calculate();
-        $("#credit").val("0");
-        $("#debit").val("0");
+
+        credit = credit >= 0 ? credit : 0;
+        debit = debit >= 0 ? debit : 0;
+        if (credit == 0 && debit == 0) {
+
+        } else {
+            table.row.add([
+                account,
+                namme_account,
+                debit,
+                credit,
+                note,
+                '<a class="btn btn-sm btn-danger deleteBillsPayment" href="#" title="Eliminar"><i class="fa fa-trash"></i></a>'
+            ]).draw(false);
+            calculate();
+            $("#credit").val("0");
+            $("#debit").val("0");
+        }
+
     }
 
     function getDocumentType() {
 
         var stateID = $("#module").val();
         $.ajax({
-            url: 'obtener_tipo_documento/' + stateID,
+            url: baseURL + 'obtener_tipo_documento/' + stateID,
             type: "GET",
             dataType: "json",
             success: function(data) {
@@ -103,7 +111,7 @@ $(document).ready(function() {
 
                 $('select[name="documentType"]').empty();
                 $.each(data, function(key, value) {
-                    $('select[name="documentType"]').append('<option value="' + value.id + '">' + value.code + " - " + value.name + '</option>');
+                    $('select[name="documentType"]').append('<option value="' + value.id + '" ' + (documenttype_ == value.id ? "SELECTED" : "") + ' >' + value.code + " - " + value.name + '</option>');
                 });
             }
         });
@@ -113,11 +121,12 @@ $(document).ready(function() {
         var balance = parseFloat($("#balance").val()),
             debit = parseFloat($("#debit_total").val()),
             credit = parseFloat($("#credit_total").val()),
+            date = ($("#date").val()),
             module = parseFloat($("#module").val()),
             documentType = parseFloat($("#documentType").val()),
             pay = true;
 
-        if (balance != 0 || debit == 0 || credit == 0) {
+        if (balance != 0 || debit == 0 || credit == 0 | date == '') {
             pay = false;
         }
 
@@ -133,16 +142,28 @@ $(document).ready(function() {
             data11.append('module', module);
             data11.append('documentType', documentType);
             data11.append('json', json);
+            data11.append('date', date);
+            data11.append('id_', id_);
 
             Swal.queue([{
-                title: '¿Desea registrar esta entrada del diario ?',
+                title: id_ == '' ? '¿Desea registrar esta entrada del diario ?' : 'Desea actualizar esta entrada de diario?',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'SI!',
                 cancelButtonText: 'No, cancelar!',
+                input: 'text',
+                inputValue: description,
+                inputPlaceholder: 'Coloque una observacion',
                 showLoaderOnConfirm: true,
+                inputValidator: (value) => {
+                    if (!value) {
+                        return 'Debes colocar una observacion!'
+                    }
+                },
                 preConfirm: () => {
+                    data11.append('observation', $('.swal2-input').val());
+
                     return fetch(hitURL, {
                             method: 'POST',
                             body: data11
@@ -152,13 +173,13 @@ $(document).ready(function() {
                             Swal.fire({
                                 position: 'top-end',
                                 icon: 'success',
-                                title: 'Entrada de diario registrada con exito!',
+                                title: id_ == '' ? 'Entrada de diario registrada con exito!' : 'Entrada de diario actualizada con exito!',
                                 showConfirmButton: false,
                                 timer: 2000
                             }).then((result) => {
                                 /* Read more about handling dismissals below */
                                 if (result.dismiss === Swal.DismissReason.timer) {
-                                    window.location = baseURL + "entrada_de_diario"
+                                    window.location = baseURL + (id_ == '' ? "entrada_de_diario" : "editar_entrada_diario/" + id_)
                                 }
                             }) :
                             Swal.fire({

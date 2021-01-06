@@ -94,16 +94,18 @@ class Bills extends BaseController
             $apartment = $this->security->xss_clean($this->input->post('apartment'));
             $dataService = $this->getDataService($service);
             $dataBills = $this->bills_model->checkBillApartment($apartment, $service, $this->condominium);
-            $countbills = !empty($dataBills) ? 1 : 0;
-            $bills_month = array();
 
-            for ($i = 0; $i < $quantity; $i++) {
-                $getMonth = $this->bills_model->addMonth($i + $countbills);
+            $dateMax = $dataBills->date;
+            $bills_month = array();
+            for ($i = 1; $i <= $quantity; $i++) {
+                $getMonth = $this->bills_model->addMonth($i, $dateMax);
+
+                //$effectiveDate = date('Y-m-d', strtotime("+3 months", strtotime($effectiveDate)));
                 $temp = array('id' => -2, 'description' => $getMonth->title . " - " . $dataService->name, 'amount' => $dataService->amount, 'payment_prox' => $getMonth->date);
                 array_push($bills_month, $temp);
             }
 
-            echo (json_encode(array('status' => true, 'countbills' => $countbills, 'bills_month' => $bills_month)));
+            echo (json_encode(array('status' => true, 'dateMax' => $dateMax, 'bills_month' => $bills_month)));
 
         }
     }
@@ -130,8 +132,6 @@ class Bills extends BaseController
 
             $id = $this->input->post('id');
             $ids = $this->input->post('ids');
-            $residue = $this->input->post('residue');
-            $amount = $this->input->post('amount');
 
             $bills = json_decode($this->input->post('json'));
             $check_number = $this->input->post('check_number');
@@ -139,39 +139,10 @@ class Bills extends BaseController
             $transfer_code = $this->input->post('transfer_code');
             $transfer_date = $this->input->post('transfer_date');
             $payment_type_id = $this->input->post('payment_type_id');
-            if (!empty($ids)) {
-                $info = array('status' => 1, 'tenant' => $id, 'payment_date' => date('Y-m-d H:i:s'), 'payment_date_prox' => date('Y-m-d H:i:s'),
-                    'payment_type' => $payment_type_id, 'check_number' => $check_number, 'check_transmitter' => $check_transmitter,
-                    'transfer_date' => $transfer_date, 'transfer_code' => $transfer_code);
-                $result_payment = $this->bills_model->save_payment($info, $ids, $this->condominium);
-            }
 
-            foreach ($bills as $bill) {
-                if ($bill[5] > -1) {
-                    $code_apartment = $bill[3];
-                    $apartment = $this->getDataApartment($code_apartment);
-                    if ($bill[5] == 0) {
-                        $info = array('status' => 1, 'condominium' => $this->condominium, 'payment_date' => date('Y-m-d H:i:s'), 'payment_date_prox' => date('Y-m-d H:i:s'),
-                            "apartment" => $apartment->id, 'tenant' => $id, 'type' => $bill[0],
-                            'description' => $bill[1], 'amount' => $bill[2],
-                            'payment_type' => $payment_type_id, 'check_number' => $check_number, 'check_transmitter' => $check_transmitter,
-                            'transfer_date' => $transfer_date, 'transfer_code' => $transfer_code);
-                        $result_payment = $this->bills_model->created_payment($info);
-                    } else {
-                        $info = array('status' => 1, 'condominium' => $this->condominium, 'payment_date' => date('Y-m-d H:i:s'),
-                            'payment_date_prox' => $bill[5], "apartment" => $apartment->id,
-                            'tenant' => $id, 'type' => $bill[0], 'description' => $bill[1], 'amount' => $bill[2],
-                            'payment_type' => $payment_type_id, 'check_number' => $check_number, 'check_transmitter' => $check_transmitter,
-                            'transfer_date' => $transfer_date, 'transfer_code' => $transfer_code);
-                        $result_payment = $this->bills_model->created_payment($info);
-                    }
-                }
-            }
-
-            $info = array('status' => 1, 'condominium' => $this->condominium, 'module' => 6, "documenttype" => 4, 'description' => 'PAGO DE FACTUAS');
-            $daily_id = $this->bills_model->created_daily($info);
             $accountdetail_debit = "";
             $accountdetail_credit = $parameter_daily->credit_input;
+            $credit_deposit_pay = $parameter_daily->credit_deposit_pay;
 
             switch ($payment_type_id) {
                 case 0:
@@ -188,6 +159,35 @@ class Bills extends BaseController
                     break;
 
             }
+            if (!empty($ids)) {
+                $info = array('status' => 1, 'tenant' => $id, 'payment_date' => date('Y-m-d H:i:s'), 'payment_date_prox' => date('Y-m-d H:i:s'),
+                    'payment_type' => $payment_type_id, 'check_number' => $check_number, 'check_transmitter' => $check_transmitter,
+                    'transfer_date' => $transfer_date, 'transfer_code' => $transfer_code);
+                $result_payment = $this->bills_model->save_payment($info, $ids, $this->condominium);
+            }
+
+            $amount = 0;
+
+            foreach ($bills as $bill) {
+
+                if ($bill[5] <= 0) {$amount = $amount + $bill[2];}
+
+                if ($bill[5] > -1) {
+                    $code_apartment = $bill[3];
+                    $apartment = $this->getDataApartment($code_apartment);
+                    if ($bill[5] == 0) {
+                        $info = array('status' => 1, 'condominium' => $this->condominium, 'payment_date' => date('Y-m-d H:i:s'), 'payment_date_prox' => date('Y-m-d H:i:s'),
+                            "apartment" => $apartment->id, 'tenant' => $id, 'type' => $bill[0],
+                            'description' => $bill[1], 'amount' => $bill[2],
+                            'payment_type' => $payment_type_id, 'check_number' => $check_number, 'check_transmitter' => $check_transmitter,
+                            'transfer_date' => $transfer_date, 'transfer_code' => $transfer_code);
+                        $result_payment = $this->bills_model->created_payment($info);
+                    }
+                }
+            }
+
+            $info = array('status' => 1, 'condominium' => $this->condominium, 'module' => 6, "documenttype" => 4, 'description' => 'PAGO DE FACTUAS');
+            $daily_id = $this->bills_model->created_daily($info);
 
             $info = array('daily' => $daily_id, 'condominium' => $this->condominium, 'accountdetail' => $accountdetail_debit, "debit" => $amount, 'credit' => 0);
             $this->bills_model->created_daily_detail($info);
@@ -195,8 +195,38 @@ class Bills extends BaseController
             $info = array('daily' => $daily_id, 'condominium' => $this->condominium, 'accountdetail' => $accountdetail_credit, "debit" => 0, 'credit' => $amount);
             $this->bills_model->created_daily_detail($info);
 
-            if ($result_payment > 0) {echo (json_encode(array('status' => true)));} else {echo (json_encode(array('status' => false)));}
+            /* DEPOSIT */
 
+            $amount = 0;
+
+            foreach ($bills as $bill) {
+                if ($bill[5] > -1) {
+                    $code_apartment = $bill[3];
+                    $apartment = $this->getDataApartment($code_apartment);
+                    if ($bill[5] == 0) {
+
+                    } else {
+                        $amount = $amount + $bill[2];
+                        $info = array('status' => 1, 'condominium' => $this->condominium, 'payment_date' => date('Y-m-d H:i:s'),
+                            'payment_date_prox' => $bill[5], "apartment" => $apartment->id,
+                            'tenant' => $id, 'type' => $bill[0], 'description' => $bill[1], 'amount' => $bill[2],
+                            'payment_type' => $payment_type_id, 'check_number' => $check_number, 'check_transmitter' => $check_transmitter,
+                            'transfer_date' => $transfer_date, 'transfer_code' => $transfer_code);
+                        $result_payment = $this->bills_model->created_payment($info);
+                    }
+                }
+            }
+
+            $info = array('status' => 1, 'condominium' => $this->condominium, 'module' => 6, "documenttype" => 4, 'description' => 'PAGO DE FACTUAS POR ADELANTADO');
+            $daily_id = $this->bills_model->created_daily($info);
+
+            $info = array('daily' => $daily_id, 'condominium' => $this->condominium, 'accountdetail' => $accountdetail_debit, "debit" => $amount, 'credit' => 0);
+            $this->bills_model->created_daily_detail($info);
+
+            $info = array('daily' => $daily_id, 'condominium' => $this->condominium, 'accountdetail' => $credit_deposit_pay, "debit" => 0, 'credit' => $amount);
+            $this->bills_model->created_daily_detail($info);
+
+            if ($result_payment > 0) {echo (json_encode(array('status' => true)));} else {echo (json_encode(array('status' => false)));}
         }
     }
 
@@ -208,10 +238,10 @@ class Bills extends BaseController
             $date_report = date('Y-m-d');
 
             $this->load->library('excel');
-            $report_bills = $this->bills_model->report_bills_date($date_report,$this->condominium);
+            $report_bills = $this->bills_model->report_bills_date($date_report, $this->condominium);
 
             $this->excel->setActiveSheetIndex(0);
-            $this->excel->getActiveSheet()->setTitle("REPORTE DIARIO -> ".$date_report);
+            $this->excel->getActiveSheet()->setTitle("REPORTE DIARIO -> " . $date_report);
             $count = 0;
             /*CENTER*/
             $style = array(
@@ -240,22 +270,22 @@ class Bills extends BaseController
             $this->excel->getActiveSheet()->setCellValue("E{$count}", 'MONTO');
             $this->excel->getActiveSheet()->setCellValue("F{$count}", 'FECHA DE EMISION');
             $this->excel->getActiveSheet()->setCellValue("G{$count}", 'FECHA DE PAGO');
-            
+
             foreach ($report_bills as $record) {
                 $count++;
                 $this->excel->getActiveSheet()->getStyle("A{$count}:G{$count}")->applyFromArray($style);
-                //Definimos los títulos de la cabecera. 
-                $this->excel->getActiveSheet()->setCellValue("A{$count}", str_pad($record->id,4,"0", STR_PAD_LEFT)." " );
+                //Definimos los títulos de la cabecera.
+                $this->excel->getActiveSheet()->setCellValue("A{$count}", str_pad($record->id, 4, "0", STR_PAD_LEFT) . " ");
                 $this->excel->getActiveSheet()->setCellValue("B{$count}", $record->description);
                 $this->excel->getActiveSheet()->setCellValue("C{$count}", $record->code);
                 $this->excel->getActiveSheet()->setCellValue("D{$count}", $record->client);
                 $this->excel->getActiveSheet()->setCellValue("E{$count}", number_format($record->amount, 2, ',', ' '));
-                $this->excel->getActiveSheet()->setCellValue("F{$count}",  $record->created);
-                $this->excel->getActiveSheet()->setCellValue("G{$count}", date_format (new DateTime($record->payment_date), 'Y-m-d g:i A'));
+                $this->excel->getActiveSheet()->setCellValue("F{$count}", $record->created);
+                $this->excel->getActiveSheet()->setCellValue("G{$count}", date_format(new DateTime($record->payment_date), 'Y-m-d g:i A'));
             }
 
-            $cur =date('YmdHis');
-            $file = "reporte_diario_". $cur."_".$date_report.".xls";
+            $cur = date('YmdHis');
+            $file = "reporte_diario_" . $cur . "_" . $date_report . ".xls";
             header('Content-Type: application/vnd.ms-excel');
             header('Content-Disposition: attachment;filename="' . $file . '"');
             header('Cache-Control: max-age=0');
@@ -264,29 +294,67 @@ class Bills extends BaseController
             $objWriter->save('php://output');
             redirect('dashboard');
 
-
         }
     }
-
 
     /* REPORT DAILY */
 
     public function getModule()
     {
-        $this->load->model('module_model'); 
-        return $this->module_model->getListing($this->condominium);  
+        $this->load->model('module_model');
+        return $this->module_model->getListing($this->condominium);
     }
 
     public function getDocumentType()
     {
-        $this->load->model('documenttype_model'); 
-        return $this->documenttype_model->getListing("6",$this->condominium);  
+        $this->load->model('documenttype_model');
+        return $this->documenttype_model->getListing("6", $this->condominium);
     }
 
     public function getAccountDetail()
     {
-        $this->load->model('accountdetail_model'); 
-        return $this->accountdetail_model->getListing("",$this->condominium);  
+        $this->load->model('accountdetail_model');
+        return $this->accountdetail_model->getListing("", $this->condominium);
+    }
+
+    public function listing_daily()
+    {
+        if (checkForPermissions('bills', PERMISSION_READ) != true) {
+            $this->loadThis();
+        } else {
+            $data['permissions'] = $this->getPermissions()->{'bills'};
+            $data['dailyRecords'] = $this->bills_model->listing_daily($this->condominium);
+            $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Lista de entradas';
+            $this->loadViews("bills/daily", $this->globalApp, $data, null);
+        }
+    }
+
+    public function edit_daily($daily = null)
+    {
+        if (checkForPermissions('bills', PERMISSION_READ) != true) {
+            $this->loadThis();
+        } else {
+            if ($daily == null) {
+                redirect('entradas_de_diario');
+            }
+
+            $data['permissions'] = $this->getPermissions()->{'bills'};
+
+            $data["moduleRecords"] = $this->getModule();
+            $data["documentTypeRecords"] = $this->getDocumentType();
+            $data["accountDetailRecords"] = $this->getAccountDetail();
+            $header = $this->bills_model->getdaily($this->condominium, $daily);
+            $detail = $this->bills_model->getdailyDetail($this->condominium, $daily);
+            $data['header'] = $header;
+            $data['detail'] = $detail;
+            if ($data['header'] == null) {
+                redirect('entradas_de_diario');
+            }
+
+            $data['max'] = $daily;
+            $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Editando entrada #'.str_pad($daily, 4, "0", STR_PAD_LEFT);
+            $this->loadViews("bills/report_daily", $this->globalApp, $data, null);
+        }
     }
 
     public function report_daily()
@@ -295,9 +363,9 @@ class Bills extends BaseController
             $this->loadThis();
         } else {
             $data['permissions'] = $this->getPermissions()->{'bills'};
-            
-            $data['max'] = $this->bills_model->getIdMaxDaily($this->condominium)->max;
-            $data["moduleRecords"] = $this->getModule(); 
+
+            $data['max'] = $this->bills_model->getIdMaxDaily($this->condominium)->max+1;
+            $data["moduleRecords"] = $this->getModule();
             $data["documentTypeRecords"] = $this->getDocumentType();
             $data["accountDetailRecords"] = $this->getAccountDetail();
             $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Entrada de diario';
@@ -309,22 +377,36 @@ class Bills extends BaseController
     {
         if (checkForPermissions('bills', PERMISSION_UPDATE) != true) {
             echo (json_encode(array('status' => 'access')));
-        } else { 
+        } else {
             $report = json_decode($this->input->post('json'));
             $module = $this->input->post('module');
-            $documentType = $this->input->post('documentType'); 
+            $date = $this->input->post('date');
+            $observation = $this->input->post('observation');
+            $documentType = $this->input->post('documentType');
+             $id_ = $this->input->post('id_');
 
-            $info = array('status' => 1, 'condominium' => $this->condominium, 'module' => $module, "documenttype" =>  $documentType, 'description' => 'ENTRADA DE DIARIO');
-            $daily_id = $this->bills_model->created_daily($info);
 
+            if(empty($id_)){
+                $info = array('created_at' => $date, 'status' => 1, 'condominium' => $this->condominium, 'module' => $module, "documenttype" => $documentType, 'description' => empty($observation) ? 'ENTRADA DE DIARIO' : $observation);
+                $daily_id = $this->bills_model->created_daily($info);
+    
+                foreach ($report as $bill) {
+                    $info = array('daily' => $daily_id, 'condominium' => $this->condominium, 'accountdetail' => $bill[0], "debit" => $bill[2], 'credit' => $bill[3], 'description' => $bill[4]);
+                    $this->bills_model->created_daily_detail($info);
+                } 
+            } else{
+                $info = array('created_at' => $date, 'status' => 1, 'condominium' => $this->condominium, 'module' => $module, "documenttype" => $documentType, 'description' => empty($observation) ? 'ENTRADA DE DIARIO' : $observation);   
+                $this->bills_model->update_daily($info,$id_,$this->condominium);
 
-            foreach ($report as $bill) {
-                $info = array('daily' => $daily_id, 'condominium' => $this->condominium, 'accountdetail' => $bill[0], "debit" => $bill[2], 'credit' =>  $bill[3], 'description' =>  $bill[4]);
-                $this->bills_model->created_daily_detail($info);
-            } 
+                $this->bills_model->delete_daily($id_,$this->condominium);
+
+                foreach ($report as $bill) {
+                    $info = array('daily' => $id_, 'condominium' => $this->condominium, 'accountdetail' => $bill[0], "debit" => $bill[2], 'credit' => $bill[3], 'description' => $bill[4]);
+                    $daily_id = $this->bills_model->created_daily_detail($info);
+                }  
+            }
 
             if ($daily_id > 0) {echo (json_encode(array('status' => true)));} else {echo (json_encode(array('status' => false)));}
-
         }
     }
 }

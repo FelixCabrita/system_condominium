@@ -25,7 +25,7 @@ class Accountdetail_model extends CI_Model
         if(!empty($account_control)){
             $this->db->where("ad.account_higher", $account_control);
         }
-        $this->db->order_by('ad.status', 'DESC'); 
+        $this->db->order_by('ad.code', 'ASC'); 
         $query = $this->db->get(); 
         $result = $query->result();        
         return $result;
@@ -41,7 +41,7 @@ class Accountdetail_model extends CI_Model
             $this->db->where("ad.account_higher", $account_control);
         }
         $this->db->where('ad.status',1);
-        $this->db->order_by('ad.status', 'DESC'); 
+        $this->db->order_by('ad.code', 'ASC'); 
         $query = $this->db->get();
         $result = $query->result();
         return $result;

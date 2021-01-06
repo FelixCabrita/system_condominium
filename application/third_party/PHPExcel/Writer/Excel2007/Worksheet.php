@@ -1113,7 +1113,7 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
                         break;
                     case 'n':   // Numeric
                         // force point as decimal separator in case current locale uses comma
-                        $objWriter->writeElement('v', str_replace(',', '.', $cellValue));
+                        $objWriter->writeElement('v', str_replace(',', '', $cellValue));
                         break;
                     case 'b':   // Boolean
                         $objWriter->writeElement('v', ($cellValue ? '1' : '0'));

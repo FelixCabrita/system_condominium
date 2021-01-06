@@ -11,12 +11,15 @@ class Reportpay_model extends CI_Model
 {  
 
 
-   function listing($condominium)
+   function listing($condominium,$id='')
     { 
         $this->db->select("rh.id, CONCAT(t.document,' - ',t.name) as 'tenant', rh.item, rh.amount, rh.code_transfer, rh.date_transfer, rh.status, rh.created_at,  rh.photo");
         $this->db->from('report_pay_header as rh');       
         $this->db->join('tenant as t', 't.id = rh.tenant AND t.condominium = rh.condominium');
-        $this->db->where('rh.condominium',$condominium);
+        $this->db->where('rh.condominium',$condominium);    
+        if(!empty($id)){
+            $this->db->where('rh.tenant',$id);
+        } 
         $this->db->order_by('rh.id', 'DESC'); 
         $query = $this->db->get(); 
         $result = $query->result();        
@@ -71,16 +74,13 @@ class Reportpay_model extends CI_Model
 
     function checkBillApartment($apartment,$service,$condominium)
     { 
-        $this->db->select("b.id, b.apartment, b.description,b.amount, b.status, b.created_at, DATE(b.created_at) as emision ");
+        $this->db->select("IFNULL(MAX(payment_date_prox),DATE_ADD(now(), INTERVAL -1 MONTH)) as date");
         $this->db->from('bills as b');
         $this->db->where('b.apartment',$apartment);  
         $this->db->where('b.type',$service); 
-        $this->db->where('b.condominium',$condominium);
-        $this->db->where('YEAR(b.created_at) = YEAR(now())');  
-        $this->db->where('MONTH(b.created_at) = MONTH(now())');  
+        $this->db->where('b.condominium',$condominium); 
         $query = $this->db->get(); 
-        $result = $query->result();        
-        return $result; 
+        return $query->row();
     }
  
     function searchClient($id,$condominium)
@@ -92,12 +92,13 @@ class Reportpay_model extends CI_Model
         return $query->row();
     }
 
-    function addMonth($mounth)
+    function addMonth($mounth,$dateMax)
     { 
-        $this->db->SELECT("  DATE(DATE_ADD(now(), INTERVAL $mounth MONTH)) as 'date', UPPER(MONTHNAME(DATE_ADD(now(), INTERVAL $mounth MONTH))) as 'title'");  
+        $this->db->SELECT("DATE(DATE_ADD('$dateMax', INTERVAL $mounth MONTH)) as 'date', UPPER(MONTHNAME(DATE_ADD('$dateMax', INTERVAL $mounth MONTH))) as 'title'");  
         $query = $this->db->get(); 
         return $query->row();
     }
+
 
 
     function getInfo($id,$condominium)

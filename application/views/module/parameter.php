@@ -6,6 +6,10 @@ $debit_cash = $info->debit_cash;
 $debit_check = $info->debit_check; 
 $debit_transfer = $info->debit_transfer;  
 $credit_input = $info->credit_input; 
+
+$debit_deposit = $info->debit_deposit; 
+$credit_deposit = $info->credit_deposit;  
+$credit_deposit_pay = $info->credit_deposit_pay; 
 $this->load->helper('form');  
 ?>
 
@@ -29,7 +33,7 @@ $this->load->helper('form');
                     </div>  
             <?php } ?>
           
-            <form class="form-inlne"  action="<?php echo base_url() ?>cambiando_parametros" method="post" id="edit" role="form"> 
+            <form class="form-inlne"  action="<?php echo base_url() ?>cambiando_parametros" method="post" id="sndParameter" role="form"> 
                 <label for="generate_credit"><b>Generacion de factura</b></label><br> 
                 <div class="row"> 
                     <div class="form-group col-sm-6">
@@ -43,15 +47,37 @@ $this->load->helper('form');
                    
                     <div class="form-group col-sm-6">
                         <label for="generate_credit">CREDITO</label>
-                        <select name="generate_credit" id="generate_credit" class="form-control">  
+                        <select name="debit_deposit" id="generate_credit" class="form-control">  
                             <?php  if(!empty($getDataAccountDetail)) { foreach($getDataAccountDetail as $record) {  ?>
                                 <option value ="<?php echo $record->id ?>" <?php echo $generate_credit==$record->id?"selected":"" ?> ><?php echo $record->code." - ".$record->name ?></option>
                             <?php }} ?> 
                         </select>
                     </div>    
                      
-                </div>   
+                </div>
                 <hr>
+                <label for="generate_credit"><b>Generacion de asiento abono</b></label><br> 
+                <div class="row"> 
+                    <div class="form-group col-sm-6">
+                        <label for="debit_deposit">DEBITO</label>
+                        <select name="debit_deposit" id="debit_deposit" class="form-control">  
+                            <?php  if(!empty($getDataAccountDetail)) { foreach($getDataAccountDetail as $record) {  ?>
+                                <option value ="<?php echo $record->id ?>" <?php echo $debit_deposit==$record->id?"selected":"" ?> ><?php echo $record->code." - ".$record->name ?></option>
+                            <?php }} ?> 
+                        </select>
+                    </div>     
+                   
+                    <div class="form-group col-sm-6">
+                        <label for="generate_credit">CREDITO</label>
+                        <select name="credit_deposit" id="credit_deposit" class="form-control">  
+                            <?php  if(!empty($getDataAccountDetail)) { foreach($getDataAccountDetail as $record) {  ?>
+                                <option value ="<?php echo $record->id ?>" <?php echo $credit_deposit==$record->id?"selected":"" ?> ><?php echo $record->code." - ".$record->name ?></option>
+                            <?php }} ?> 
+                        </select>
+                    </div>    
+                     
+                </div>      
+                <hr style = "background-color: green;height:10px">
                 <label for="generate_credit"><b>Al momento de generar un proceso de caja</b></label><br> 
                 <label for="generate_credit"><b>::DEBITO PARA TIPOS DE PAGO</b></label><br> 
                 <div class="row"> 
@@ -90,7 +116,7 @@ $this->load->helper('form');
                     </div>    
                 </div>   
 
-                <label for="generate_credit"><b>::CREDITO</b></label><br> 
+                <label for="generate_credit">CREDITO</label><br> 
                 <div class="row"> 
                     <div class="form-group col-sm-12"> 
                         <select name="credit_input" id="credit_input" class="form-control">  
@@ -99,9 +125,21 @@ $this->load->helper('form');
                             <?php }} ?> 
                         </select>
                     </div>     
+                </div>      
+
+                <label for="generate_credit"><b>Asiento proceso de caja abono</b></label><br> 
+                <label for="generate_credit">CREDITO</label><br> 
+                <div class="row"> 
+                    <div class="form-group col-sm-12"> 
+                        <select name="credit_deposit_pay" id="credit_deposit_pay" class="form-control">  
+                            <?php  if(!empty($getDataAccountDetail)) { foreach($getDataAccountDetail as $record) {  ?>
+                                <option value ="<?php echo $record->id ?>" <?php echo $credit_deposit_pay==$record->id?"selected":"" ?> ><?php echo $record->code." - ".$record->name ?></option>
+                            <?php }} ?> 
+                        </select>
+                    </div>     
                 </div>     
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-form">ACTUALIZAR</button>
+                    <a  class="btn btn-primary btn-form sendParameter" id="sendParameter"style="color:#ffff">ACTUALIZAR</a>
                 </div>
                 
             </form>  

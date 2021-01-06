@@ -32,7 +32,7 @@
                     <tr>  
                         <td class="text-center"style="vertical-align: middle;"><?php echo str_pad($record->id,4,"0", STR_PAD_LEFT)  ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php echo  $record->tenant ?></td>
-                        <td class="text-center" style="vertical-align: middle;"><?php echo number_format($record->amount, 2, ',', ' ') ?></td>
+                        <td class="text-center" style="vertical-align: middle;"><?php echo number_format($record->amount, 2, ',', '') ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php echo  $record->code_transfer ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php echo  $record->date_transfer ?></td>     
                         <td class="text-center" style="vertical-align: middle;"><?php echo  date_format (new DateTime($record->created_at), 'Y-m-d g:i A')  ?></td>

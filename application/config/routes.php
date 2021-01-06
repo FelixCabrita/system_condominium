@@ -368,8 +368,11 @@ $route['busqueda_cliente'] = 'bills/searchClient';
 $route['pagar_facturas'] = 'bills/save_payment'; 
 $route['calculando_abono'] = 'bills/calculate_bill_month'; 
 $route['reporte_diario'] = 'bills/report_bills_date'; 
+$route["entradas_de_diario"] = 'bills/listing_daily';  
 $route["entrada_de_diario"] = 'bills/report_daily';  
 $route["guarda_entrada_diario"] = 'bills/save_daily';  
+$route["editar_entrada_diario"] = 'bills/edit_daily';  
+$route["editar_entrada_diario/(:any)"] = 'bills/edit_daily/$1';  
 /*REPORT PAY*/
 $route["reportesdepago"] = 'reportpay/listing'; 
 $route["crearreportepago"] = 'reportpay/generate_report'; 

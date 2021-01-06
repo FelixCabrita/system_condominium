@@ -598,7 +598,7 @@
                                     </a>
                                 </li>  
                                 <li> 
-                                    <a href="<?php echo base_url(); ?>entrada_de_diario">
+                                    <a href="<?php echo base_url(); ?>entradas_de_diario">
                                         <i class="metismenu-icon pe-7s-user"></i>ENTRADA DE DIARIO
                                     </a>
                                 </li>  

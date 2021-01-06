@@ -262,7 +262,7 @@ class condominium extends BaseController
 
     public function parameter()
     {
-        if (checkForPermissions('bills', PERMISSION_CREATE) != true) {
+        if ($this->rol > ROLE_VENDOR) {
             $this->loadThis();
         } else {
 
@@ -284,25 +284,21 @@ class condominium extends BaseController
         $debit_check = (($this->security->xss_clean($this->input->post('debit_check'))));
         $debit_transfer = (($this->security->xss_clean($this->input->post('debit_transfer'))));
         $credit_input = (($this->security->xss_clean($this->input->post('credit_input'))));
+
+        $debit_deposit = (($this->security->xss_clean($this->input->post('debit_deposit'))));
+        $credit_deposit = (($this->security->xss_clean($this->input->post('credit_deposit'))));
+        $credit_deposit_pay = (($this->security->xss_clean($this->input->post('credit_deposit_pay'))));
   
         $condominiumInfo = array('generate_credit' => $generate_credit, 'generate_debit' => $generate_debit
         , 'debit_card' => $debit_card, 'debit_cash' => $debit_cash, 'debit_check' => $debit_check
-        , 'debit_transfer' => $debit_transfer, 'credit_input' => $credit_input);
+        , 'debit_transfer' => $debit_transfer, 'credit_input' => $credit_input
+        , 'debit_deposit' => $debit_deposit, 'credit_deposit' => $credit_deposit
+        , 'credit_deposit_pay' => $credit_deposit_pay);
 
         $result = $this->condominium_model->edit($condominiumInfo, $this->condominium);
 
         if ($result == true) {
-            $this->session->set_flashdata('success', 'Condominio actualizado');
-            if ($condominiumId == $this->condominium) {
-                $this->session->set_userdata('condominium_text', $name);
-                $this->session->set_userdata('generate_credit', $generate_credit);
-                $this->session->set_userdata('generate_debit', $generate_debit);
-                $this->session->set_userdata('debit_card', $debit_card);
-                $this->session->set_userdata('debit_cash', $debit_cash);
-                $this->session->set_userdata('debit_check', $debit_check);
-                $this->session->set_userdata('debit_transfer', $debit_transfer);
-                $this->session->set_userdata('credit_input', $credit_input);
-            }
+            $this->session->set_flashdata('success', 'parametros actualizados actualizado'); 
         } else {
             $this->session->set_flashdata('error', 'Fallo actualización');
         }

@@ -82,7 +82,8 @@ class Condominium_model extends CI_Model
 
     public function getParameter($id)
     {   
-        $this->db->select("cc.generate_credit,cc.generate_debit,cc.debit_card,cc.debit_cash,cc.debit_check,cc.debit_transfer,cc.credit_input ");  
+        $this->db->select("cc.generate_credit,cc.generate_debit,cc.debit_card,cc.debit_cash,cc.debit_check,cc.debit_transfer,cc.credit_input,
+        cc.debit_deposit,cc.credit_deposit,cc.credit_deposit_pay ");  
         $this->db->from('condominium as cc');  
         $this->db->where('cc.id', $id);
         $query = $this->db->get(); 

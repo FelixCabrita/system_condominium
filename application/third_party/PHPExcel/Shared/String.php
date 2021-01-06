@@ -407,7 +407,7 @@ class PHPExcel_Shared_String {
      */
     public static function FormatNumber($value) {
         if (is_float($value)) {
-            return str_replace(',', '.', $value);
+            return str_replace(',', '', $value);
         }
         return (string) $value;
     }

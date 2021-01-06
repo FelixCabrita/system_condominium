@@ -2275,6 +2275,22 @@ jQuery(document).ready(function() {
         }])
     });
 
+    jQuery(document).on("click", ".sendParameter", function() {
+        console.log("afadfa");
+        Swal.queue([{
+            title: "¿Desea actualizar estos parametros?",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'SI!',
+            cancelButtonText: 'No, cancelar!',
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                document.forms["sndParameter"].submit();
+            }
+        }])
+    });
+
     jQuery(document).on("click", ".searchList", function() {
 
     });

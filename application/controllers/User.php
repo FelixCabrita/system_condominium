@@ -314,7 +314,7 @@ class User extends BaseController
      */
     public function profile($active = 'details')
     {
-        $data["userInfo"] = $this->user_model->getInfo($this->id);
+        $data["userInfo"] = $this->user_model->getInfo($this->id, $this->condominium);
         $data["active"] = $active;
         $this->globalApp['pageTitle'] = NAME_SYSTEM . ' Mi Perfil';
         $this->loadViews("user/profile", $this->globalApp, $data, null);

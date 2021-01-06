@@ -26,16 +26,13 @@ class Bills_model extends CI_Model
 
     function checkBillApartment($apartment,$service,$condominium)
     { 
-        $this->db->select("b.id, b.apartment, b.description,b.amount, b.status, b.created_at, DATE(b.created_at) as emision ");
+        $this->db->select("IFNULL(MAX(payment_date_prox),DATE_ADD(now(), INTERVAL -1 MONTH)) as date");
         $this->db->from('bills as b');
         $this->db->where('b.apartment',$apartment);  
         $this->db->where('b.type',$service); 
-        $this->db->where('b.condominium',$condominium);
-        $this->db->where('YEAR(b.created_at) = YEAR(now())');  
-        $this->db->where('MONTH(b.created_at) = MONTH(now())');  
+        $this->db->where('b.condominium',$condominium); 
         $query = $this->db->get(); 
-        $result = $query->result();        
-        return $result; 
+        return $query->row();
     }
  
     function searchClient($document,$condominium)
@@ -47,9 +44,9 @@ class Bills_model extends CI_Model
         return $query->row();
     }
 
-    function addMonth($mounth)
+    function addMonth($mounth,$dateMax)
     { 
-        $this->db->SELECT("  DATE(DATE_ADD(now(), INTERVAL $mounth MONTH)) as 'date', UPPER(MONTHNAME(DATE_ADD(now(), INTERVAL $mounth MONTH))) as 'title'");  
+        $this->db->SELECT("DATE(DATE_ADD('$dateMax', INTERVAL $mounth MONTH)) as 'date', UPPER(MONTHNAME(DATE_ADD('$dateMax', INTERVAL $mounth MONTH))) as 'title'");  
         $query = $this->db->get(); 
         return $query->row();
     }
@@ -101,6 +98,43 @@ class Bills_model extends CI_Model
     }
 
 
+    function listing_daily($condominium)
+    {  
+        $this->db->select("d.id, d.description, d.created_at,
+         CONCAT(m.code,' - ',m.name) as 'module', CONCAT(dt.code,' - ',dt.name) as 'documentType'");
+        $this->db->from('daily as d'); 
+        $this->db->join('module as m', 'm.id = d.module  AND m.condominium = d.condominium');       
+        $this->db->join('document_type as dt', 'dt.id = d.documenttype  AND dt.condominium = d.condominium');   
+        $this->db->where('d.condominium',$condominium);
+        $this->db->order_by('d.id', 'DESC'); 
+        $query = $this->db->get(); 
+        $result = $query->result();        
+        return $result;
+    }
+
+    function getdaily($condominium,$id)
+    {   
+        $this->db->from('daily as d');  
+        $this->db->where('d.condominium',$condominium);
+        $this->db->where('d.id',$id);
+        $this->db->order_by('d.id', 'DESC'); 
+        $query = $this->db->get(); 
+        return $query->row(); 
+    }
+
+
+    function getdailyDetail($condominium,$id)
+    {   
+        $this->db->select("dd.id, dd.daily, dd.accountdetail,CONCAT(ac.code,' - ', ac.name) as 'name_ac', dd.description, dd.debit, dd.credit, dd.created_at");
+        $this->db->from('daily_detail as dd');  
+        $this->db->where('dd.condominium',$condominium); 
+        $this->db->join('account_detail as ac', 'ac.id = dd.accountdetail AND ac.condominium = dd.condominium');
+        $this->db->where('dd.daily',$id); 
+        $query = $this->db->get(); 
+        $result = $query->result();        
+        return $result;
+    }
+
     function created_daily($info)
     {  
         $this->db->trans_start();
@@ -111,6 +145,27 @@ class Bills_model extends CI_Model
         
         return $insert_id;
     }
+
+    /**
+     * This function is used to update the tenant information
+     * @param array $Info : This is tenants updated information
+     * @param number $Id : This is tenant id
+     */
+    function update_daily($Info, $Id,$condominium)
+    {
+        $this->db->where('id', $Id);
+        $this->db->where('condominium',$condominium);
+        $this->db->update('daily', $Info); 
+        return $this->db->affected_rows();
+    }
+
+    function delete_daily($id,$condominium)
+    {
+        $this->db->where('daily', $id); 
+        $this->db->where('condominium',$condominium);
+        $this->db->delete('daily_detail'); 
+        return $this->db->affected_rows();
+    } 
 
     function created_daily_detail($info)
     {  
