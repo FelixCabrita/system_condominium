@@ -26,7 +26,7 @@
  *  @version     1.8.0, 2014-03-02
  */
 /**  Require DomPDF library */
-$pdfRendererClassFile = PHPExcel_Settings::getPdfRendererPath() . '/dompdf_config.inc.php';
+$pdfRendererClassFile =  '../../dompdf/dompdf_config.inc.php';
 if (file_exists($pdfRendererClassFile)) {
     require_once $pdfRendererClassFile;
 } else {

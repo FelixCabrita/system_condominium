@@ -128,7 +128,7 @@ class Service_model extends CI_Model
     function create_service($date_load,$id,$condominium)
     {
         $this->db->query("CREATE DEFINER=".USER_BD."@`localhost` 
-        EVENT ".$id."_SERVICE"." ON SCHEDULE EVERY 1 MONTH STARTS '$date_load 15:15:00' ON COMPLETION NOT PRESERVE ENABLE DO 
+        EVENT ".$id."_SERVICE"." ON SCHEDULE EVERY 1 MONTH STARTS '$date_load 19:05:00' ON COMPLETION NOT PRESERVE ENABLE DO 
         CALL `setBills`($id,$condominium);"); 
      
     } 

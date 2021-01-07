@@ -21,7 +21,7 @@ $status = $reportpayRecords->status;
 
                     <?php
                     if($status==PAY_PENDING){ 
-                        if($permissions->U==1 && $rol< ROLE_VIGILANT){ ?>
+                        if($rol< ROLE_VIGILANT){ ?>
                             <a class="btn btn-sm btn-success changeStatusReportPay"  href="#" data-userid="<?php echo $id; ?>" data-isactive="<?php echo 1; ?>" data-name="<?php echo str_pad($reportpayRecords->id,4,"0", STR_PAD_LEFT) ?>"><i class="fa fa-check"></i> APROBAR</a>
                             <a class="btn btn-sm btn-warning changeStatusReportPay"  href="#" data-userid="<?php echo $id; ?>" data-isactive="<?php echo -1; ?>" data-name="<?php echo str_pad($reportpayRecords->id,4,"0", STR_PAD_LEFT) ?>"><i class="fa fa-times"></i> RECHAZAR</a>
                         <?php } 

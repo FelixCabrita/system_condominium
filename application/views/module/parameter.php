@@ -47,7 +47,7 @@ $this->load->helper('form');
                    
                     <div class="form-group col-sm-6">
                         <label for="generate_credit">CREDITO</label>
-                        <select name="debit_deposit" id="generate_credit" class="form-control">  
+                        <select name="generate_credit" id="generate_credit" class="form-control">  
                             <?php  if(!empty($getDataAccountDetail)) { foreach($getDataAccountDetail as $record) {  ?>
                                 <option value ="<?php echo $record->id ?>" <?php echo $generate_credit==$record->id?"selected":"" ?> ><?php echo $record->code." - ".$record->name ?></option>
                             <?php }} ?> 

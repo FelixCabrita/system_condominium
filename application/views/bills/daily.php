@@ -28,21 +28,15 @@
                     </tr>
                 </thead>
                 <tbody> 
-                    <?php
-                    if(!empty($dailyRecords))
-                    {
-                        foreach($dailyRecords as $record)
-                        {  
-                    ?>
-                    <tr>  
-
+                    <?php if(!empty($dailyRecords)){ foreach($dailyRecords as $record) { ?>
+                    <tr>
                         <td class="text-center"style="vertical-align: middle;"><?php echo str_pad($record->id,4,"0", STR_PAD_LEFT) ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php echo $record->module ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php echo  $record->documentType ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php echo  $record->description ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php echo  date_format (new DateTime($record->created_at), 'Y-m-d g:i A')  ?></td>
                         <td class="text-center" style="vertical-align: middle;">
-                            <a class="btn btn-sm btn-success changeStatusPeriod"  href="#"  data-userid="<?php echo $record->id; ?>" title="IMPRIMIR"><i class="fa fa-print"></i></a> 
+                            <a class="btn btn-sm btn-success"  href="<?php echo base_url().'reporte_entrada_diario/'.$record->id; ?>" target="_blank"  data-userid="<?php echo $record->id; ?>" title="IMPRIMIR"><i class="fa fa-print"></i></a> 
                             <a class="btn btn-sm btn-info" href="<?php echo base_url().'editar_entrada_diario/'.$record->id; ?>" title="EDITAR"><i class="fa fa-paint-brush"></i></a>  
                         </td>
                     </tr>

@@ -8,7 +8,7 @@ INSERT INTO bills(apartment, amount, description,type)
 DROP EVENT IF EXISTS 1;
   
 DELIMITER $$
-CREATE  PROCEDURE `setBills`(IN `id_service` INT, IN `condominium_sp` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `setBills`(IN `id_service` INT, IN `condominium_sp` INT)
 BEGIN
 	DECLARE unique_code_ps INT DEFAULT 0;
     DECLARE id_insert_daily INT DEFAULT 0;   

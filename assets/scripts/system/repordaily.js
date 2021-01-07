@@ -180,6 +180,8 @@ $(document).ready(function() {
                                 /* Read more about handling dismissals below */
                                 if (result.dismiss === Swal.DismissReason.timer) {
                                     window.location = baseURL + (id_ == '' ? "entrada_de_diario" : "editar_entrada_diario/" + id_)
+                                    window.open(baseURL + "reporte_entrada_diario/" + data.id, '_blank');
+
                                 }
                             }) :
                             Swal.fire({

@@ -46,7 +46,7 @@
                         } ?></td>
                         <td class="text-center" style="vertical-align: middle;"> 
                             <a class="btn btn-sm btn-info" href="<?php echo base_url().'reporte/'.$record->id; ?>" title="VER INFORMACION"><i class="fa fa-info"></i></a>   
-                            <?php if($permissions->D==1 && $record->status==PAY_PENDING){ ?> <a class="btn btn-sm btn-danger deleteReportPay" href="#" data-userid="<?php echo $record->id; ?>" data-photo="<?php echo $record->photo; ?>" data-name="<?php echo str_pad($record->id,4,"0", STR_PAD_LEFT) ?>" title="Eliminar"><i class="fa fa-trash"></i></a>  <?php } ?>
+                            <?php if($record->status==PAY_PENDING && $rol>ROLE_VIGILANT){ ?> <a class="btn btn-sm btn-danger deleteReportPay" href="#" data-userid="<?php echo $record->id; ?>" data-photo="<?php echo $record->photo; ?>" data-name="<?php echo str_pad($record->id,4,"0", STR_PAD_LEFT) ?>" title="Eliminar"><i class="fa fa-trash"></i></a>  <?php } ?>
                         </td>
                     </tr>
                     <?php

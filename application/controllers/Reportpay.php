@@ -98,7 +98,7 @@ class Reportpay extends BaseController
             $reportpay_month = array();
 
             for ($i = 0; $i < $quantity; $i++) {
-                $getMonth = $this->reportpay_model->addMonth($i,$dateMax);
+                $getMonth = $this->reportpay_model->addMonth($i, $dateMax);
                 $temp = array('id' => -2, 'description' => $getMonth->title . " - " . $dataService->name, 'amount' => $dataService->amount, 'payment_prox' => $getMonth->date);
                 array_push($reportpay_month, $temp);
             }
@@ -126,7 +126,7 @@ class Reportpay extends BaseController
             $this->loadThis();
         } else {
             $data['permissions'] = $this->getPermissions()->{'Payments'};
-            $data['reportpayRecords'] = $this->reportpay_model->listing($this->condominium,$this->rol>ROLE_VIGILANT?$this->id:"");
+            $data['reportpayRecords'] = $this->reportpay_model->listing($this->condominium, $this->rol > ROLE_VIGILANT ? $this->id : "");
             $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Lista de reportes de pago';
             $this->loadViews("reportpay/reportpay", $this->globalApp, $data, null);
         }
@@ -310,7 +310,7 @@ class Reportpay extends BaseController
 
     public function delete()
     {
-    
+
         $id = $this->input->post('id');
         $photo = $this->input->post('photo');
 
@@ -322,7 +322,7 @@ class Reportpay extends BaseController
         } else {
             echo (json_encode(array('status' => false)));
         }
-        
+
     }
 
     public function changestatus()
@@ -335,15 +335,17 @@ class Reportpay extends BaseController
 
             if ($isactive == -1) {
                 $info = array('status' => $isactive);
-                $result = $this->reportpay_model->edit($info, $id, $this->condominium); 
+                $result = $this->reportpay_model->edit($info, $id, $this->condominium);
                 if ($result > 0) {echo (json_encode(array('status' => true)));} else {echo (json_encode(array('status' => false)));}
             } else {
                 //rh.id, CONCAT(t.document,' - ',t.name) as 'tenant',t.type, rh.item, rh.amount, rh.code_transfer, rh.date_transfer, rh.status, rh.created_at,  rh.photo
                 //rp.id,rp.description,rp.amount,a.code,rp.created_at,rp.service,rp.bill,rp.payment_date_prox,rp.apartment
                 $info = array('status' => $isactive);
-                $result = $this->reportpay_model->edit($info, $id, $this->condominium); 
-                $header = $this->reportpay_model->getReportPay($id,$this->condominium);
-                $detail = $this->reportpay_model->listingDetail($this->condominium,$id);
+                $result = $this->reportpay_model->edit($info, $id, $this->condominium);
+                $header = $this->reportpay_model->getReportPay($id, $this->condominium);
+                $detail = $this->reportpay_model->listingDetail($this->condominium, $id);
+                $amount = 0;
+                $amount_deposit = 0;
                 if (!empty($detail)) {
                     foreach ($detail as $record) {
                         if (!empty($record->bill)) {
@@ -359,27 +361,51 @@ class Reportpay extends BaseController
                                 'transfer_date' => $header->date_transfer, 'transfer_code' => $header->code_transfer);
                             $result_payment = $this->reportpay_model->save_cre_payment($info);
                         }
+
+                        if ($record->payment_date_prox=='0000-00-00') {
+                            $amount = $amount + $record->amount;
+                        } else {
+                            $amount_deposit = $amount_deposit + $record->amount;
+                        }
                     }
-                    $this->load->model('bills_model');
-                    $parameter_daily = $this->getParameter();
-                    $info = array('status' => 1, 'condominium' => $this->condominium, 'module' => 6, "documenttype" => 4, 'description' => 'PAGO DE FACTUAS');
-                    $daily_id = $this->bills_model->created_daily($info);
+
+                    $this->load->model('bills_model');  
+                    $parameter_daily = $this->getParameter();  
                     $accountdetail_debit = "";
                     $accountdetail_credit = $parameter_daily->credit_input;
-                    $accountdetail_debit = $parameter_daily->debit_transfer; 
-                    
-                   
-                    $info = array('daily' => $daily_id, 'condominium' => $this->condominium, 'accountdetail' => $accountdetail_debit, "debit" => $header->amount, 'credit' => 0);
-                    $this->bills_model->created_daily_detail($info);
+                    $accountdetail_debit = $parameter_daily->debit_transfer;
+                    $credit_deposit_pay = $parameter_daily->credit_deposit_pay;
 
-                    $info = array('daily' => $daily_id, 'condominium' => $this->condominium, 'accountdetail' => $accountdetail_credit, "debit" => 0, 'credit' => $header->amount);
-                    $this->bills_model->created_daily_detail($info);
+                   if($amount>0){
+                        $info = array('status' => 1, 'condominium' => $this->condominium, 'module' => 6, "documenttype" => 4, 'description' => 'PAGO DE FACTUAS');
+                        $daily_id = $this->bills_model->created_daily($info);
+                 
+
+                        $info = array('daily' => $daily_id, 'condominium' => $this->condominium, 'accountdetail' => $accountdetail_debit, "debit" => $amount, 'credit' => 0);
+                        $this->bills_model->created_daily_detail($info);
+
+                        $info = array('daily' => $daily_id, 'condominium' => $this->condominium, 'accountdetail' => $accountdetail_credit, "debit" => 0, 'credit' => $amount);
+                        $this->bills_model->created_daily_detail($info);
+                   }
+                 
+
+
+                    if($amount_deposit>0){
+                        $info = array('status' => 1, 'condominium' => $this->condominium, 'module' => 6, "documenttype" => 4, 'description' => 'PAGO DE FACTUAS POR ADELANTADO');
+                        $daily_id = $this->bills_model->created_daily($info);
+        
+                        $info = array('daily' => $daily_id, 'condominium' => $this->condominium, 'accountdetail' => $accountdetail_debit, "debit" => $amount_deposit, 'credit' => 0);
+                        $this->bills_model->created_daily_detail($info);
+        
+                        $info = array('daily' => $daily_id, 'condominium' => $this->condominium, 'accountdetail' => $credit_deposit_pay, "debit" => 0, 'credit' => $amount_deposit);
+                        $this->bills_model->created_daily_detail($info);
+                    }
 
                     if ($result_payment > 0) {echo (json_encode(array('status' => true)));} else {echo (json_encode(array('status' => false)));}
 
                 }
 
-            }  
+            }
         }
     }
 

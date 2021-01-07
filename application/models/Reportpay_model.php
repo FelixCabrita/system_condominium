@@ -126,7 +126,7 @@ class Reportpay_model extends CI_Model
     }
 
 
-    function save_cre_payment($info, $id,$condominium)
+    function save_cre_payment($info)
     { 
         $this->db->trans_start();
         $this->db->insert('bills', $info); 

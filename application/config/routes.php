@@ -373,6 +373,8 @@ $route["entrada_de_diario"] = 'bills/report_daily';
 $route["guarda_entrada_diario"] = 'bills/save_daily';  
 $route["editar_entrada_diario"] = 'bills/edit_daily';  
 $route["editar_entrada_diario/(:any)"] = 'bills/edit_daily/$1';  
+
+$route["demo"] = 'bills/demo';  
 /*REPORT PAY*/
 $route["reportesdepago"] = 'reportpay/listing'; 
 $route["crearreportepago"] = 'reportpay/generate_report'; 
@@ -383,5 +385,9 @@ $route["reporte"] = 'reportpay/report';
 $route["reporte/(:any)"] = 'reportpay/report/$1';
 $route["cambio_estatus_reporte_pago"] = 'reportpay/changestatus';  
 
+/* Generate_pdf */
+$route["catalogo_cuentas"] = 'generate_pdf/cataloge_account';  
+$route["reporte_entrada_diario"] = 'generate_pdf/daily'; 
+ $route["reporte_entrada_diario/(:any)"] = 'generate_pdf/daily/$1';  
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

@@ -121,7 +121,7 @@ class Bills extends BaseController
             $this->loadViews("bills/payment", $this->globalApp, $data, null);
         }
     }
-
+ 
     public function save_payment()
     {
         if (checkForPermissions('pay', PERMISSION_UPDATE) != true) {
@@ -186,14 +186,17 @@ class Bills extends BaseController
                 }
             }
 
-            $info = array('status' => 1, 'condominium' => $this->condominium, 'module' => 6, "documenttype" => 4, 'description' => 'PAGO DE FACTUAS');
-            $daily_id = $this->bills_model->created_daily($info);
+            if($amount>0){
+                 $info = array('status' => 1, 'condominium' => $this->condominium, 'module' => 6, "documenttype" => 4, 'description' => 'PAGO DE FACTUAS');
+                $daily_id = $this->bills_model->created_daily($info);
 
-            $info = array('daily' => $daily_id, 'condominium' => $this->condominium, 'accountdetail' => $accountdetail_debit, "debit" => $amount, 'credit' => 0);
-            $this->bills_model->created_daily_detail($info);
+                $info = array('daily' => $daily_id, 'condominium' => $this->condominium, 'accountdetail' => $accountdetail_debit, "debit" => $amount, 'credit' => 0);
+                $this->bills_model->created_daily_detail($info);
 
-            $info = array('daily' => $daily_id, 'condominium' => $this->condominium, 'accountdetail' => $accountdetail_credit, "debit" => 0, 'credit' => $amount);
-            $this->bills_model->created_daily_detail($info);
+                $info = array('daily' => $daily_id, 'condominium' => $this->condominium, 'accountdetail' => $accountdetail_credit, "debit" => 0, 'credit' => $amount);
+                $this->bills_model->created_daily_detail($info); 
+            }
+          
 
             /* DEPOSIT */
 
@@ -216,16 +219,16 @@ class Bills extends BaseController
                     }
                 }
             }
+            if($amount>0){
+                $info = array('status' => 1, 'condominium' => $this->condominium, 'module' => 6, "documenttype" => 4, 'description' => 'PAGO DE FACTUAS POR ADELANTADO');
+                $daily_id = $this->bills_model->created_daily($info);
 
-            $info = array('status' => 1, 'condominium' => $this->condominium, 'module' => 6, "documenttype" => 4, 'description' => 'PAGO DE FACTUAS POR ADELANTADO');
-            $daily_id = $this->bills_model->created_daily($info);
+                $info = array('daily' => $daily_id, 'condominium' => $this->condominium, 'accountdetail' => $accountdetail_debit, "debit" => $amount, 'credit' => 0);
+                $this->bills_model->created_daily_detail($info);
 
-            $info = array('daily' => $daily_id, 'condominium' => $this->condominium, 'accountdetail' => $accountdetail_debit, "debit" => $amount, 'credit' => 0);
-            $this->bills_model->created_daily_detail($info);
-
-            $info = array('daily' => $daily_id, 'condominium' => $this->condominium, 'accountdetail' => $credit_deposit_pay, "debit" => 0, 'credit' => $amount);
-            $this->bills_model->created_daily_detail($info);
-
+                $info = array('daily' => $daily_id, 'condominium' => $this->condominium, 'accountdetail' => $credit_deposit_pay, "debit" => 0, 'credit' => $amount);
+                $this->bills_model->created_daily_detail($info);
+            }
             if ($result_payment > 0) {echo (json_encode(array('status' => true)));} else {echo (json_encode(array('status' => false)));}
         }
     }
@@ -294,6 +297,8 @@ class Bills extends BaseController
             $objWriter->save('php://output');
             redirect('dashboard');
 
+            
+
         }
     }
 
@@ -343,6 +348,7 @@ class Bills extends BaseController
             $data["moduleRecords"] = $this->getModule();
             $data["documentTypeRecords"] = $this->getDocumentType();
             $data["accountDetailRecords"] = $this->getAccountDetail();
+          
             $header = $this->bills_model->getdaily($this->condominium, $daily);
             $detail = $this->bills_model->getdailyDetail($this->condominium, $daily);
             $data['header'] = $header;
@@ -384,12 +390,12 @@ class Bills extends BaseController
             $observation = $this->input->post('observation');
             $documentType = $this->input->post('documentType');
              $id_ = $this->input->post('id_');
-
+             $daily_id_return=$id_;
 
             if(empty($id_)){
                 $info = array('created_at' => $date, 'status' => 1, 'condominium' => $this->condominium, 'module' => $module, "documenttype" => $documentType, 'description' => empty($observation) ? 'ENTRADA DE DIARIO' : $observation);
                 $daily_id = $this->bills_model->created_daily($info);
-    
+                $daily_id_return=$daily_id;
                 foreach ($report as $bill) {
                     $info = array('daily' => $daily_id, 'condominium' => $this->condominium, 'accountdetail' => $bill[0], "debit" => $bill[2], 'credit' => $bill[3], 'description' => $bill[4]);
                     $this->bills_model->created_daily_detail($info);
@@ -406,7 +412,9 @@ class Bills extends BaseController
                 }  
             }
 
-            if ($daily_id > 0) {echo (json_encode(array('status' => true)));} else {echo (json_encode(array('status' => false)));}
+            if ($daily_id > 0) {echo (json_encode(array('status' => true,"id"=>$daily_id_return)));} else {echo (json_encode(array('status' => false)));}
         }
-    }
+    } 
+
+   
 }
