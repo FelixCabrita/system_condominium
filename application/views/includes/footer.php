@@ -16,9 +16,9 @@
                                 <ul class="nav"> 
                                     <li class="nav-item">
                                         <a href="javascript:void(0);" class="nav-link">
-                                            SISTEMA DE CONDOMINIO
+                                            ADMICONDOR &nbsp;
                                             <div class="badge badge-success mr-1 ml-0">
-                                                <small>VERSION 0.1</small>
+                                                <small>VERSION 1</small>
                                             </div> 
                                         </a>
                                     </li>

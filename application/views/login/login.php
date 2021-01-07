@@ -14,11 +14,11 @@
 </head>
 
 <body>
-    <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header center-elem" style="background-image: url('<?php echo base_url(); ?>assets/images/background/login.jpg');">
+    <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header center-elem" style="background-image: url('<?php echo base_url(); ?>assets/images/background/login.jpg');background-size: 100%;">
         <div class="app-main app-main_login center-elem">
             <div class="main-card  card">
                 <div class="card-body text-center" >
-                    <img class ="img-login" src ="<?php echo base_url(); ?>assets/images/avatars/login.png"/>
+                    <img class ="img-login" src ="<?php echo base_url(); ?>assets/images/avatars/ic_launcher.png"/>
                     <h5 class="card-title">INICIO DE SESION</h5> 
                     <form class="needs-validation" action="<?php echo base_url(); ?>/logUser" method="post" novalidate>
                          <?php $this->load->helper('form'); 
