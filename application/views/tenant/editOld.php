@@ -73,8 +73,8 @@ if($permissions->U==1){
                     </div>  
                 </div>
                 <div class="form-group">
-              
-              <div class="position-relative form-check"><label class="form-check-label"><input type="checkbox" <?php echo $user?'checked':'' ?> <?php echo $readonly; ?>   id="user"  name="user" class="form-check-input"> Generarle usuario para el sistema de clientes (Si lo deshabilita el usuario ya no tendra acceso) </label></div>
+                <?php if($parameter<$max_user_tenant || $user ){ ?>
+              <div class="position-relative form-check"><label class="form-check-label"><input type="checkbox" <?php echo $user?'checked':'' ?> <?php echo $readonly; ?>   id="user"  name="user" class="form-check-input"> Generarle usuario para el sistema de clientes (Si lo deshabilita el usuario ya no tendra acceso) </label></div><?php } ?> 
           </div>  
           <label><b>NOTA: Para el acceso del sistema del inquilinios sera: Documento de identidad y una clave generada enviada al correo electronico.</b></label>
                 <?php if($permissions->U==1){ ?> 

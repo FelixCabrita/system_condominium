@@ -56,11 +56,12 @@
                         <?php echo validation_error('email');?> 
                     </div>  
                 </div>  
+                <?php if($parameter<$max_user_tenant){ ?>
                 <div class="form-group">
               
                     <div class="position-relative form-check"><label class="form-check-label"><input type="checkbox"  id="user"  name="user" class="form-check-input"> Generarle usuario para el sistema de clientes </label></div>
-                </div>  
-                <label><b>NOTA: Para el acceso del sistema del inquilinios sera: Documento de identidad y una clave generada enviada al correo electronico.</b></label>
+                </div> 
+                <label><b>NOTA: Para el acceso del sistema del inquilinios sera: Documento de identidad y una clave generada enviada al correo electronico.</b></label> <?php }?>
                 <div class="form-group"> 
                     <button type="submit" class="btn btn-primary btn-form">AGREGAR</button>
                 </div>

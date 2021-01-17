@@ -11,6 +11,17 @@
  */
 class Condominium_model extends CI_Model
 {
+
+    protected $db="";
+
+    /**
+     * This is default constructor of the class
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->db = $this->load->database('', true,null,NAME_DB);
+    }
     /**
      * This function is used to get the Condominium listing count
      * @param string $searchText : This is optional search text
@@ -18,19 +29,21 @@ class Condominium_model extends CI_Model
      * @param number $segment : This is pagination limit
      * @return array $result : This is result
      */
-    public function Listing()
+    public function Listing($id)
     {  
         $this->db->from('condominium'); 
-        $this->db->order_by('status,id', 'DESC');
+        $this->db->order_by('status,id', 'DESC');   
+        $this->db->where("owner", $id);
         $query = $this->db->get();
         $result = $query->result();
         return $result;
     }
 
-    public function getListing()
+    public function getListing($id)
     {  
         $this->db->select('id,name'); 
         $this->db->from('condominium'); 
+        $this->db->where("owner", $id);
         $this->db->where("status",1);
         $query = $this->db->get();
         $result = $query->result();
@@ -82,13 +95,29 @@ class Condominium_model extends CI_Model
 
     public function getParameter($id)
     {   
-        $this->db->select("cc.generate_credit,cc.generate_debit,cc.debit_card,cc.debit_cash,cc.debit_check,cc.debit_transfer,cc.credit_input,
+        $this->db->select("cc.generate_credit,cc.generate_debit,cc.debit_card,cc.debit_cash,cc.debit_check,cc.debit_transfer,cc.credit_input,cc.documenttype,cc.module,
         cc.debit_deposit,cc.credit_deposit,cc.credit_deposit_pay ");  
         $this->db->from('condominium as cc');  
         $this->db->where('cc.id', $id);
         $query = $this->db->get(); 
         return $query->row();
     }
+
+     /**
+     * This function used to get user information by id
+     * @param number $userId : This is user id
+     * @return array $result : This is user information
+     */
+    function getInfoUser($userId)
+    { 
+        $this->db->from('users'); 
+        $this->db->where('id', $userId);
+        $this->db->where('type',3);
+        $query = $this->db->get();
+        
+        return $query->row();
+    }
+    
 
     /**
      * This function is used to update the Condominium information

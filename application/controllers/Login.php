@@ -17,27 +17,56 @@ const USER_INVALID_ROLE = 3;
 
 class Login extends BaseController
 {
-
+    protected $workstation = "";protected $workstation_name = "";
     public function __construct()
     {
         parent::__construct();
         $this->load->model('login_model');
         $this->load->library('form_validation');
+
+        $this->load->helper('cookie');
+      
+        $this->workstation = !isset($_COOKIE['workstation_fscv']) ? '' : $_COOKIE['workstation_fscv'];
+        $this->workstation_name = !isset($_COOKIE['workstation_name_fscv']) ? '' : $_COOKIE['workstation_name_fscv'];
+
     }
 
     public function index()
     {
-        if ($this->isLoggedIn()) {
-            redirect('/dashboard');
+        $isLoggedIn = $this->session->userdata('isLoggedIn');
+
+        $data["workstation"] = $this->workstation;
+        $data["workstation_name"] = $this->workstation_name;
+        if (empty($this->workstation)) {
+            $this->valid_condominium();
+        } else {
+            if ($this->isLoggedIn()) {
+                redirect('/dashboard');
+            }
+
+            $this->load->view('login/login', $data, false);
         }
 
-        $this->load->view('login/login');
     }
 
+    public function valid_condominium()
+    { 
+        setcookie("workstation_fscv",  '', time() - (86400 * 15),'/'); 
+        setcookie("workstation_name_fscv", '', time() - (86400 * 15),'/');
+       setcookie("workstation_fscv_", '', time() - (86400 * 15),'/');
+        $this->session->sess_destroy();
+        $this->load->view('login/setworking');
+    }
+
+    public function condominium_owner()
+    {
+        setcookie("workstation_name_fscv", "OWNER", time() + (86400 * 1),'/');
+        setcookie("workstation_fscv", "OWNER", time() + (86400 * 1),'/');
+        redirect('login');
+    }
     public function isLoggedIn()
     {
         $isLoggedIn = $this->session->userdata('isLoggedIn');
-
         return isset($isLoggedIn) && $isLoggedIn === true;
     }
 
@@ -46,35 +75,58 @@ class Login extends BaseController
         if ($this->IsValidLoginForm()) {
             $email = strtolower($this->security->xss_clean($this->input->post('username')));
             $password = $this->input->post('password');
+            $isclient = $this->input->post('isclient') == 'on' ? 1 : 0;
+            $log = true;
+            if ($isclient == 0) { 
+                if ($this->workstation == "OWNER") {
+                    $UserData = $this->login_model->LoginOWNER($email, $password);
+                    if (!empty($UserData)) {
+                        if ($UserData->type != 1) {
+                            $log = false;
+                        }
+                        setcookie("workstation_fscv_", $UserData->id, time() + (86400 * 15),'/');
+                    }
 
-            //TODO: Check function "loginMe" of login_model to fix it
-            $UserData = $this->login_model->LoginUser($email, $password);
+                }else{
+                    $UserData = $this->login_model->LoginUser($email, $password, $this->workstation);
+                }
 
-            $UserValidCode = $this->validPanelUser($UserData);
+                $UserValidCode = $this->validPanelUser($UserData);
+                $log = !empty($UserData);
+                if ($UserValidCode == STATUS_ACTIVE && $log) {
 
-            if ($UserValidCode == USER_VALID_CODE) {
-                $sessionArray =
-                array(
-                    'id' => $UserData->id,
-                    'username' => $UserData->username,
-                    'permissions' => $UserData->permissions,
-                    'name' => $UserData->name,
-                    'rol' => $UserData->type, 'apartment' => 0,
-                    'condominium' => $UserData->condominium, 
-                    'generate_credit' => $UserData->generate_credit, 
-                    'generate_debit' => $UserData->generate_debit,   
-                    'generates_report' => $UserData->generates_report,
-                    'condominium_text' => $UserData->condominium_name,
-                    'isLoggedIn' => true,
-                );
+                    $iar = $this->login_model->gettInfoAIDC($UserData->condominium);
 
-                $this->session->set_userdata($sessionArray);
-                unset($sessionArray['id'], $sessionArray['isLoggedIn']);
+                    $sessionArray =
+                    array(
+                        'id' => $UserData->id,
+                        'username' => $UserData->username,
+                        'permissions' =>  $this->workstation == "OWNER"?PERMISSION_DEFAULT:$UserData->permissions,
+                        'name' => $UserData->name,
+                        'rol' => $UserData->type, 'apartment' => 0,
+                        'condominium' => $UserData->condominium,
+                        'generate_credit' =>  !empty($iar)?$iar->generate_credit:0,
+                        'generate_debit' => !empty($iar)?$iar->generate_debit:0,   
+                        'max_user_tenant' => !empty($iar)?$iar->max_user_tenant:0,
+                        'generates_report' => $UserData->generates_report,
+                        'condominium_text' => !empty($iar)?$iar->name:'SIN CONDOMINIO',
+                        'isLoggedIn' => true,
+                    ); 
+                    $this->session->set_userdata($sessionArray);
+                    unset($sessionArray['id'], $sessionArray['isLoggedIn']);
+                    $this->index();
+                }
+
+                $this->displayLoginFormError($UserValidCode);
                 $this->index();
             } else {
-                $TenantData = $this->login_model->LoginTenant($email, $password);
+              
+                $TenantData = $this->login_model->LoginTenant($email, $password, $this->workstation);
                 $TenantValidCode = $this->validPanelUser($TenantData);
-                if ($TenantValidCode == USER_VALID_CODE) {
+               
+                $log = !empty($TenantData);
+                if ($TenantValidCode == STATUS_ACTIVE && $log) {
+                    $iar = $this->login_model->gettInfoAIDC($TenantData->condominium);
                     $sessionArray =
                     array(
                         'id' => $TenantData->id,
@@ -82,8 +134,8 @@ class Login extends BaseController
                         'permissions' => PERMISSION_TENANT,
                         'name' => $TenantData->name,
                         'rol' => $TenantData->type,
-                        'condominium' => $TenantData->condominium,
-                        'condominium_text' => $TenantData->condominium_name,
+                        'condominium' => $iar->id,
+                        'condominium_text' => $iar->name,
                         'isLoggedIn' => true,
                     );
                     $this->session->set_userdata($sessionArray);
@@ -91,7 +143,7 @@ class Login extends BaseController
                     $this->index();
                 }
 
-                $this->displayLoginFormError($UserValidCode);
+                $this->displayLoginFormError(USER_INVALID_ROLE);
                 $this->index();
             }
 
@@ -127,6 +179,8 @@ class Login extends BaseController
             return USER_NOT_EXISTS;
         } else if ($UserData->status != STATUS_ACTIVE) {
             return USER_NOT_ACTIVE;
+        } else {
+            return STATUS_ACTIVE;
         }
 
     }
@@ -164,37 +218,57 @@ class Login extends BaseController
 
         if ($this->isValidResetPasswordForm()) {
             $email = strtolower($this->security->xss_clean($this->input->post('login_email')));
-            if ($this->login_model->checkEmailExist($email)) {
-                $encoded_email = urlencode($email);
+            $isclient = strtolower($this->security->xss_clean($this->input->post('isclient'))) == 'on' ? 1 : 0;
 
+            $check = false;
+
+            if ($isclient == 0) {
+                $check = $this->login_model->checkEmailExist($email);
+            } else {
+                $check = $this->login_model->checkEmailExistClient($email);
+            }
+
+            if (!empty($check)) {
+                $encoded_email = urlencode($email);
+                $iar = $this->login_model->gettInfoAIDC($check->condominium);
                 $this->load->helper('string');
                 $data['email'] = $email;
                 $data['activation_id'] = random_string('alnum', 15);
                 $data['createdDtm'] = date('Y-m-d H:i:s');
-                $data['agent'] = getBrowserAgent();
+                $data['agent'] = $isclient; 
+                $data['createdBy'] =$_COOKIE['workstation_fscv']=='OWNER'?$check->id:$iar->owner;
                 $data['client_ip'] = $this->input->ip_address();
 
-                $save = $this->login_model->resetPasswordUser($data, $codigoempresa);
+                $save = $this->login_model->resetPasswordUser($data);
 
                 if ($save) {
-                    $data1['reset_link'] = base_url() . "resetearcontraconfir/" . $data['activation_id'] . "/" . $encoded_email;
-                    $userInfo = $this->login_model->getCustomerInfoByEmail($email);
-                    $link = base_url() . "resetearcontraconfir/" . $data['activation_id'] . "/" . $encoded_email;
-                    if (!empty($userInfo)) {
+                   
+                    if($_COOKIE['workstation_fscv']=='OWNER'){
+                        $data1['reset_link'] = base_url() . "resetearcontraconfir/OWNER/" . $data['activation_id'] . "/" . $encoded_email;
+                    }else{
+                        $data1['reset_link'] = base_url() . "resetearcontraconfir/".$data['createdBy']."/" . $data['activation_id'] . "/" . $encoded_email;
+                    }
+                    if ($isclient == 0) {
+                        $userInfo = $this->login_model->getCustomerInfoByEmail($email);
+                    } else {
+                        $userInfo = $this->login_model->getCustomerInfoByEmailTenant($email);
+                    }
+                    $link = $data1['reset_link'];
+                    if (!empty($userInfo)) { 
                         $data1["name"] = $userInfo->name;
-                        $data1["email"] = $userInfo->email;
+                        $data1["email"] = $email;
                         $data1["message"] = "Restablecer su contraseña";
                     }
 
                     $mensaje = "Buen dia " . $userInfo->name . " para restablecer su contraseña de " . NAME_SYSTEM . " por favor acceda a este link $link  y siga los pasos.";
-                    $sendStatus = $this->enviar($userInfo->email, $userInfo->name, "Restablecer contraseña", $mensaje);
+                    $sendStatus = $this->enviar($email, $userInfo->name, "Restablecer contraseña", $mensaje);
 
                     if ($sendStatus > 0) {
                         $status = "success";
                         setFlashData($status, "El enlace para restablecer la contraseña se envió correctamente, verifique los correos.");
                     } else {
                         $status = "error";
-                        setFlashData($status, "El correo electrónico ha fallado, intente nuevamente.");
+                        setFlashData($status, "El correo electrónico ha fallado, intente nuevamente.".$data1['reset_link']);
                     }
                 } else {
                     $status = 'error';
@@ -219,15 +293,17 @@ class Login extends BaseController
         return $this->form_validation->run() === true;
     }
 
-    public function resetPasswordConfirmUser($activation_id, $email)
+    public function resetPasswordConfirmUser($owner,$activation_id, $email)
     {
         // Get email and activation code from URL values at index 3-4
-        $email = urldecode($email);
-        $is_correct = $this->login_model->checkActivationDetails($email, $activation_id);
+        $email = urldecode($email);  
+        $this->load->helper('cookie'); 
+        setcookie("workstation_fscv", $owner, time() + (86400 * 15),'/'); 
+        $is_correct = $this->login_model->checkActivationDetails($owner,$email, $activation_id);
         $data['email'] = $email;
         $data['activation_code'] = $activation_id;
 
-        if ($is_correct == 1) {
+     if (!empty($is_correct)) {
             $this->load->view('user/newPassword', $data);
         } else {
             redirect("/");
@@ -247,27 +323,67 @@ class Login extends BaseController
         $this->form_validation->set_rules('cpassword', 'Confirma contraseña', 'trim|required|matches[password]|max_length[20]');
 
         if ($this->form_validation->run() == false) {
-            $this->resetPasswordConfirmUser($origin, $activation_id, urlencode($email));
+            $this->resetPasswordConfirmUser($_COOKIE['workstation_fscv'],$activation_id, urlencode($email));
         } else {
             $password = $this->input->post('password');
             $cpassword = $this->input->post('cpassword');
 
             // Check activation id in database
-            $is_correct = $this->login_model->checkActivationDetails($email, $activation_id);
+            $is_correct = $this->login_model->checkActivationDetails($_COOKIE['workstation_fscv'],$email, $activation_id);
 
-            if ($is_correct == 1) {
-                $this->login_model->createPasswordUser($email, $password);
+            if (!empty($is_correct)) {
+                $isCliente = $is_correct->agent;
+                $createdBy = $is_correct->createdBy;
+                $update = "";
+                if ($isCliente == '0') {
+                    $update = $this->login_model->createPasswordUser($email, $password,$createdBy);
 
-                $status = 'success';
-                $message = 'Restablecimiento de contraseña exitosamente';
+                } else {
+                    $update = $this->login_model->createPasswordTenant($email, $password);
+                }
+
+                if ($update > 0) {
+                    $status = 'success';
+                    $message = 'Restablecimiento de contraseña exitosamente';
+                } else {
+                    $status = 'error';
+                    $message = 'Restablecimiento de contraseña fallo';
+                }
+
             } else {
                 $status = 'error';
                 $message = 'Restablecimiento de contraseña fallo';
             }
 
             setFlashData($status, $message);
+            redirect("validar_condominio");
+        }
+    }
 
-            redirect("/");
+    public function logcondominium()
+    {
+
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('code_condominium', 'Codigo del condominio', 'required|max_length[700]|trim');
+        if ($this->form_validation->run() == false) {
+            $this->index();
+        } else {
+            $code_condominium = $this->security->xss_clean($this->input->post('code_condominium'));
+            $result = $this->login_model->gettInfo($code_condominium);
+
+            if ($result) { 
+                setcookie("workstation_fscv", $result->id,1);
+                setcookie("workstation_name_fscv", $result->name,1); 
+                setcookie("workstation_fscv_", $result->name,1);
+                
+                setcookie("workstation_fscv", $result->id, time() + (86400 * 15),'/');
+                setcookie("workstation_name_fscv", $result->name, time() + (86400 * 15),'/');
+                setcookie("workstation_fscv_", $result->owner, time() + (86400 * 15),'/');
+                redirect('login');
+            } else {
+                $this->session->set_flashdata('error', 'Este codigo de condominio no existe');
+                $this->index();
+            }
         }
     }
 

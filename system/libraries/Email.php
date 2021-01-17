@@ -1036,7 +1036,7 @@ class CI_Email {
 	{
 		if (function_exists('idn_to_ascii') && $atpos = strpos($email, '@'))
 		{
-			$email = self::substr($email, 0, ++$atpos).idn_to_ascii(self::substr($email, $atpos));
+			$email = self::substr($email, 0, ++$atpos).idn_to_ascii(self::substr($email, $atpos),INTL_IDNA_VARIANT_UTS46,INTL_IDNA_VARIANT_UTS46);
 		}
 
 		return (bool) filter_var($email, FILTER_VALIDATE_EMAIL);
@@ -1853,7 +1853,7 @@ class CI_Email {
 	{
 		if (function_exists('idn_to_ascii') && $atpos = strpos($email, '@'))
 		{
-			$email = self::substr($email, 0, ++$atpos).idn_to_ascii(self::substr($email, $atpos));
+			$email = self::substr($email, 0, ++$atpos).idn_to_ascii(self::substr($email, $atpos),INTL_IDNA_VARIANT_UTS46,INTL_IDNA_VARIANT_UTS46);
 		}
 
 		return (filter_var($email, FILTER_VALIDATE_EMAIL) === $email && preg_match('#\A[a-z0-9._+-]+@[a-z0-9.-]{1,253}\z#i', $email));

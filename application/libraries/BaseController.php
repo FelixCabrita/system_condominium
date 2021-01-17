@@ -15,9 +15,10 @@ class BaseController extends CI_Controller
     protected $username = '';
     protected $permissions = '';
     protected $condominium_text = '';
-    protected $condominium = '';    
+    protected $condominium = '';
     protected $generates_report = '';
     protected $apartment = '';
+    protected $max_user_tenant = '';
     protected $rol = '';
     protected $globalAppApp = array();
     protected $lastLogin = '';
@@ -53,10 +54,11 @@ class BaseController extends CI_Controller
             $this->name = $this->session->userdata('name');
             $this->apartment = $this->session->userdata('apartment');
             $this->rol = $this->session->userdata('rol');
+            $this->max_user_tenant = $this->session->userdata('max_user_tenant');
             $this->lastLogin = $this->session->userdata('lastLogin');
             $this->isLoggedIn = $this->session->userdata('isLoggedIn');
             $this->condominium = $this->session->userdata('condominium');
-            $this->condominium_text = $this->session->userdata('condominium_text');  
+            $this->condominium_text = $this->session->userdata('condominium_text');
             $this->generates_report = $this->session->userdata('generates_report');
             $this->globalApp['id'] = $this->id;
             $this->globalApp['username'] = $this->username;
@@ -64,6 +66,7 @@ class BaseController extends CI_Controller
             $this->globalApp['apartment'] = $this->apartment;
             $this->globalApp['rol'] = $this->rol;
             $this->globalApp['name'] = $this->name;
+            $this->globalApp['max_user_tenant'] = $this->max_user_tenant;
             $this->globalApp['isLoggedIn'] = $this->isLoggedIn;
             $this->globalApp['condominium'] = $this->condominium;
             $this->globalApp['condominium_text'] = $this->condominium_text;

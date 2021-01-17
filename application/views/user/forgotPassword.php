@@ -46,7 +46,14 @@
                                 <div class="invalid-feedback">
                                     Por favor colocar el correo electronico.
                                 </div>
-                            </div>
+                               
+                            </div> 
+                            <?php   if($_COOKIE['workstation_fscv']!='OWNER'){ ?>
+                            <div class="form-group  ">
+                                <input type="checkbox" id="isclient" name= "isclient" class="custom-control-input">
+                                 <label class="custom-control-label" for="isclient">Es cliente?</label>
+                            </div> 
+                            <?php } ?>
                         </div> 
                         <button class="btn btn-primary" type="submit">RECUPERAR</button>
                         <a class="btn btn-primary" href="<?php echo base_url()  ?>">VOLVER</a>

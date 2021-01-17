@@ -26,8 +26,10 @@ class condominium extends BaseController
 
     public function getDataCondominium()
     {
-        $this->load->model('condominium_model');
-        $this->globalApp['condominiumRecords'] = $this->condominium_model->getListing();
+        if ($this->rol == ROLE_ADMIN) {
+            $this->load->model('condominium_model');
+            $this->globalApp['condominiumRecords'] = $this->condominium_model->getListing($this->id);
+        }
     }
 
     /**
@@ -47,8 +49,10 @@ class condominium extends BaseController
         if ($this->getPermissions('condominium', PERMISSION_READ) != true) {
             $this->loadThis();
         } else {
-            $data['permissions'] = $this->getPermissions()->{'condominium'};
-            $data['condominiumRecords'] = $this->condominium_model->Listing();
+            $data['permissions'] = $this->getPermissions()->{'condominium'};        
+            $data['Pameter'] = $this->condominium_model->getInfoUser($this->id)->max_condominium;
+            $data['PameterCOUNT'] = COUNT($this->condominium_model->getListing($this->id));
+            $data['condominiumRecords'] = $this->condominium_model->Listing($this->id);
             $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Lista de condominios';
             $this->loadViews("condominium/condominium", $this->globalApp, $data, null);
         }
@@ -103,25 +107,57 @@ class condominium extends BaseController
                 $email = (strtolower($this->security->xss_clean($this->input->post('email'))));
                 $masive = (($this->security->xss_clean($this->input->post('masive'))));
 
-                $condominiumInfo = array('name' => $name, 'mobile' => $mobile, 'masive' => $masive, 'rcn' => $rcn, 'email' => $email, 'address' => $address);
-                $condominiumId = $this->condominium_model->addNew($condominiumInfo);
+                $getPameter = $this->condominium_model->getInfoUser($this->id); 
+                $count = COUNT($this->condominium_model->getListing($this->id));
 
-                if ($condominiumId > 0) {
-                    $this->session->set_flashdata('success', 'Condominio creado exitosamente');
-                    $userInfo = array('condominium' => $result);
-                    $this->load->model('user_model');
-                    $result = $this->user_model->edit($userInfo, $this->id, $this->condominium);
-                    $this->session->set_userdata('condominium_text', $name);
-                    $this->session->set_userdata('condominium', $condominiumId);
-                    redirect('condominios');
-                } else {
-                    $this->session->set_flashdata('error', 'Fallo la creacción del condominio');
+                if ($count < $getPameter->max_condominium) { 
+                    $condominiumInfo = array('name' => $name, 'mobile' => $mobile, 'masive' => $masive, 'rcn' => $rcn,
+                        'email' => $email, 'owner' => $this->id, 'address' => $address,
+                        'max_user_tenant' => $getPameter->max_user_tenant, 'max_condominium' => $getPameter->max_condominium);
+                    $condominiumId = $this->condominium_model->addNew($condominiumInfo);
+
+                    if ($condominiumId > 0) {
+                        $this->session->set_flashdata('success', 'Condominio creado exitosamente');
+                        $userInfo = array('condominium' => $condominiumId);
+                        $this->load->model('user_model');
+                        $result = $this->user_model->edit($userInfo, $this->id, $this->condominium);
+
+                        //*OWNER */
+                        if($this->rol==1){ 
+                            $this->load->model('user_model');
+                            $result = $this->user_model->editOWNER($userInfo, $this->id, $this->condominium);
+                        }
+                        $this->session->set_userdata('condominium_text', $name);
+                        $this->session->set_userdata('condominium', $condominiumId); 
+                        $this->session->set_userdata('max_user_tenant', $getPameter->max_user_tenant); 
+
+                        $words = $this->initials($name);
+                        $code = $words . str_pad($condominiumId, 4, '0', STR_PAD_LEFT);
+                        $condominiumInfo = array('code' => $code);
+                        $this->condominium_model->edit($condominiumInfo, $condominiumId);
+
+                        redirect('condominios');
+                    } else {
+                        $this->session->set_flashdata('error', 'Fallo la creacción del condominio');
+                        $this->addNew();
+                    }
+                }else{
+                    $this->session->set_flashdata('error', 'Para crear mas condominios debe expandir su plan o desactive uno');
                     $this->addNew();
                 }
             }
         }
     }
 
+    public function initials($str)
+    {
+        $ret = '';
+        foreach (explode(' ', $str) as $word) {
+            $ret .= strtoupper($word[0]);
+        }
+
+        return $ret;
+    }
     /**
      * This function is used load condominium edit information
      * @param number $condominiumId : Optional : This is condominium id
@@ -175,7 +211,10 @@ class condominium extends BaseController
                 $email = (strtolower($this->security->xss_clean($this->input->post('email'))));
                 $masive = (($this->security->xss_clean($this->input->post('masive'))));
 
-                $condominiumInfo = array('name' => $name, 'mobile' => $mobile, 'masive' => $masive, 'rcn' => $rcn, 'email' => $email, 'address' => $address);
+                $words = $this->initials($name);
+                $code = $words . str_pad($condominiumId, 4, '0', STR_PAD_LEFT);
+
+                $condominiumInfo = array('code' => $code, 'name' => $name, 'mobile' => $mobile, 'masive' => $masive, 'rcn' => $rcn, 'email' => $email, 'address' => $address);
 
                 $result = $this->condominium_model->edit($condominiumInfo, $condominiumId);
 
@@ -203,7 +242,6 @@ class condominium extends BaseController
         } else {
             $condominiumId = $this->input->post('id');
             $result = $this->condominium_model->delete($condominiumId);
-
             if ($result) {echo (json_encode(array('status' => true)));} else {echo (json_encode(array('status' => false)));}
         }
     }
@@ -251,13 +289,17 @@ class condominium extends BaseController
         $this->loadViews("404", $this->globalApp, null, null);
     }
 
-    
- 
-
     public function getDataAccountDetail()
     {
         $this->load->model('accountdetail_model');
         return $this->accountdetail_model->getListing('', $this->condominium);
+    }
+
+
+    public function getDataModule()
+    {
+        $this->load->model('module_model');
+            return $this->module_model->getListing( $this->condominium);
     }
 
     public function parameter()
@@ -268,14 +310,15 @@ class condominium extends BaseController
 
             $data['permissions'] = $this->getPermissions()->{'bills'};
             $data['info'] = $this->condominium_model->getParameter($this->condominium);
-            $data['getDataAccountDetail'] = $this->getDataAccountDetail(); 
+            $data['getDataAccountDetail'] = $this->getDataAccountDetail();
+            $data['getDataModule'] = $this->getDataModule(); 
             $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Establecer parametros';
             $this->loadViews("module/parameter", $this->globalApp, $data, null);
         }
     }
 
     public function changue_parameter()
-    { 
+    {
         $generate_credit = (($this->security->xss_clean($this->input->post('generate_credit'))));
         $generate_debit = (($this->security->xss_clean($this->input->post('generate_debit'))));
 
@@ -288,17 +331,21 @@ class condominium extends BaseController
         $debit_deposit = (($this->security->xss_clean($this->input->post('debit_deposit'))));
         $credit_deposit = (($this->security->xss_clean($this->input->post('credit_deposit'))));
         $credit_deposit_pay = (($this->security->xss_clean($this->input->post('credit_deposit_pay'))));
-  
-        $condominiumInfo = array('generate_credit' => $generate_credit, 'generate_debit' => $generate_debit
-        , 'debit_card' => $debit_card, 'debit_cash' => $debit_cash, 'debit_check' => $debit_check
-        , 'debit_transfer' => $debit_transfer, 'credit_input' => $credit_input
-        , 'debit_deposit' => $debit_deposit, 'credit_deposit' => $credit_deposit
-        , 'credit_deposit_pay' => $credit_deposit_pay);
+
+        $module = (($this->security->xss_clean($this->input->post('module'))));
+        $documenttype = (($this->security->xss_clean($this->input->post('documentType'))));
+
+        $condominiumInfo = array('module' => $module, 'documenttype' => $documenttype,
+        'generate_credit' => $generate_credit, 'generate_debit' => $generate_debit
+            , 'debit_card' => $debit_card, 'debit_cash' => $debit_cash, 'debit_check' => $debit_check
+            , 'debit_transfer' => $debit_transfer, 'credit_input' => $credit_input
+            , 'debit_deposit' => $debit_deposit, 'credit_deposit' => $credit_deposit
+            , 'credit_deposit_pay' => $credit_deposit_pay);
 
         $result = $this->condominium_model->edit($condominiumInfo, $this->condominium);
 
         if ($result == true) {
-            $this->session->set_flashdata('success', 'parametros actualizados actualizado'); 
+            $this->session->set_flashdata('success', 'parametros actualizados actualizado');
         } else {
             $this->session->set_flashdata('error', 'Fallo actualización');
         }

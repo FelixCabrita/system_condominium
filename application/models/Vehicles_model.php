@@ -11,6 +11,19 @@
  */
 class Vehicles_model extends CI_Model
 {
+    protected $db="";
+
+    public function __construct()
+    {
+        parent::__construct();  
+        if(!isset($_COOKIE['workstation_fscv_'])){
+            $this->session->sess_destroy();
+            redirect('login');
+        }
+        $db = $_COOKIE['workstation_fscv_'];
+        $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
+    }
+    
     /**
      * This function is used to get the vehicles listing count
      * @param string $searchText : This is optional search text

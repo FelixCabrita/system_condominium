@@ -9,6 +9,19 @@
  */
 class tenant_model extends CI_Model
 { 
+    protected $db="";
+
+    public function __construct()
+    {
+        parent::__construct();  
+        if(!isset($_COOKIE['workstation_fscv_'])){
+            $this->session->sess_destroy();
+            redirect('login');
+        }
+        $db = $_COOKIE['workstation_fscv_'];
+        $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
+    }
+    
     /**
      * This function is used to get the tenant listing count
      * @param string $searchText : This is optional search text
@@ -37,6 +50,20 @@ class tenant_model extends CI_Model
         $result = $query->result();
         return $result;
     }
+
+    public function getListingCount($condominium)
+    {  
+        $this->db->select('t.id, t.name, t.document'); 
+        $this->db->from('tenant as t');  
+        $this->db->where("t.password <> ''");
+        $this->db->where("t.status",1);
+        $this->db->where('t.condominium',$condominium); 
+        $query = $this->db->get();
+        $result = $query->result();
+        return $result;
+    }
+ 
+
  
 
     function Assignment($id,$condominium,$_id ='')

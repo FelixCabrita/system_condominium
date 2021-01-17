@@ -26,10 +26,11 @@ class Tenant extends BaseController
 
     public function getDataCondominium()
     {
-        $this->load->model('condominium_model');
-        $this->globalApp['condominiumRecords'] = $this->condominium_model->getListing();
+        if($this->rol==ROLE_ADMIN){
+            $this->load->model('condominium_model');
+            $this->globalApp['condominiumRecords'] = $this->condominium_model->getListing($this->id);
+        }
     }
-
     /**
      * This function used to load the first screen of the Tenant
      */
@@ -58,6 +59,7 @@ class Tenant extends BaseController
             $this->loadThis();
         } else {
             $data['TenantRecords'] = $this->tenant_model->Listing($this->id, $this->condominium);
+            $data['parameter'] = COUNT($this->tenant_model->getListingCount( $this->condominium));
             $data['permissions'] = $this->getPermissions()->{'tenants'};
             $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Lista de clientes';
             $this->loadViews("tenant/tenant", $this->globalApp, $data, null);
@@ -90,8 +92,9 @@ class Tenant extends BaseController
         if (checkForPermissions('tenants', PERMISSION_CREATE) != true) {
             $this->loadThis();
         } else {
+            $data['parameter'] = COUNT($this->tenant_model->getListingCount($this->condominium));
             $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Nueva cliente';
-            $this->loadViews("tenant/addNew", $this->globalApp, null, null);
+            $this->loadViews("tenant/addNew", $this->globalApp, $data, null);
         }
     }
 
@@ -182,7 +185,7 @@ class Tenant extends BaseController
             }
             $data['permissions'] = $this->getPermissions()->{'tenants'};
             $data['TenantInfo'] = $this->tenant_model->getInfo($id, $this->condominium);
-
+            $data['parameter'] = COUNT($this->tenant_model->getListingCount($this->condominium));
             if ($data['TenantInfo'] == null) {
                 redirect('clientes');
             }

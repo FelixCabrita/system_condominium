@@ -10,7 +10,18 @@
 class Reportpay_model extends CI_Model
 {  
 
+    protected $db="";
 
+    public function __construct()
+    {
+        parent::__construct();  
+        if(!isset($_COOKIE['workstation_fscv_'])){
+            $this->session->sess_destroy();
+            redirect('login');
+        }
+        $db = $_COOKIE['workstation_fscv_'];
+        $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
+    }
    function listing($condominium,$id='')
     { 
         $this->db->select("rh.id, CONCAT(t.document,' - ',t.name) as 'tenant', rh.item, rh.amount, rh.code_transfer, rh.date_transfer, rh.status, rh.created_at,  rh.photo");
@@ -94,6 +105,7 @@ class Reportpay_model extends CI_Model
 
     function addMonth($mounth,$dateMax)
     { 
+        $this->db->query("SET lc_time_names = 'es_MX';"); 
         $this->db->SELECT("DATE(DATE_ADD('$dateMax', INTERVAL $mounth MONTH)) as 'date', UPPER(MONTHNAME(DATE_ADD('$dateMax', INTERVAL $mounth MONTH))) as 'title'");  
         $query = $this->db->get(); 
         return $query->row();

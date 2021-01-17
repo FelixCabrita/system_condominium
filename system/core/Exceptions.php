@@ -251,12 +251,11 @@ class CI_Exceptions {
 			{
 				$x = explode('/', $filepath);
 				$filepath = $x[count($x)-2].'/'.end($x);
-			}
-
+			} 
 			$template = 'html'.DIRECTORY_SEPARATOR.'error_php';
 		}
 		else
-		{
+		{ 
 			$template = 'cli'.DIRECTORY_SEPARATOR.'error_php';
 		}
 

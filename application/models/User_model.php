@@ -9,6 +9,19 @@
  */
 class User_model extends CI_Model
 { 
+    protected $db="";
+
+    public function __construct()
+    {
+        parent::__construct();  
+        if(!isset($_COOKIE['workstation_fscv_'])){
+            $this->session->sess_destroy();
+            redirect('login');
+        }
+        $db = $_COOKIE['workstation_fscv_'];
+        $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
+    }
+    
     /**
      * This function is used to get the user listing count
      * @param string $searchText : This is optional search text
@@ -20,6 +33,7 @@ class User_model extends CI_Model
     { 
         $this->db->from('users as us');    
         $this->db->where('us.id !=',$id);
+        $this->db->where('us.type !=',1);
         $this->db->where('us.condominium',$condominium);
         $this->db->order_by('us.id', 'DESC'); 
         $query = $this->db->get(); 
@@ -70,8 +84,7 @@ class User_model extends CI_Model
     function getInfo($userId,$condominium)
     { 
         $this->db->from('users'); 
-        $this->db->where('id', $userId);
-        $this->db->where('condominium',$condominium);
+        $this->db->where('id', $userId); 
         $query = $this->db->get();
         
         return $query->row();
@@ -85,13 +98,25 @@ class User_model extends CI_Model
      */
     function edit($userInfo, $userId,$condominium)
     {
-        $this->db->where('id', $userId);
-        $this->db->where('condominium',$condominium);
+        $this->db->where('id', $userId); 
         $this->db->update('users', $userInfo); 
         return $this->db->affected_rows();
     }
     
     
+    /**
+     * This function is used to update the user information
+     * @param array $userInfo : This is users updated information
+     * @param number $userId : This is user id
+     */
+    function editOWNER($userInfo, $userId,$condominium)
+    {
+        $this->db = $this->load->database('', true, null, NAME_DB);
+        $this->db->where('id', $userId); 
+        $this->db->update('users', $userInfo); 
+        return $this->db->affected_rows();
+    }
+     
     
     /**
      * This function is used to delete the user information
@@ -100,8 +125,7 @@ class User_model extends CI_Model
      */
     function delete($userId,$condominium)
     {
-        $this->db->where('id', $userId); 
-        $this->db->where('condominium',$condominium);
+        $this->db->where('id', $userId);  
         $this->db->delete('users'); 
         return $this->db->affected_rows();
     }
@@ -114,8 +138,7 @@ class User_model extends CI_Model
     function matchOldPassword($userId, $oldPassword,$condominium)
     {
         $this->db->select('id, password');
-        $this->db->where('id', $userId);    
-        $this->db->where('condominium',$condominium); 
+        $this->db->where('id', $userId);     
         $query = $this->db->get('users');
         
         $user = $query->result();
@@ -139,8 +162,7 @@ class User_model extends CI_Model
     function changePassword($userId, $userInfo,$condominium)
     {
         $this->db->where('id', $userId); 
-        $this->db->update('users', $userInfo); 
-        $this->db->where('condominium',$condominium); 
+        $this->db->update('users', $userInfo);  
         return $this->db->affected_rows();
     }
 

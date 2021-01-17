@@ -25,7 +25,6 @@ $(document).ready(function() {
                     url: baseURL + "chequeo_cuenta_control",
                     type: "post",
                     data: { id: function() { return $("#id").val() } }
-
                 }
             }
         },

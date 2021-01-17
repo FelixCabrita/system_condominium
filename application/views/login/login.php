@@ -12,14 +12,14 @@
     <meta name="msapplication-tap-highlight" content="no">
     <link href="<?php echo base_url(); ?>assets/main.css" rel="stylesheet"></head>
 </head>
-
+<?php $owner = $workstation=="OWNER"?1:0; ?>
 <body>
     <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header center-elem" style="background-image: url('<?php echo base_url(); ?>assets/images/background/login.jpg');background-size: 100%;">
         <div class="app-main app-main_login center-elem">
             <div class="main-card  card">
                 <div class="card-body text-center" >
-                    <img class ="img-login" src ="<?php echo base_url(); ?>assets/images/avatars/ic_launcher.png"/>
-                    <h5 class="card-title">INICIO DE SESION</h5> 
+                    <img class ="img-login" src ="<?php echo base_url(); ?>assets/images/background/logo_admicondor.png"  style="width:500px;" />
+                    <h5 class="card-title">INICIO DE SESION <?php echo $owner==1?" PARA PROPIETARIOS":"" ?></h5> 
                     <form class="needs-validation" action="<?php echo base_url(); ?>/logUser" method="post" novalidate>
                          <?php $this->load->helper('form'); 
                             $error = $this->session->flashdata('error');   
@@ -59,6 +59,15 @@
                                 </div>
                             </div>
                         </div> 
+                        <?php if($owner==0){ ?>
+                            <div class="mb-3"> 
+                            <div class="form-group  ">
+                                <input type="checkbox" id="isclient" name= "isclient" class="custom-control-input">
+                                 <label class="custom-control-label" for="isclient">Es cliente?</label>
+                            </div> 
+                        </div> 
+                        <?php }?>
+                       
                         <button class="btn btn-primary" type="submit">ENTRAR</button>
                         <a class="btn btn-primary" href="<?php echo base_url().'recuperar'  ?>">RECUPERAR CONTRASEÑA</a>
                     </form>
@@ -66,8 +75,14 @@
                   
                         </div>
                     </div>
-                </div>
-        </div>
+                </div>  
+                
+                 <a style="margin-bottom:15px" href="<?php echo base_url().'validar_condominio'  ?>">
+                 <?php if($owner==0){ ?>
+                 SALIR DEL CONDOMINIO {<?php echo $workstation_name ?>}
+                  <?php }else{echo "VALIDAR UN CONDOMINIO"; }?></a>
+             
+        </div> 
     </div>
     <script type="text/javascript" src="<?php echo base_url(); ?>assets/scripts/main.js"></script>
     <script>      

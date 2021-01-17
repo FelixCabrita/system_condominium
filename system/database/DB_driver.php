@@ -429,16 +429,18 @@ abstract class CI_DB_driver {
 			// We still don't have a connection?
 			if ( ! $this->conn_id)
 			{
-				log_message('error', 'Unable to connect to the database');
+				redirect("validar_condominio");
+				//log_message('error', 'Unable to connect to the database');
 
 				if ($this->db_debug)
 				{
+					redirect("validar_condominio");
 					$this->display_error('db_unable_to_connect');
 				}
 
 				return FALSE;
 			}
-		}
+		} 
 
 		// Now we set the character set and that's all
 		return $this->db_set_charset($this->char_set);

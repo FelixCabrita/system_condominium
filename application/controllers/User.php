@@ -26,8 +26,10 @@ class User extends BaseController
 
     public function getDataCondominium()
     {
-        $this->load->model('condominium_model');
-        $this->globalApp['condominiumRecords'] = $this->condominium_model->getListing();
+        if($this->rol==ROLE_ADMIN){
+            $this->load->model('condominium_model');
+            $this->globalApp['condominiumRecords'] = $this->condominium_model->getListing($this->id);
+        }
     }
 
     /**
@@ -107,7 +109,8 @@ class User extends BaseController
                 $type = strtolower($this->security->xss_clean($this->input->post('type')));
                 $password = $this->input->post('password');
                 $generates_report =  ($this->security->xss_clean($this->input->post('generates_report')));
-                $userInfo = array('username' => $email, 'mobile' => $mobile, 'condominium' => $this->condominium, 'type' => $type, 'generates_report' => $generates_report, 'password' => getHashedPassword($password), 'name' => ucwords($name), 'permissions' => getPermission($type));
+                $userInfo = array('username' => $email, 'mobile' => $mobile, 'condominium' => $this->condominium, 'type' => $type, 
+                'generates_report' => $generates_report, 'password' => getHashedPassword($password), 'name' => ucwords($name), 'permissions' => getPermission($type));
                 $result = $this->user_model->addNew($userInfo);
 
                 if ($result > 0) {
@@ -340,6 +343,12 @@ class User extends BaseController
             $userInfo = array('name' => $name, 'username' => $username);
             $result = $this->user_model->edit($userInfo, $this->id, $this->condominium);
 
+            //*OWNER */
+            if($this->rol==1){ 
+                $this->load->model('user_model');
+                $result = $this->user_model->editOWNER($userInfo, $this->id, $this->condominium);
+            }
+
             if ($result > 0) {
                 $this->session->set_userdata('name', $name);
                 $this->session->set_flashdata('success', 'Perfil actualizado');
@@ -359,9 +368,9 @@ class User extends BaseController
     {
         $this->load->library('form_validation');
 
-        $this->form_validation->set_rules('oldPassword', 'Old password', 'required|max_length[20]');
-        $this->form_validation->set_rules('newPassword', 'New password', 'required|max_length[20]');
-        $this->form_validation->set_rules('cNewPassword', 'Confirm new password', 'required|matches[newPassword]|max_length[20]');
+        $this->form_validation->set_rules('oldPassword', 'Antigua contraseña', 'required|max_length[20]');
+        $this->form_validation->set_rules('newPassword', 'Nueva contraseña', 'required|max_length[20]');
+        $this->form_validation->set_rules('cNewPassword', 'Confirmacion nueva contraseña', 'required|matches[newPassword]|max_length[20]');
 
         if ($this->form_validation->run() == false) {
             $this->profile($active);
@@ -379,7 +388,14 @@ class User extends BaseController
 
                 $result = $this->user_model->changePassword($this->id, $usersData, $this->condominium);
 
-                if ($result > 0) {$this->session->set_flashdata('success', 'Password updation successful');} else { $this->session->set_flashdata('error', 'Password updation failed');}
+
+                //*OWNER */
+                if($this->rol==1){ 
+                    $this->load->model('user_model');
+                    $result = $this->user_model->editOWNER($usersData, $this->id, $this->condominium);
+                }
+
+                if ($result > 0) {$this->session->set_flashdata('success', 'Contraseña actualizada');} else { $this->session->set_flashdata('error', 'Password updation failed');}
 
                 redirect('profile/' . $active);
             }

@@ -67,7 +67,16 @@
                             </li> 
                         </ul>
                     </div>
-                <?php } ?>
+                <?php }else{?>
+                    <div class="app-header-left">
+                
+                        <ul class="header-menu nav">
+                            <li class="nav-item">
+                    <a class="btn btn-sm btn-success" target="_blank" title="IMPRIMIR CODIGO" href="<?php echo base_url().'imprimir_condominio/'.$condominium; ?>" ><i class="fa fa-print"></i> <?php echo $condominium_text ?></a> </a>
+                    </li> 
+                        </ul>
+                    </div>
+                <?php  } ?>
                 <div class="app-header-right">
                     <div class="header-btn-lg pr-0">
                         <div class="widget-content p-0">
@@ -114,6 +123,77 @@
         </div>
 
 
+<!-- REPORT --> 
+ 
+<div class="modal fade" id="report_bv" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">REPORTE DE BALANCE DE COMPROBACION</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">  
+                <div class="row form-group ">
+                    <div class="form-group col-sm-6">
+                        <label for="start_time">Desde</label>
+                        <input type="date"  class="form-control mb-2 mr-sm-5" id="start_date"  name="start_date" >
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label for="ending_time">Hasta</label>
+                        <input type="date"  class="form-control mb-2 mr-sm-5" id="ending_date"  name="ending_date" >
+                    </div>
+                </div>    
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary report_balance_verification">Generar reporte</button>
+            </div>
+        </div>
+    </div>
+</div>   
+
+
+<div class="modal fade" id="report_ra" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">REPORTE DE RESULTADOS ACUMULADOS</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">  
+                <div class="row form-group ">
+                    <div class="form-group col-sm-6">
+                        <label for="start_time">Desde</label>
+                        <input type="date"  class="form-control mb-2 mr-sm-5" id="start_date_ra"  name="start_date_ra" >
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label for="ending_time">Hasta</label>
+                        <input type="date"  class="form-control mb-2 mr-sm-5" id="ending_date_ra"  name="ending_date_ra" >
+                    </div>
+                </div>   
+                <h3>Selecciones cuentas a comparar</h3>                 
+                 <div class="row form-group ">
+                    <div class="form-group col-sm-6"> 
+                        <select name="heading_1_ra" id="heading_1_ra" class="form-control"> 
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <select name="heading_2_ra" id="heading_2_ra" class="form-control"> 
+                        </select>
+                    </div>
+                </div>    
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary report_result_accumulated">Generar reporte</button>
+            </div>
+        </div>
+    </div>
+</div>  
 
 <!-- Modal --> 
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -158,7 +238,7 @@
                 </form>      
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                 <button type="button" class="btn btn-primary generate_report">Generar reporte</button>
             </div>
         </div>
@@ -400,6 +480,34 @@
   </div>
 </div>
 
+<div class="modal fade" id="load_bills" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">CARGA DE FACTURAS</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+         <form  id="load_bills_" action="<?php echo base_url()  ?>cargar_facturas" method="post" role="form"  enctype="multipart/form-data">
+                    
+            <div class="form-group">
+                <label for="userfile">Selecciona tu excel (xlsx|xls)</label>
+                <input type="file" class="form-control-file" id="userfile" name="userfile" accept=".xlsx,.xls">
+            </div>
+        </form>
+        <p><b>NOTA: SE COMPROBARA LA EXISTENCIA DEL SERVICIO Y DEL APARTAMENTO ANTES DE AGREGAR LA FACTURA.</b></p>                 
+      </div>
+      <div class="modal-footer">
+      <a href="<?php echo base_url()  ?>/assets/format/load_bills.xlsx" target="_blank" class="btn btn-success" >Descargar formato</a>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" onclick="load_bills_()">Procesar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal fade" id="payment_type" tabindex="-1" role="dialog" aria-labelledby="payment_type" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -432,6 +540,8 @@
     </div>
   </div>
 </div>
+
+ 
         <div class="app-main">
             <div class="app-sidebar sidebar-shadow">
                 <div class="app-header__logo">
@@ -473,18 +583,20 @@
                                     <i class="metismenu-icon pe-7s-graph3"></i> Dashboard
                                 </a>
                             </li>
-                            
-                            <?php 
-                            if($rol<ROLE_VIGILANT){
-                            
-                            echo $rol<ROLE_VIGILANT?'<li class="app-sidebar__heading">ADMINISTRACION</li>':"" ?> 
                             <?php  if($rol==ROLE_ADMIN){ ?>
                                 <li> 
                                     <a href="<?php echo base_url(); ?>condominios">
-                                        <i class="metismenu-icon pe-7s-user"></i> CONDOMINIOS 
+                                        <i class="metismenu-icon pe-7s-keypad" style="color:#000 ;opacity:1;"></i> CONDOMINIOS 
                                     </a>
                                 </li>
                             <?php } 
+                            
+                               if($condominium!=0){
+                            if($rol<ROLE_VIGILANT){
+                            
+                            echo $rol<ROLE_VENDOR?'<li class="app-sidebar__heading">ADMINISTRACION</li>':""; 
+                           
+                         
                              if (checkForPermissions('users', PERMISSION_READ) == true) { ?> 
                             <li> 
                                 <a href="<?php echo base_url(); ?>usuarios">
@@ -495,73 +607,89 @@
                              if (checkForPermissions('edifices', PERMISSION_READ) == true) { ?> 
                             <li> 
                                 <a href="<?php echo base_url(); ?>edificios">
-                                    <i class="metismenu-icon pe-7s-user"></i> EDIFICIOS 
+                                    <i class="metismenu-icon pe-7s-culture"></i> EDIFICIOS 
                                 </a>
                             </li>
                             <?php } 
                              if (checkForPermissions('apartments', PERMISSION_READ) == true) { ?> 
                             <li> 
                                 <a href="<?php echo base_url(); ?>apartamentos">
-                                    <i class="metismenu-icon pe-7s-user"></i> APARTAMENTOS 
+                                    <i class="metismenu-icon pe-7s-culture"></i> APARTAMENTOS 
                                 </a>
                             </li> 
                             <?php } 
                              if (checkForPermissions('tags', PERMISSION_READ) == true) { ?> 
                             <li> 
                                 <a href="<?php echo base_url(); ?>etiquetas">
-                                    <i class="metismenu-icon pe-7s-user"></i> ETIQUETAS
+                                    <i class="metismenu-icon pe-7s-ticket"></i> ETIQUETAS
                                 </a>
                             </li> 
                             <?php } 
                              if (checkForPermissions('commonarea', PERMISSION_READ) == true) { ?> 
                             <li> 
                                 <a href="<?php echo base_url(); ?>areascomunes">
-                                    <i class="metismenu-icon pe-7s-user"></i> AREAS COMUNES 
+                                    <i class="metismenu-icon pe-7s-share"></i> AREAS COMUNES 
                                 </a>
                             </li>
                             <?php } 
                              if (checkForPermissions('tenants', PERMISSION_READ) == true) { ?> 
                             <li> 
-                                <a href="<?php echo base_url(); ?>clientes">
-                                    <i class="metismenu-icon pe-7s-user"></i> CLIENTES 
+                                <a href="#">
+                                    <i class="metismenu-icon pe-7s-users"></i> CLIENTES 
                                 </a>
+                                <ul >
+                                    <li> 
+                                        <a href="<?php echo base_url(); ?>clientes">
+                                            <i class="metismenu-icon pe-7s-users"></i> LISTADO 
+                                        </a>
+                                    </li>
+                                    <?php if (checkForPermissions('Payments', PERMISSION_READ) == true) { 
+                                   
+                                    ?>   
+                                        <li>  <a href="<?php echo base_url(); ?>reportesdepago">
+                                                <i class="metismenu-icon pe-7s-user"></i>REPORTE DE TRANSFERENCIA
+                                            </a>
+                                        </li> 
+                                
+                                    <?php }  ?>  
+                                </ul >
                             </li>
                             <?php } 
                              if (checkForPermissions('services', PERMISSION_READ) == true) { ?> 
                             <li> 
                                 <a href="<?php echo base_url(); ?>servicios">
-                                    <i class="metismenu-icon pe-7s-user"></i> SERVICIOS 
+                                    <i class="metismenu-icon pe-7s-paint-bucket"></i> SERVICIOS 
                                 </a>
                             </li>
                             <?php } 
                              if (checkForPermissions('period', PERMISSION_READ) == true) { ?> 
                             <li> 
                                 <a href="<?php echo base_url(); ?>periodos">
-                                    <i class="metismenu-icon pe-7s-user"></i> PERIODOS 
+                                    <i class="metismenu-icon pe-7s-refresh-2"></i> PERIODOS 
                                 </a>
                             </li>
                             <?php } 
                              if (checkForPermissions('directive', PERMISSION_READ) == true) { ?> 
                             <li> 
                                 <a href="<?php echo base_url(); ?>juntadirectiva">
-                                    <i class="metismenu-icon pe-7s-user"></i> JUNTA DIRECTIVA 
+                                    <i class="metismenu-icon pe-7s-network"></i> JUNTA DIRECTIVA 
                                 </a>
                             </li> 
                             <?php }  ?>   
-                            <?php if (checkForPermissions('bills', PERMISSION_READ) == true) { ?>  
+                            <?php if (checkForPermissions('bills', PERMISSION_READ) == true && ($rol != ROLE_VENDOR)) { ?>  
                                 <li class="app-sidebar__heading">CONTABILIDAD</li> 
                                 <li>  <a href="<?php echo base_url(); ?>modulos">
-                                        <i class="metismenu-icon pe-7s-user"></i> MODULO 
+                                        <i class="metismenu-icon pe-7s-portfolio"></i> MODULO 
                                     </a>
                                 </li>
                                  <li  > 
                                     <a href="<?php echo base_url(); ?>tipodocumento">
-                                        <i class="metismenu-icon pe-7s-user"></i> TIPO DE DOCUMENTOS 
+                                        <i class="metismenu-icon pe-7s-photo-gallery"></i> TIPO DE DOCUMENTOS 
                                     </a>
                                 </li>   
                                 <li>
                                     <a href="#">
-                                        <i class="metismenu-icon pe-7s-diamond"></i> MANTENIMIENTO DE CUENTAS
+                                        <i class="metismenu-icon pe-7s-wallet"></i> MANTENIMIENTO DE CUENTAS
                                         <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                                     </a>
                                     <ul >
@@ -585,92 +713,124 @@
                                                 <i class="metismenu-icon pe-7s-user"></i> CUENTA DETALLE 
                                             </a>
                                         </li>
+                                        <li> 
+                                            <a href="<?php echo base_url(); ?>catalogo_cuentas" target="_blank">
+                                                <i class="metismenu-icon pe-7s-user"></i> CATALOGO DE CUENTA
+                                            </a>
+                                        </li>
                                     </ul> 
                                 <li> 
                                 <li> 
                                     <a href="<?php echo base_url(); ?>establcer_parametros">
-                                        <i class="metismenu-icon pe-7s-user"></i>ESTABLECER PARAMETROS
+                                        <i class="metismenu-icon pe-7s-tools"></i>ESTABLECER PARAMETROS
                                     </a>
                                 </li>  
                                 <li> 
                                     <a href="<?php echo base_url(); ?>entradas_de_diario">
-                                        <i class="metismenu-icon pe-7s-user"></i>ENTRADA DE DIARIO
+                                        <i class="metismenu-icon pe-7s-notebook"></i>ENTRADA DE DIARIO
                                     </a>
-                                </li>  
+                                </li> 
+                                <li>
+                                    <a href="#">
+                                        <i class="metismenu-icon pe-7s-note2"></i> REPORTES
+                                        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                                    </a>
+                                    <ul >
+                                        <li> 
+                                            <a   href="#" data-toggle="modal" data-target="#report_bv">
+                                                <i class="metismenu-icon pe-7s-user"></i> BALANZA DE COMPROBACION
+                                            </a>
+                                        </li> 
+                                        <li> 
+                                            <a   href="#" data-toggle="modal" data-target="#report_ra">
+                                                <i class="metismenu-icon pe-7s-user"></i> RESULTADO ACOMULADO
+                                            </a>
+                                        </li>
+                                    </ul> 
+                                <li> 
                             <?php } ?> 
                             <?php if (checkForPermissions('pay', PERMISSION_READ) == true) { ?>  
                                 <li class="app-sidebar__heading">CAJA</li> 
                                 <li>  <a href="<?php echo base_url(); ?>caja">
-                                        <i class="metismenu-icon pe-7s-user"></i> PAGAR 
+                                        <i class="metismenu-icon pe-7s-cash"></i> PAGAR 
+                                    </a>
+                                </li>  
+                                <li>  <a href="<?php echo base_url(); ?>facturas">
+                                        <i class="metismenu-icon pe-7s-news-paper"></i> FACTURAS 
                                     </a>
                                 </li> 
                                 <?php if($generates_report==1){ ?>
                                 <li  > 
-                                    <a href="<?php echo base_url(); ?>reporte_diario">
-                                        <i class="metismenu-icon pe-7s-user"></i>REPORTE DIARIO
+                                    <a href="<?php echo base_url(); ?>cierresdecaja">
+                                        <i class="metismenu-icon pe-7s-download"></i>CIERRE DE CAJA
                                     </a>
                                 </li>  
-                            <?php }  } }?>  
-                            
-                            <?php if (checkForPermissions('Payments', PERMISSION_READ) == true) { 
-                                 echo $rol<ROLE_VIGILANT?'<li class="app-sidebar__heading">Pagos</li>':"" 
-                                ?>   
-                                <li>  <a href="<?php echo base_url(); ?>reportesdepago">
-                                        <i class="metismenu-icon pe-7s-user"></i>REPORTE DE PAGO
-                                    </a>
-                                </li> 
-                             
-                            <?php }  ?>  
-                            <?php echo $rol<ROLE_VIGILANT?'<li class="app-sidebar__heading">RESERVA DE AREA COMUN</li>':"" ?>  
-                             <?php if (checkForPermissions('reservations', PERMISSION_READ) == true) { ?> 
+                            <?php }  } }?>   
+                            <?php echo $rol<ROLE_VENDOR?'<li class="app-sidebar__heading">RESERVA DE AREA COMUN</li>':"" ?>  
+                             <?php if (checkForPermissions('reservations', PERMISSION_READ)) { ?> 
                              <li> 
                                 <a href="<?php echo base_url(); ?>reservaciones">
-                                    <i class="metismenu-icon pe-7s-user"></i><?php echo $rol<=ROLE_VIGILANT?'VER RESERVACIONES':"MIS RESERVACIONES" ?>  
+                                    <i class="metismenu-icon pe-7s-pin"></i><?php echo $rol<=ROLE_VIGILANT?'VER RESERVACIONES':"MIS RESERVACIONES" ?>  
                                 </a>
                             </li> 
                             <?php } ?>  
-                            <?php echo $rol<ROLE_VIGILANT?'<li class="app-sidebar__heading">INSIDENCIAS</li>':"" ?>   
+                            <?php echo $rol<ROLE_VENDOR?'<li class="app-sidebar__heading">INSIDENCIAS</li>':"" ?>   
                             <?php  if (checkForPermissions('incidents', PERMISSION_READ) == true) { ?>  
                              <li> 
                                 <a href="<?php echo base_url(); ?>insidencias">
-                                    <i class="metismenu-icon pe-7s-user"></i> <?php echo $rol<=ROLE_VIGILANT?'VER INSIDENCIAS':"MIS INSIDENCIAS" ?>    
+                                    <i class="metismenu-icon pe-7s-attention"></i> <?php echo $rol<=ROLE_VIGILANT?'VER INSIDENCIAS':"MIS INSIDENCIAS" ?>    
                                 </a>
                             </li> 
                             <?php } ?> 
-                            <?php echo $rol<ROLE_VIGILANT?'<li class="app-sidebar__heading">VIGILANCIA</li>':"" ?>   
+                            <?php echo $rol<ROLE_VENDOR?'<li class="app-sidebar__heading">VIGILANCIA</li>':"" ?>   
                             <?php if (checkForPermissions('vigilant', PERMISSION_READ) == true) { ?>  
                              <li> 
                                 <a href="<?php echo base_url(); ?>casillavigilante">
-                                    <i class="metismenu-icon pe-7s-user"></i> ENTRADAS Y SALIDAS
+                                    <i class="metismenu-icon pe-7s-back-2"></i> ENTRADAS Y SALIDAS
                                 </a> 
                             </li>   
                             <li> 
                                 <a href="<?php echo base_url(); ?>visitantes">
-                                    <i class="metismenu-icon pe-7s-user"></i> VISITANTES
+                                    <i class="metismenu-icon pe-7s-smile "></i> VISITANTES
                                 </a> 
                             </li> 
                             <?php if($generates_report==1){ ?>
                              <li> 
                                 <a href="#"  data-toggle="modal" data-target="#exampleModal">
-                                    <i class="metismenu-icon pe-7s-user"></i> REPORTES
+                                    <i class="metismenu-icon pe-7s-note2"></i> REPORTES
                                 </a> 
                             </li>  
                             <?php }} ?>
-                            <?php echo $rol<ROLE_VIGILANT?' <li class="app-sidebar__heading">CLIENTES</li>':"" ?>   
-                           
+                            <?php echo $rol<ROLE_VENDOR?' <li class="app-sidebar__heading">CLIENTES</li>':"" ?>   
+                            <?php if ($rol>ROLE_VIGILANT) {  
+                                ?>   
+                                    <li>  <a href="<?php echo base_url(); ?>reportesdepago">
+                                            <i class="metismenu-icon pe-7s-user"></i>REPORTE DE TRANSFERENCIA
+                                        </a>
+                                    </li> 
+                                    <li>  <a href="<?php echo base_url(); ?>facturas">
+                                        <i class="metismenu-icon pe-7s-user"></i> FACTURAS 
+                                    </a>
+                                </li> 
+                                <?php }  ?>  
                             <?php   if (checkForPermissions('employees', PERMISSION_READ) == true) { ?> 
                             <li> 
                                 <a href="<?php echo base_url(); ?>empleados">
-                                    <i class="metismenu-icon pe-7s-user"></i> EMPLEADOS
+                                    <i class="metismenu-icon pe-7s-id"></i> EMPLEADOS
                                 </a> 
                             </li>  
                             <?php }  if (checkForPermissions('vehicles', PERMISSION_READ) == true) { ?> 
                             <li> 
                                 <a href="<?php echo base_url(); ?>vehiculos">
-                                    <i class="metismenu-icon pe-7s-user"></i> VEHICULOS
+                                    <i class="metismenu-icon pe-7s-car"></i> VEHICULOS
                                 </a> 
                             </li> 
-                            <?php }  ?>
+                            <?php } 
+                        } ?>
+
+
+
+
                         </ul>
                     </div>
                      

@@ -26,8 +26,16 @@ class Heading extends BaseController
 
     public function getDataCondominium()
     {
-        $this->load->model('condominium_model');
-        $this->globalApp['condominiumRecords'] = $this->condominium_model->getListing();
+        if($this->rol==ROLE_ADMIN){
+            $this->load->model('condominium_model');
+            $this->globalApp['condominiumRecords'] = $this->condominium_model->getListing($this->id);
+        }
+    }
+
+    public function getDataHeading()
+    {
+        $this->load->model('apartment_model'); 
+        echo json_encode($this->heading_model->getListing($this->condominium)); 
     }
 
     /**

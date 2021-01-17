@@ -26,8 +26,10 @@ class Incidents extends BaseController
 
     public function getDataCondominium()
     {
-        $this->load->model('condominium_model');
-        $this->globalApp['condominiumRecords'] = $this->condominium_model->getListing();
+        if($this->rol==ROLE_ADMIN){
+            $this->load->model('condominium_model');
+            $this->globalApp['condominiumRecords'] = $this->condominium_model->getListing($this->id);
+        }
     }
 
     public function getDataEdifices($code = '')
@@ -302,7 +304,11 @@ class Incidents extends BaseController
                 $incidentsInfo = array('status' => $status, 'observations' => $observation);
                 $result = $this->incidents_model->edit($incidentsInfo, $id, $this->condominium);
 
-                if ($result > 0) {echo (json_encode(array('status' => true)));} else {echo (json_encode(array('status' => false)));}
+                if ($result == true) {
+                    $this->session->set_flashdata('success', 'Insidencia actualizada');
+                } else {
+                    $this->session->set_flashdata('error', 'Fallo actualización');
+                }
 
                 redirect("ver_informacion_insidencias/" . $id);
             }

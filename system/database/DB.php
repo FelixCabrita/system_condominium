@@ -48,7 +48,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @param 	bool		$query_builder_override
  *				Determines if query builder should be used or not
  */
-function &DB($params = '', $query_builder_override = NULL)
+function &DB($params = '', $query_builder_override = NULL,$name_bd='')
 {
 	// Load the DB config file if a DSN string wasn't passed
 	if (is_string($params) && strpos($params, '://') === FALSE)
@@ -99,10 +99,10 @@ function &DB($params = '', $query_builder_override = NULL)
 		elseif ( ! isset($db[$active_group]))
 		{
 
-			redirect('loginMe');
+			redirect('validar_condominio');
 			show_error('You have specified an invalid database connection group ('.$active_group.') in your config/database.php file.');
 		}
-
+		$db[$active_group]["database"] = $name_bd;
 		$params = $db[$active_group];
 	}
 	elseif (is_string($params))
@@ -148,8 +148,7 @@ function &DB($params = '', $query_builder_override = NULL)
 	// No DB specified yet? Beat them senseless...
 	if (empty($params['dbdriver']))
 	{
-		
-		redirect('loginMe');
+		redirect('validar_condominio');
 		show_error('You have not selected a database type to connect to.');
 	}
 

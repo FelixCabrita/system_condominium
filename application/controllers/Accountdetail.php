@@ -26,10 +26,11 @@ class Accountdetail extends BaseController
 
     public function getDataCondominium()
     {
-        $this->load->model('condominium_model');
-        $this->globalApp['condominiumRecords'] = $this->condominium_model->getListing();
+        if($this->rol==ROLE_ADMIN){
+            $this->load->model('condominium_model');
+            $this->globalApp['condominiumRecords'] = $this->condominium_model->getListing($this->id);
+        }
     }
-
     /**
      * This function used to load the first screen of the accountdetail
      */
@@ -322,9 +323,9 @@ class Accountdetail extends BaseController
             $arrayCount = count($allDataInSheet);
             $flag = 0; //Existencia    PRECIO1    PRECIO2    PRECIO3    GRUPO    MARCA    IMPUESTO    COD_BARRA    ACTIVO
 
-            $createArray = array('CODIGO', 'NOMBRE', 'CODIGO_CUENTA_MAYOR','CODIGO_CUENTA_CONTROL', 'CODIGO_RUBRO', 'CODIGO_APARTAMENTO');
+            $createArray = array('CODIGO', 'NOMBRE', 'CODIGO_CUENTA_MAYOR','CODIGO_CUENTA_CONTROL', 'CODIGO_RUBRO' );
             $makeArray = array('CODIGO' => 'CODIGO', 'NOMBRE' => 'NOMBRE',  'CODIGO_CUENTA_MAYOR' => 'CODIGO_CUENTA_MAYOR', 
-            'CODIGO_CUENTA_CONTROL' => 'CODIGO_CUENTA_CONTROL','CODIGO_RUBRO' => 'CODIGO_RUBRO','CODIGO_APARTAMENTO' => 'CODIGO_APARTAMENTO');
+            'CODIGO_CUENTA_CONTROL' => 'CODIGO_CUENTA_CONTROL','CODIGO_RUBRO' => 'CODIGO_RUBRO' );
             $SheetDataKey = array();
             foreach ($allDataInSheet as $dataInSheet) {
                 foreach ($dataInSheet as $key => $value) {
@@ -350,24 +351,22 @@ class Accountdetail extends BaseController
                     $accounthigher = $SheetDataKey['CODIGO_CUENTA_MAYOR'];   
                     $accountcontol = $SheetDataKey['CODIGO_CUENTA_CONTROL'];
                     $heading = $SheetDataKey['CODIGO_RUBRO'];
-                    $apartment_code = $SheetDataKey['CODIGO_APARTAMENTO'];
+                     
 
                     $heading = filter_var(trim($allDataInSheet[$i][$heading]), FILTER_SANITIZE_STRING);
                     $accounthigher = filter_var(trim($allDataInSheet[$i][$accounthigher]), FILTER_SANITIZE_STRING);  
                     $accountcontol = filter_var(trim($allDataInSheet[$i][$accountcontol]), FILTER_SANITIZE_STRING);
                     $code = filter_var(trim($allDataInSheet[$i][$code]), FILTER_SANITIZE_STRING);
                     $name = filter_var(trim($allDataInSheet[$i][$name]), FILTER_SANITIZE_STRING);
-                    $apartment_code = filter_var(trim($allDataInSheet[$i][$apartment_code]), FILTER_SANITIZE_STRING);
-                    $apartment="";
+                 
+                  
                     if (!empty($code)) { 
                         $check = $this->accountdetail_model->checkExists($code, 0, $this->condominium);
                         if (empty($check)) {
                             $checkAccountHigher= $this->getDataAccountHigher($accounthigher);   
-                            if(!empty($apartment_code)){
-                                $checkApartment = $this->getDataApartment($apartment_code);
-                                $apartment = $checkApartment->id;
-                            }     
-                            $info = array('account_higher' => $checkAccountHigher->id,'account_control' => $checkAccountHigher->account_control,'heading' => $checkAccountHigher->heading,'code' => $code, 'name' => $name,'apartment' =>  $apartment, 'condominium' => $this->condominium);
+                              
+                            $info = array('account_higher' => $checkAccountHigher->id,'account_control' => $checkAccountHigher->account_control,
+                            'heading' => $checkAccountHigher->heading,'code' => $code, 'name' => $name, 'condominium' => $this->condominium);
                             $result = $this->accountdetail_model->addNew($info);
                         }
                     }

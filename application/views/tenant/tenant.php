@@ -34,6 +34,7 @@
                     </div>  
             <?php } ?>
             <div class="table-responsive">
+                <p><b>CLIENTES CON USUARIO: <?php echo $parameter ?> / PERMITIDOS <?php echo $max_user_tenant ?></b></p>
                 <table id="example" class="display" style="min-width: 845px">
                 <thead>
                     <tr> 

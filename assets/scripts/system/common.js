@@ -37,7 +37,29 @@ function importaccountdetail() {
     document.forms["importaccountdetail"].submit();
 }
 
+function load_bills_() {
+    document.forms["load_bills_"].submit();
+}
+
+function report_balance_verification() {
+    document.forms["report_balance_verification"].submit();
+}
 jQuery(document).ready(function() {
+
+    $.ajax({
+        url: baseURL + 'obtener_rubros',
+        type: "GET",
+        dataType: "json",
+        success: function(data) {
+
+            $('select[name="heading_2_ra"]').empty();
+            $('select[name="heading_1_ra"]').empty();
+            $.each(data, function(key, value) {
+                $('select[name="heading_1_ra"]').append('<option value="' + value.id + '" ' + (value.code == 4 ? 'selected' : '') + '>' + value.code + " - " + value.name + '</option>');
+                $('select[name="heading_2_ra"]').append('<option value="' + value.id + '" ' + (value.code == 6 ? 'selected' : '') + '>' + value.code + " - " + value.name + '</option>');
+            });
+        }
+    });
 
     jQuery(document).on("click", ".activ", function() {
         var userId = $(this).data("userid"),
@@ -124,10 +146,7 @@ jQuery(document).ready(function() {
                             showConfirmButton: false,
                             timer: 2000
                         }).then((result) => {
-                            /* Read more about handling dismissals below */
-                            if (result.dismiss === Swal.DismissReason.timer) {
-                                window.location = baseURL + "condominios"
-                            }
+                            window.location = baseURL + "condominios";
                         }) :
                         Swal.fire({
                             position: 'top-end',
@@ -2245,26 +2264,101 @@ jQuery(document).ready(function() {
                         body: data
                     })
                     .then(response => response.json())
-                    .then(data => (data.status ?
-                        Swal.fire({
-                            position: 'top-end',
-                            icon: 'success',
-                            title: "Reporte de pago " + (isactive == 1 ? "aprobado" : "rechazado") + "  con exito",
-                            showConfirmButton: false,
-                            timer: 2000
-                        }).then((result) => {
-                            /* Read more about handling dismissals below */
-                            if (result.dismiss === Swal.DismissReason.timer) {
+                    .then(data => {
+                        if (data.status) {
+                            Swal.queue([{
+                                title: 'Factura procesada con exito! ¿Desea imprimir esta factura?',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'SI!',
+                                cancelButtonText: 'No, cancelar!',
+                                showLoaderOnConfirm: true,
+                                preConfirm: () => {
+                                    window.location = baseURL + "reportesdepago"
+                                    window.open(baseURL + "reporte_factura/" + data.daily, '_blank');
+                                },
 
-                            }
-                        }) :
-                        Swal.fire({
-                            position: 'top-end',
+                            }]).then((result) => {
+                                if (result.dismiss) {
+                                    window.location = baseURL + "reportesdepago"
+                                }
+                            })
+                        } else {
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'error',
+                                title: "No es posible procesar el pago en estos momentos",
+                                showConfirmButton: false,
+                                timer: 2000
+                            })
+                        }
+
+                    })
+                    .catch(() => {
+                        Swal.insertQueueStep({
                             icon: 'error',
-                            title: "Por alguna razon no podemos " + (isactive == 1 ? "aprobar" : "rechazar") + " este reporte de pago?",
-                            showConfirmButton: false,
-                            timer: 2000
-                        })))
+                            title: 'acceso denegado..!'
+                        })
+                    })
+            }
+        }])
+    });
+
+    jQuery(document).on("click", ".changeCashierClosing", function() {
+        var userId = $(this).data("userid"),
+            hitURL = baseURL + "cambio_estatus_cierre";
+
+        const data = new FormData();
+        data.append('id', userId);
+
+        Swal.queue([{
+            title: "¿Desea anular este cierre de caja?",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'SI!',
+            cancelButtonText: 'No, cancelar!',
+            showLoaderOnConfirm: true,
+            input: 'text',
+            inputPlaceholder: 'Ingresa una observacion',
+            showLoaderOnConfirm: true,
+            inputValidator: (value) => {
+                if (!value) {
+                    return 'Debes colocar una observacion!'
+                }
+            },
+            preConfirm: () => {
+                data.append('observation', $('.swal2-input').val());
+                return fetch(hitURL, {
+                        method: 'POST',
+                        body: data
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status) {
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'success',
+                                title: "Cierre de caja anulado",
+                                showConfirmButton: false,
+                                timer: 2000
+                            }).then((result) => {
+                                if (result.dismiss) {
+                                    window.location = baseURL + "cierresdecaja"
+                                }
+                            })
+                        } else {
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'error',
+                                title: "No es posible procesar el pago en estos momentos",
+                                showConfirmButton: false,
+                                timer: 2000
+                            })
+                        }
+
+                    })
                     .catch(() => {
                         Swal.insertQueueStep({
                             icon: 'error',
@@ -2349,5 +2443,24 @@ jQuery(document).ready(function() {
         }]).then(function() {
             $('#selectCondominium option[value=' + c + ']').prop('selected', true);
         }).catch(swal.noop);
+    });
+
+
+    /* REPORT */
+    jQuery(document).on("click", ".report_balance_verification", function() {
+        var date_start = $("#start_date").val() == null ? "" : $("#start_date").val(),
+            date_ending = $("#ending_date").val() == null ? "" : $("#ending_date").val(),
+            hitURL = baseURL + "reporte_balance_comprobacion?date_start=" + date_start + "&date_ending=" + date_ending;
+        window.open(hitURL, '_blank');
+    });
+
+    jQuery(document).on("click", ".report_result_accumulated", function() {
+
+        var date_start = $("#start_date_ra").val() == null ? "" : $("#start_date_ra").val(),
+            date_ending = $("#ending_date_ra").val() == null ? "" : $("#ending_date_ra").val(),
+            heading_1 = $("#heading_1_ra").val() == null ? "" : $("#heading_1_ra").val(),
+            heading_2 = $("#heading_2_ra").val() == null ? "" : $("#heading_2_ra").val(),
+            hitURL = baseURL + "reporte_resultado_acumulado?date_start=" + date_start + "&date_ending=" + date_ending + "&heading_1=" + heading_1 + "&heading_2=" + heading_2;
+        window.open(hitURL, '_blank');
     });
 });

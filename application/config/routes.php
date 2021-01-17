@@ -55,6 +55,10 @@ $route['404_override'] = 'error_404';
 
 $route['login'] = 'login/index';
 $route['logUser'] = 'login/loguser';
+
+$route['validar_condominio'] = 'login/valid_condominium';
+$route['entrar_propietario'] = 'login/condominium_owner';
+$route['logcondominium'] = 'login/logcondominium';
 $route['dashboard'] = 'user';
 $route['logout'] = 'user/logout'; 
 $route['usuarios'] = "user/userListing";
@@ -319,6 +323,7 @@ $route['editando_rubro'] = 'heading/edit';
 $route['eliminar_rubro'] = 'heading/delete'; 
 $route['cambio_estado_rubro'] = 'heading/changeStatus';  
 $route['importacion_rubro'] = 'heading/importData'; 
+$route['obtener_rubros'] = 'heading/getDataHeading'; 
 
 /*ACCOUNT CONTROL*/
 $route['cuenta_control'] = 'accountcontrol/listing';
@@ -373,8 +378,9 @@ $route["entrada_de_diario"] = 'bills/report_daily';
 $route["guarda_entrada_diario"] = 'bills/save_daily';  
 $route["editar_entrada_diario"] = 'bills/edit_daily';  
 $route["editar_entrada_diario/(:any)"] = 'bills/edit_daily/$1';  
+$route["facturas"] = 'bills/listing_bill';  
+$route["cargar_facturas"] = 'bills/importData';  
 
-$route["demo"] = 'bills/demo';  
 /*REPORT PAY*/
 $route["reportesdepago"] = 'reportpay/listing'; 
 $route["crearreportepago"] = 'reportpay/generate_report'; 
@@ -385,9 +391,33 @@ $route["reporte"] = 'reportpay/report';
 $route["reporte/(:any)"] = 'reportpay/report/$1';
 $route["cambio_estatus_reporte_pago"] = 'reportpay/changestatus';  
 
-/* Generate_pdf */
+/*CASHIER*/
+$route["cierresdecaja"] = 'cashier/listing';
+$route["cierredecaja"] = 'cashier/addNew';
+$route["obtener_cierre"] = 'cashier/getAmount';
+$route["nuevo_cierre_caja"] = 'cashier/addNewData';
+$route["cambio_estatus_cierre"] = 'cashier/changestatus';
+  
+/* GENERATE PDF */
 $route["catalogo_cuentas"] = 'generate_pdf/cataloge_account';  
 $route["reporte_entrada_diario"] = 'generate_pdf/daily'; 
- $route["reporte_entrada_diario/(:any)"] = 'generate_pdf/daily/$1';  
+$route["reporte_entrada_diario/(:any)"] = 'generate_pdf/daily/$1';  
+$route["reporte_factura"] = 'generate_pdf/bill'; 
+$route["reporte_factura/(:any)"] = 'generate_pdf/bill/$1';  
+
+$route["reporte_factura_asiento"] = 'generate_pdf/bill_daily'; 
+$route["reporte_factura_asiento/(:any)"] = 'generate_pdf/bill_daily/$1';   
+$route["reporte_balance_comprobacion"] = 'generate_pdf/balance_verification'; 
+$route["reporte_resultado_acumulado"] = 'generate_pdf/accumulated_result'; 
+$route["reporte_cierre_caja"] = 'generate_pdf/cashier_closing'; 
+$route["reporte_cierre_caja/(:any)"] = 'generate_pdf/cashier_closing/$1'; 
+
+$route["imprimir_etiqueta"] = 'generate_pdf/print_tag';
+$route["imprimir_etiqueta/(:any)"] = 'generate_pdf/print_tag/$1'; 
+
+$route["imprimir_condominio"] = 'generate_pdf/print_condominium';
+$route["imprimir_condominio/(:any)"] = 'generate_pdf/print_condominium/$1'; 
+/* SEND EMAIL */
+$route["send_bill"] = 'send_email/send_bill';  
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

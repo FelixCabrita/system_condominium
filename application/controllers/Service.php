@@ -26,8 +26,10 @@ class Service extends BaseController
 
     public function getDataCondominium()
     {
-        $this->load->model('condominium_model');
-        $this->globalApp['condominiumRecords'] = $this->condominium_model->getListing();
+        if($this->rol==ROLE_ADMIN){
+            $this->load->model('condominium_model');
+            $this->globalApp['condominiumRecords'] = $this->condominium_model->getListing($this->id);
+        }
     }
 
     /**
@@ -244,4 +246,7 @@ class Service extends BaseController
                 echo (json_encode(array('status' => true)));} else {echo (json_encode(array('status' => false)));}
         }
     }
+
+    
+
 }

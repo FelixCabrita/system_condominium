@@ -20,7 +20,7 @@
                 <div class="card-body text-center" >
                 <img class ="img-login" src ="<?php echo base_url(); ?>assets/images/avatars/ic_launcher.png"/>
                     <h5 class="card-title">RECUPERAR CONTRASEÑA</h5> 
-                    <form class="needs-validation" action="<?php echo base_url()."resetPasswordUser"?>" method="post" novalidate>
+                    <form class="needs-validation" action="<?php echo base_url()."createPasswordUser"?>" method="post" novalidate>
                          <?php $this->load->helper('form'); 
                             $error = $this->session->flashdata('error');   
                             if($error) { ?>
@@ -43,6 +43,7 @@
                                     <span class="input-group-text" id="inputGroupPrepend">@</span>
                                 </div>
                                 <input type="text" class="form-control" id="email" name = "email" readonly placeholder="Ingrese correo electronico" value = "<?php echo $email; ?>"aria-describedby="inputGroupPrepend" required>
+                                <input type="hidden" value="<?php echo $activation_code; ?>" name="activation_code" id="activation_code" />    
                                 <div class="invalid-feedback">
                                     Por favor colocar el correo electronico.
                                 </div>

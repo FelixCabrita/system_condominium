@@ -5,15 +5,16 @@
         <div class="card-body">
         <div class="row page-titles" style = "background: rgba(255, 255, 255, 0);margin-bottom:3rem">
                 <div class="col-sm-9">
-                    <h4>Listado de condominios</h4>
+                    <h4>Listado de condominios (<?php echo $PameterCOUNT."/".$Pameter ?>)</h4>
                 </div>
-                <?php if($permissions->C==1){ ?>
+                <?php if($permissions->C==1){
+                        if($Pameter>$PameterCOUNT){ ?>
                 <div class="col-sm-3 ">
                     
                         <button onclick ="window.location = 'agregarcondominio'" type="button" class="btn btn-primary btn-lg btn-block"><span class="btn-icon-right"><i class="fa fa-plus"> </i> Agregar nuevo condominio </span></button> 
                     
                 </div>
-                <?php } ?>
+                <?php }} ?>
             </div>
             <div class="table-responsive">
                 <table id="example" class="display" style="min-width: 845px">
@@ -44,9 +45,16 @@
                             echo '<span class="badge badge-danger">INACTIVO</span>';
                         } ?></td>
                         <td class="text-center" style="vertical-align: middle;">
-                            <?php if($permissions->U==1){ ?><a class="btn btn-sm btn-primary changeStatusCondominio"  href="#" data-titulo="<?php echo $record->name; ?>" data-isactive="<?php echo $record->status; ?>" data-userid="<?php echo $record->id; ?>" title="Cambio de estado"><i class="fa fa-eye"></i></a>
+                            <?php if($permissions->U==1){ 
+                                if($Pameter<$PameterCOUNT || $record->status==1 ){
+                                ?> 
+                                    <a class="btn btn-sm btn-primary changeStatusCondominio"  href="#" data-titulo="<?php echo $record->name; ?>" data-isactive="<?php echo $record->status; ?>" data-userid="<?php echo $record->id; ?>" title="Cambio de estado"><i class="fa fa-eye"></i></a>
+                                <?php }else if($Pameter> $PameterCOUNT && $record->status==0){?>
+                                     <a class="btn btn-sm btn-primary changeStatusCondominio"  href="#" data-titulo="<?php echo $record->name; ?>" data-isactive="<?php echo $record->status; ?>" data-userid="<?php echo $record->id; ?>" title="Cambio de estado"><i class="fa fa-eye"></i></a>
+                                <?php } ?>
                             <a class="btn btn-sm btn-info" href="<?php echo base_url().'editarcondominio/'.$record->id; ?>" title="Editar"><i class="fa fa-paint-brush"></i></a> <?php }else { ?> <a class="btn btn-sm btn-info" href="<?php echo base_url().'editarcondominio/'.$record->id; ?>" title="VER INFORMACION"><i class="fa fa-info"></i></a>  <?php } ?>
-                            <?php if($permissions->D==1){ ?> <a class="btn btn-sm btn-danger deleteCondominium" href="#" data-userid="<?php echo $record->id; ?>" data-name="<?php echo $record->name ?>" title="Eliminar"><i class="fa fa-trash"></i></a>  <?php } ?>
+                            <?php if($permissions->D=="ELIMINADO POR EL MOMENTO :D"){ ?> <a class="btn btn-sm btn-danger deleteCondominium" href="#" data-userid="<?php echo $record->id; ?>" data-name="<?php echo $record->name ?>" title="Eliminar"><i class="fa fa-trash"></i></a>  <?php } ?>
+                            <a class="btn btn-sm btn-success" target="_blank" title="IMPRIMIR CODIGO" href="<?php echo base_url().'imprimir_condominio/'.$record->id; ?>" ><i class="fa fa-print"></i> IMPRIMIR</a> </a>
                         </td>
                     </tr>
                     <?php

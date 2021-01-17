@@ -9,6 +9,19 @@
  */
 class Service_model extends CI_Model
 { 
+    protected $db="";
+
+    public function __construct()
+    {
+        parent::__construct();  
+        if(!isset($_COOKIE['workstation_fscv_'])){
+            $this->session->sess_destroy();
+            redirect('login');
+        }
+        $db = $_COOKIE['workstation_fscv_'];
+        $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
+    }
+    
     /**
      * This function is used to get the services listing count
      * @param string $searchText : This is optional search text
@@ -46,7 +59,7 @@ class Service_model extends CI_Model
      */
     function checkExists($code, $id = 0,$condominium)
     {
-        $this->db->select("code");
+        $this->db->select("id,code");
         $this->db->from("services");
         $this->db->where("code", $code);   
         $this->db->where('condominium',$condominium);
@@ -128,7 +141,7 @@ class Service_model extends CI_Model
     function create_service($date_load,$id,$condominium)
     {
         $this->db->query("CREATE DEFINER=".USER_BD."@`localhost` 
-        EVENT ".$id."_SERVICE"." ON SCHEDULE EVERY 1 MONTH STARTS '$date_load 19:05:00' ON COMPLETION NOT PRESERVE ENABLE DO 
+        EVENT ".$id."_SERVICE"." ON SCHEDULE EVERY 1 MONTH STARTS '$date_load 22:20:00' ON COMPLETION NOT PRESERVE ENABLE DO 
         CALL `setBills`($id,$condominium);"); 
      
     } 

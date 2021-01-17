@@ -59,6 +59,9 @@
                                  <a class="btn btn-sm btn-info observationTag"  href="#" data-name="<?php echo $record->serial; ?>" data-observations="<?php echo $record->observations; ?>" data-userid="<?php echo $record->id; ?>" title="OBSERVACION"><i class="fa fa-info"></i></a>  
                             <?php } ?>
                             <?php if($permissions->D==1){ ?> <a class="btn btn-sm btn-danger deleteTag" href="#" data-userid="<?php echo $record->id; ?>" data-name="<?php echo $record->serial ?>" title="Eliminar"><i class="fa fa-trash"></i></a>  <?php } ?>
+                            <?php if(!empty($record->vehicle)){ ?>
+                               <a class="btn btn-sm btn-success"  target="_blank"  title="IMPRIMIR ETIQUETA" href="<?php echo base_url().'imprimir_etiqueta/'.$record->serial; ?>" ><i class="fa fa-print"></i> IMPRIMIR</a> </a>
+                            <?php } ?>
                         </td>
                     </tr>
                     <?php

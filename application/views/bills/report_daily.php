@@ -31,10 +31,16 @@ if(isset($header)){
                 <div class="col-sm-5">
                     <h4>Entrada de diario</h4>
                 </div> 
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     <h5> <b># <?php echo str_pad($max,4,"0", STR_PAD_LEFT) ?> </b></h5>
                 </div> 
-                <div class="col-sm-4">
+                <div class="col-sm-2">
+
+                    <?php if(!empty($id) && (!strstr($description, "GENERACION") && !strstr($description, "REBAJA"))) { ?>
+                    <h5><a class="btn btn-sm btn-success"  href="<?php echo base_url().'reporte_factura_asiento/'.$id; ?>" target="_blank"  title="IMPRIMIR"><i class="fa fa-print"></i> VER DETALLE</a> </h5>
+                    <?php } ?>
+                </div> 
+                <div class="col-sm-3">
                     <div class="input-group"> 
                         <div class="input-group-prepend">
                             <a class="btn btn-secondary" style="color:#ffff">Fecha</i></a>

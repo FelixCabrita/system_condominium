@@ -9,7 +9,19 @@
  */
 class Bills_model extends CI_Model
 {  
-  
+    protected $db="";
+
+    public function __construct()
+    {
+        parent::__construct();  
+        if(!isset($_COOKIE['workstation_fscv_'])){
+            $this->session->sess_destroy();
+            redirect('login');
+        }
+        $db = $_COOKIE['workstation_fscv_'];
+        $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
+    }
+
     function searchAsignationApartmentClient($id,$condominium)
     { 
         $this->db->select("b.id, b.apartment, b.description,b.amount, b.status, b.created_at,a.code,DATE(b.created_at) as emision ");
@@ -24,8 +36,20 @@ class Bills_model extends CI_Model
         return $result; 
     }
 
-    function checkBillApartment($apartment,$service,$condominium)
+    function check_report_pay($id,$condominium)
     { 
+        $this->db->select("rh.id");
+        $this->db->from('report_pay_header as rh');       
+        $this->db->where('rh.condominium',$condominium);
+        $this->db->where('rh.tenant',$id);
+        $this->db->where('rh.status',0);
+        $this->db->order_by('rh.id', 'DESC'); 
+        $query = $this->db->get(); 
+        return $query->row();
+    }
+
+    function checkBillApartment($apartment,$service,$condominium)
+    {  
         $this->db->select("IFNULL(MAX(payment_date_prox),DATE_ADD(now(), INTERVAL -1 MONTH)) as date");
         $this->db->from('bills as b');
         $this->db->where('b.apartment',$apartment);  
@@ -46,6 +70,7 @@ class Bills_model extends CI_Model
 
     function addMonth($mounth,$dateMax)
     { 
+        $this->db->query("SET lc_time_names = 'es_MX';"); 
         $this->db->SELECT("DATE(DATE_ADD('$dateMax', INTERVAL $mounth MONTH)) as 'date', UPPER(MONTHNAME(DATE_ADD('$dateMax', INTERVAL $mounth MONTH))) as 'title'");  
         $query = $this->db->get(); 
         return $query->row();
@@ -76,6 +101,20 @@ class Bills_model extends CI_Model
         return $this->db->affected_rows();
     }
 
+     /**
+     * This function is used to update the account_higher information
+     * @param array $account_higherInfo : This is account_highers updated information
+     * @param number $account_higherId : This is account_higher id
+     */
+    function update_payment($info, $unique_code,$condominium)
+    {
+        $this->db->where("unique_code",$unique_code);
+        $this->db->where('condominium',$condominium);
+        $this->db->update('bills', $info); 
+        return $this->db->affected_rows();
+    }
+
+
     function created_payment($info)
     {  
         $this->db->trans_start();
@@ -97,6 +136,14 @@ class Bills_model extends CI_Model
         return $query->row(); 
     }
 
+    function getIdMaxBill($condominium)
+    {  
+        $this->db->select("iFNULL(MAX(bill_group),0) as max");
+        $this->db->from('bills');  
+        $this->db->where('condominium',$condominium);
+        $query = $this->db->get(); 
+        return $query->row(); 
+    }
 
     function listing_daily($condominium)
     {  
@@ -107,6 +154,23 @@ class Bills_model extends CI_Model
         $this->db->join('document_type as dt', 'dt.id = d.documenttype  AND dt.condominium = d.condominium');   
         $this->db->where('d.condominium',$condominium);
         $this->db->order_by('d.id', 'DESC'); 
+        $query = $this->db->get(); 
+        $result = $query->result();        
+        return $result;
+    }
+
+    function getBills($id,$condominium)
+    { 
+        $this->db->select("SUM(b.amount) as 'amount', b.tenant, b.bill_group, b.type, b.payment_date, b.payment_date_prox, b.payment_type, CONCAT(t.document, ' - ', t.name) as 'client', b.transfer_code, b.transfer_date, b.check_number, b.check_transmitter, b.unique_code,b.created_at");
+        $this->db->from('bills as b');          
+        $this->db->join('tenant as t', 't.id = b.tenant AND t.condominium = b.condominium'); 
+        $this->db->where('b.condominium',$condominium);
+        if(!empty($id)){
+            $this->db->where('b.tenant',$id);
+        } 
+        $this->db->order_by('b.bill_group', 'DESC');  
+        $this->db->order_by('b.status', 1); 
+        $this->db->group_by("b.bill_group");
         $query = $this->db->get(); 
         $result = $query->result();        
         return $result;

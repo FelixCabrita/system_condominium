@@ -50,7 +50,7 @@ $this->load->helper('form');
                             </div>
                             <div class="form-group">
                                 <label class="text-label">Correo electronico</label>
-                                <input type="email" class="form-control"  id="username" name="username" placeholder="<?php echo $username; ?>" value="<?php echo set_value('username', $username); ?>">
+                                <input type="email" class="form-control"  id="username" name="username" <?php echo $rol==ROLE_ADMIN?"readonly":"" ?> placeholder="<?php echo $username; ?>" value="<?php echo set_value('username', $username); ?>">
                                 <?php echo validation_error('username');?> 
                             </div>  
                             <div class="submit-buttons mb-5">

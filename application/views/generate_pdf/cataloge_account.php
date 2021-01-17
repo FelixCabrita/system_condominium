@@ -11,6 +11,14 @@
   width: 100%;
   font-size:13px;
 } 
+
+img{
+  position: absolute; 
+  left:620px;
+  width: 80px;
+  top: -10px
+}
+
  hr{
     padding-top: 5px;
   padding-bottom: 5px;
@@ -20,7 +28,7 @@
  }
 
 #customers td, #customers th {
-  border: 1px solid #ddd;
+  
   padding: 8px;
 } 
 .account{
@@ -30,12 +38,13 @@
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
-  background-color: #1AABAB;
+  background-color: #76c1c8;
   color: white;
 }
 </style>
 <body> 
-    <h3  style="padding:0px;margin:0px;"><?php echo $condominium->name ?></h3>
+<img src="data:image/png;base64,<?php echo LOGO_PDF ?>">
+<h3  style="padding:0px;margin:0px;"><?php echo $condominium->name ?></h3>
 <p  style="padding:0px;margin:0px"> 
 
 RCN: <?php echo $condominium->rcn ?> <br>
@@ -46,7 +55,7 @@ DIRECCION: <?php echo $condominium->address ?></p>
 
 </table>
 <h2  style="color:red;text-align:center">CATALOGO DE CUENTAS</h2> 
-<table id="customers"> 
+<table id="customers"   cellspacing="1" cellpadding="1">   
     <tr>
         <th class="account">CUENTAS</th>
         <th>CONCEPTOS</th> 

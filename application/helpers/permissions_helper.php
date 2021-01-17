@@ -89,7 +89,7 @@ if (!function_exists('getPermission'))
                 $permission =PERMISSION_DEFAULT;
             break;
             case ROLE_VENDOR:
-                $permission =PERMISSION_DEFAULT;
+                $permission =PERMISSION_VENDOR;
             break;
             case ROLE_ACCOUNTING:
                 $permission =PERMISSION_ACCOUNTING;
@@ -107,5 +107,29 @@ if (!function_exists('getPermission'))
         return $permission;
     } 
 }
+
+
+if (!function_exists('checkpaymenttype'))
+{  
+    function checkpaymenttype($rol){  
+        $role_text =$rol;
+        switch($rol){
+            case 0:
+                $role_text = "EFECTIVO";
+            break;
+            case 1:
+                $role_text = "TRANSFERENCIA";
+            break;
+            case 2:
+                $role_text = "CHEQUE";
+            break;
+            case 3:
+                $role_text = "TARJETA";
+            break;
+        } 
+        return $role_text;
+    } 
+}
+
 
 ?>

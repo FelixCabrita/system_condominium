@@ -107,9 +107,9 @@ jQuery(document).ready(function() {
                         Swal.fire({
                             position: 'top-end',
                             icon: 'error',
-                            title: "No hemos encontrado alguna coincidencia con el documento: " + document,
+                            title: data.erro == '' ? "No hemos encontrado alguna coincidencia con el documento: " + document : data.error,
                             showConfirmButton: false,
-                            timer: 2000
+                            timer: 7000
                         });
                     }
                 })
@@ -347,26 +347,37 @@ jQuery(document).ready(function() {
                                     body: data11
                                 })
                                 .then(response => response.json())
-                                .then(data => (data.status ?
-                                    Swal.fire({
-                                        position: 'top-end',
-                                        icon: 'success',
-                                        title: 'Pago realizado con exito!',
-                                        showConfirmButton: false,
-                                        timer: 2000
-                                    }).then((result) => {
-                                        /* Read more about handling dismissals below */
-                                        if (result.dismiss === Swal.DismissReason.timer) {
-                                            window.location = baseURL + "caja"
-                                        }
-                                    }) :
-                                    Swal.fire({
-                                        position: 'top-end',
-                                        icon: 'error',
-                                        title: "No es posible procesar el pago en estos momentos",
-                                        showConfirmButton: false,
-                                        timer: 2000
-                                    })))
+                                .then(data => {
+                                    if (data.status) {
+                                        Swal.queue([{
+                                            title: 'Factura procesada con exito! ¿Desea imprimir esta factura?',
+                                            showCancelButton: true,
+                                            confirmButtonColor: '#3085d6',
+                                            cancelButtonColor: '#d33',
+                                            confirmButtonText: 'SI!',
+                                            cancelButtonText: 'No, cancelar!',
+                                            showLoaderOnConfirm: true,
+                                            preConfirm: () => {
+                                                window.location = baseURL + "caja"
+                                                window.open(baseURL + "reporte_factura/" + data.daily, '_blank');
+                                            },
+
+                                        }]).then((result) => {
+                                            if (result.dismiss) {
+                                                window.location = baseURL + "caja"
+                                            }
+                                        })
+                                    } else {
+                                        Swal.fire({
+                                            position: 'top-end',
+                                            icon: 'error',
+                                            title: "No es posible procesar el pago en estos momentos",
+                                            showConfirmButton: false,
+                                            timer: 2000
+                                        })
+                                    }
+
+                                })
                                 .catch(() => {
                                     Swal.insertQueueStep({
                                         icon: 'error',

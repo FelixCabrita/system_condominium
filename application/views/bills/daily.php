@@ -36,7 +36,9 @@
                         <td class="text-center" style="vertical-align: middle;"><?php echo  $record->description ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php echo  date_format (new DateTime($record->created_at), 'Y-m-d g:i A')  ?></td>
                         <td class="text-center" style="vertical-align: middle;">
-                            <a class="btn btn-sm btn-success"  href="<?php echo base_url().'reporte_entrada_diario/'.$record->id; ?>" target="_blank"  data-userid="<?php echo $record->id; ?>" title="IMPRIMIR"><i class="fa fa-print"></i></a> 
+                            <?php if( (!strstr($record->description, "GENERACION") && !strstr($record->description, "REBAJA"))){ ?>
+                                <a class="btn btn-sm btn-success"  href="<?php echo base_url().'reporte_entrada_diario/'.$record->id; ?>" target="_blank"  data-userid="<?php echo $record->id; ?>" title="IMPRIMIR"><i class="fa fa-print"></i></a> 
+                            <?php } ?>
                             <a class="btn btn-sm btn-info" href="<?php echo base_url().'editar_entrada_diario/'.$record->id; ?>" title="EDITAR"><i class="fa fa-paint-brush"></i></a>  
                         </td>
                     </tr>

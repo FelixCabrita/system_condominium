@@ -10,6 +10,9 @@ $credit_input = $info->credit_input;
 $debit_deposit = $info->debit_deposit; 
 $credit_deposit = $info->credit_deposit;  
 $credit_deposit_pay = $info->credit_deposit_pay; 
+
+$module = $info->module;  
+$documenttype = $info->documenttype; 
 $this->load->helper('form');  
 ?>
 
@@ -34,6 +37,29 @@ $this->load->helper('form');
             <?php } ?>
           
             <form class="form-inlne"  action="<?php echo base_url() ?>cambiando_parametros" method="post" id="sndParameter" role="form"> 
+                
+                <label for="generate_credit"><b>Parametro de modulo y documento</b></label><br> 
+                <div class="row"> 
+                    <div class="form-group col-sm-6">
+                        <label for="module">MODULO</label>
+                        <select name="module" id="module" class="form-control">  
+                            <?php  if(!empty($getDataModule)) { foreach($getDataModule as $record) {  ?>
+                                <option value ="<?php echo $record->id ?>" <?php echo $module==$record->id?"selected":"" ?> ><?php echo $record->code." - ".$record->name ?></option>
+                            <?php }} ?> 
+                        </select>
+                    </div>     
+                   
+                    <div class="form-group col-sm-6">
+                        <label for="documentType">TIPO DE DOCUMENTO</label>
+                        <select name="documentType" id="documentType" class="form-control">  
+                            <?php  if(!empty($getDataDocumentType)) { foreach($getDataDocumentType as $record) {  ?>
+                                <option value ="<?php echo $record->id ?>" <?php echo $documenttype==$record->id?"selected":"" ?> ><?php echo $record->code." - ".$record->name ?></option>
+                            <?php }} ?> 
+                        </select>
+                    </div>    
+                     
+                </div>
+                <hr>
                 <label for="generate_credit"><b>Generacion de factura</b></label><br> 
                 <div class="row"> 
                     <div class="form-group col-sm-6">
@@ -146,3 +172,48 @@ $this->load->helper('form');
         </div>
     </div>
 </div>  
+
+
+<script>
+  
+/**
+ * File : addUser.js
+ * 
+ * This file contain the validation of add user form
+ * 
+ * Using validation plugin : jquery.validate.js
+ * 
+ * @author Felix Cabrita
+ */
+
+$(document).ready(function() {
+ 
+    
+    getDocumentType();
+    $("#module").change(function() {
+        getDocumentType();
+    });
+
+ 
+
+    function getDocumentType() {
+
+        var stateID = $("#module").val();
+        $.ajax({
+            url: baseURL + 'obtener_tipo_documento/' + stateID,
+            type: "GET",
+            dataType: "json",
+            success: function(data) {
+
+
+                $('select[name="documentType"]').empty();
+                $.each(data, function(key, value) {
+                    $('select[name="documentType"]').append('<option value="' + value.id + '" ' + (<?php echo $documenttype ?> == value.id ? "SELECTED" : "") + ' >' + value.code + " - " + value.name + '</option>');
+                });
+            }
+        });
+    }
+  
+});
+
+</script>

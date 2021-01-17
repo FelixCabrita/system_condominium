@@ -23,7 +23,8 @@ $(document).ready(function() {
                 required: true,
                 remote: {
                     url: baseURL + "chequeo_cuenta_detalle",
-                    type: "post"
+                    type: "post",
+                    data: { id: function() { return $("#id").val() } }
                 }
             }
         },
