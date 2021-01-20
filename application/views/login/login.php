@@ -10,6 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
     <meta name="description" content="Sistema de condominio">
     <meta name="msapplication-tap-highlight" content="no">
+    <link rel="icon" type="image/png" sizes="16x16" href="<?php echo base_url(); ?>assets/favicon.png">
     <link href="<?php echo base_url(); ?>assets/main.css" rel="stylesheet"></head>
 </head>
 <?php $owner = $workstation=="OWNER"?1:0; ?>

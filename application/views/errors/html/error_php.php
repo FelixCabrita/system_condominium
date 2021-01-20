@@ -24,7 +24,7 @@ setcookie("workstation_fscv_", '', time() - (86400 * 15),'/');
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?php echo NAME_SYSTEM ?> :: LO SENTIMOS</title>
-
+    <link rel="icon" type="image/png" sizes="16x16" href="<?php echo base_url(); ?>assets/favicon.png">
 	<link href="<?php echo base_url(); ?>assets/main.css" rel="stylesheet"></head>
 </head>
 <style>
