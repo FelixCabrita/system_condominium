@@ -99,7 +99,6 @@ function &DB($params = '', $query_builder_override = NULL,$name_bd='')
 		elseif ( ! isset($db[$active_group]))
 		{
 
-			redirect('validar_condominio');
 			show_error('You have specified an invalid database connection group ('.$active_group.') in your config/database.php file.');
 		}
 		$db[$active_group]["database"] = $name_bd;
@@ -148,7 +147,6 @@ function &DB($params = '', $query_builder_override = NULL,$name_bd='')
 	// No DB specified yet? Beat them senseless...
 	if (empty($params['dbdriver']))
 	{
-		redirect('validar_condominio');
 		show_error('You have not selected a database type to connect to.');
 	}
 

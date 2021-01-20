@@ -16,11 +16,7 @@ class Vehicles_model extends CI_Model
     public function __construct()
     {
         parent::__construct();  
-        if(!isset($_COOKIE['workstation_fscv_'])){
-            $this->session->sess_destroy();
-            redirect('login');
-        }
-        $db = $_COOKIE['workstation_fscv_'];
+        $db = $this->session->userdata('owner');
         $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
     }
     
@@ -52,7 +48,7 @@ class Vehicles_model extends CI_Model
     {
         $this->db->select("v.id, v.condominium, v.tenant,tg.serial,  t.document, t.name , v.licence_plate, v.model, v.brand, v.year, v.colour, v.condition_car, v.status, v.updated_at, v.created_at");
         $this->db->from('vehicles v');
-        $this->db->join("assigning_apartment as as", "as.apartment = '$apartment' AND as.tenant = v.tenant AND asi.condominium = v.condominium"); 
+        $this->db->join("assigning_apartment as as", "as.apartment = '$apartment' AND as.tenant = v.tenant AND as.condominium = v.condominium"); 
         $this->db->join('tenant as t', 't.id = v.tenant AND t.condominium = v.condominium'); 
         $this->db->join('tag as tg', 'tg.vehicle = v.id  AND tg.condominium = v.condominium','left'); 
         $this->db->where('v.condominium', $condominium);

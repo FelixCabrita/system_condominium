@@ -41,7 +41,7 @@ class Login extends BaseController
             $this->valid_condominium();
         } else {
             if ($this->isLoggedIn()) {
-                redirect('/dashboard');
+                redirect('/tablero');
             }
 
             $this->load->view('login/login', $data, false);
@@ -91,7 +91,9 @@ class Login extends BaseController
                     $UserData = $this->login_model->LoginUser($email, $password, $this->workstation);
                 }
 
+               
                 $UserValidCode = $this->validPanelUser($UserData);
+               
                 $log = !empty($UserData);
                 if ($UserValidCode == STATUS_ACTIVE && $log) {
 
@@ -106,17 +108,24 @@ class Login extends BaseController
                         'rol' => $UserData->type, 'apartment' => 0,
                         'condominium' => $UserData->condominium,
                         'generate_credit' =>  !empty($iar)?$iar->generate_credit:0,
+                        'owner' =>  $this->workstation == "OWNER"?$UserData->id:$iar->owner,
                         'generate_debit' => !empty($iar)?$iar->generate_debit:0,   
                         'max_user_tenant' => !empty($iar)?$iar->max_user_tenant:0,
                         'generates_report' => $UserData->generates_report,
                         'condominium_text' => !empty($iar)?$iar->name:'SIN CONDOMINIO',
-                        'isLoggedIn' => true,
+                        'isLoggedIn' => true
                     ); 
+  
+                    setcookie("workstation_fscv",!empty($iar)? $iar->id:0, time() + (86400 * 15),'/');
+                    setcookie("workstation_name_fscv", !empty($iar)?$iar->name:'SIN CONDOMINIO', time() + (86400 * 15),'/');
+                    setcookie("workstation_fscv_", $UserData->id, time() + (86400 * 15),'/');
+
                     $this->session->set_userdata($sessionArray);
                     unset($sessionArray['id'], $sessionArray['isLoggedIn']);
-                    $this->index();
+                    $this->index(); 
                 }
-
+ 
+                
                 $this->displayLoginFormError($UserValidCode);
                 $this->index();
             } else {
@@ -127,6 +136,8 @@ class Login extends BaseController
                 $log = !empty($TenantData);
                 if ($TenantValidCode == STATUS_ACTIVE && $log) {
                     $iar = $this->login_model->gettInfoAIDC($TenantData->condominium);
+                    
+                  //  t.id, t.condominium, t.document, t.name, t.mobile,   t.password, t.type, t.created_at, t.status
                     $sessionArray =
                     array(
                         'id' => $TenantData->id,
@@ -135,12 +146,17 @@ class Login extends BaseController
                         'name' => $TenantData->name,
                         'rol' => $TenantData->type,
                         'condominium' => $iar->id,
+                        'owner' => $iar->owner,
                         'condominium_text' => $iar->name,
                         'isLoggedIn' => true,
                     );
+                    setcookie("workstation_fscv",!empty($iar)? $iar->id:0, time() + (86400 * 15),'/');
+                    setcookie("workstation_name_fscv", !empty($iar)?$iar->name:'SIN CONDOMINIO', time() + (86400 * 15),'/');
+                    setcookie("workstation_fscv_", $iar->owner, time() + (86400 * 15),'/');
+
                     $this->session->set_userdata($sessionArray);
                     unset($sessionArray['id'], $sessionArray['isLoggedIn']);
-                    $this->index();
+                    $this->index(); 
                 }
 
                 $this->displayLoginFormError(USER_INVALID_ROLE);
@@ -206,7 +222,7 @@ class Login extends BaseController
     public function forgotPassword()
     {
         if ($this->isLoggedIn()) {
-            redirect('/dashboard');
+            redirect('/tablero');
         }
 
         $this->load->view('user/forgotPassword', null);

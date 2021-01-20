@@ -749,7 +749,7 @@ class DOMPDF {
     if (!is_null($this->_pdf))
       $this->_pdf->stream($filename, $options);
       
-    $this->restore_locale();
+     $this->restore_locale();
   }
 
   /**

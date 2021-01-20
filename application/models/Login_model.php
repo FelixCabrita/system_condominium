@@ -23,11 +23,9 @@ class Login_model extends CI_Model
             return 0;
         }$db = $_COOKIE['workstation_fscv_'];
         $this->db = $this->load->database('', true, null, ALIAS_ADMIN . str_pad($db, 5, '0', STR_PAD_LEFT));
-        $this->db->select("u.id,IFNULL(u.condominium,'0') as 'condominium',u.username,u.password,u.permissions,u.generates_report,u.name,u.status,u.type,
-         IFNULL(c.name,'SIN CONDOMINIO') as 'condominium_name',IFNULL(c.max_user_tenant,'0') as 'max_user_tenant',IFNULL(c.generate_debit,'0') as 'generate_debit',IFNULL(c.generate_credit,'0') as 'generate_credit'");
-        $this->db->join('condominium as c', 'c.id = u.condominium', 'left');
+        $this->db->select("u.id,IFNULL(u.condominium,'0') as 'condominium',u.username,u.password,u.permissions,u.generates_report,u.name,u.status,u.type");
         $this->db->from('users as u');
-        $this->db->where('username', $email);
+        $this->db->where('u.username', $email);
         if ($condominium != 'OWNER') {
             $this->db->where('u.condominium', $condominium);
         }

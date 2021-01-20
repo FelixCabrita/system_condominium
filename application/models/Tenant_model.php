@@ -14,11 +14,7 @@ class tenant_model extends CI_Model
     public function __construct()
     {
         parent::__construct();  
-        if(!isset($_COOKIE['workstation_fscv_'])){
-            $this->session->sess_destroy();
-            redirect('login');
-        }
-        $db = $_COOKIE['workstation_fscv_'];
+        $db = $this->session->userdata('owner');
         $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
     }
     

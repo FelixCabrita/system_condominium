@@ -37,7 +37,7 @@ class Tenant extends BaseController
     public function index()
     {
         $this->globalApp['pageTitle'] = NAME_SYSTEM . ' Escritorio';
-        $this->loadViews("dashboard", $this->globalApp, null, null);
+        $this->loadViews("tablero", $this->globalApp, null, null);
     }
 
     public function getDataEdifices($code = '')

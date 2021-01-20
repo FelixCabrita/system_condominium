@@ -428,9 +428,11 @@ else if ( !function_exists("__autoload") ) {
    *
    * @param string $class
    */
-  function __autoload($class) {
+  function OM__autoload($class) {
     DOMPDF_autoload($class);
   }
+
+  spl_autoload_register('OM__autoload');
 }
 
 // ### End of user-configurable options ###

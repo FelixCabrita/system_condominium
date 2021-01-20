@@ -14,11 +14,7 @@ class Incidents_model extends CI_Model
     public function __construct()
     {
         parent::__construct();  
-        if(!isset($_COOKIE['workstation_fscv_'])){
-            $this->session->sess_destroy();
-            redirect('login');
-        }
-        $db = $_COOKIE['workstation_fscv_'];
+        $db = $this->session->userdata('owner');
         $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
     }
 
@@ -56,6 +52,24 @@ class Incidents_model extends CI_Model
         $query = $this->db->get(); 
         return $query->row();
     } 
+
+    function ListingDashboard($id,$condominium)
+    { 
+        $this->db->select("i.id, i.user,(CASE WHEN i.user_type < 6 THEN (SELECT u.name FROM users as u  WHERE u.id = i.user) 
+                                                              ELSE (SELECT CONCAT('(',t.document,') ',t.name) FROM tenant as t WHERE t.id = i.user)  END) as 'name', 
+                            i.user_type, i.description, i.photo_1, i.photo_2, i.status, i.observations, i.created_at, i.updated_at");
+        $this->db->from('incidents as i');     
+        $this->db->where('i.condominium',$condominium);
+        if(!empty($id)){
+            $this->db->where("i.user", $id);
+        } 
+        $this->db->where("i.status <", 2);
+        $this->db->order_by('i.status, i.id', 'ASC'); 
+        $this->db->limit(4);
+        $query = $this->db->get(); 
+        $result = $query->result();        
+        return $result;
+    }
     
     /**
      * This function is used to add new Apartment to system

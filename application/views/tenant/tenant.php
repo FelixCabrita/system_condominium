@@ -58,7 +58,7 @@
                         <td class="text-center" style="vertical-align: middle;"><?php echo  $record->mobile ?></td>
                         <td class="text-center" style="vertical-align: middle;"><?php echo  $record->email  ?></td> 
                         <td class="text-center" style="vertical-align: middle;">
-                           <?php if($permissions->U==1){ ?><!-- <a class="btn btn-sm btn-primary changeStatusEdifice"  href="#" data-titulo="<?php echo $record->code; ?>" data-isactive="<?php echo $record->status; ?>" data-userid="<?php echo $record->id; ?>" title="Cambio de estado"><i class="fa fa-eye"></i></a>-->
+                           <?php if($permissions->U==1){ ?> 
                             <?php if(!empty($record->password)){ ?>
                             <a class="btn btn-sm btn-warning changeStatusTenant" href="#" data-userid="<?php echo $record->id; ?>" data-name="<?php echo $record->name ?>" title="DESHABILTAR EL USUARIO"><i class="fa fa-user-times"></i></a>
                             <?php } ?>

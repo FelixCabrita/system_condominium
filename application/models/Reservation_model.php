@@ -14,11 +14,7 @@ class Reservation_model extends CI_Model
     public function __construct()
     {
         parent::__construct();  
-        if(!isset($_COOKIE['workstation_fscv_'])){
-            $this->session->sess_destroy();
-            redirect('login');
-        }
-        $db = $_COOKIE['workstation_fscv_'];
+        $db = $this->session->userdata('owner');
         $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
     }
     
@@ -62,6 +58,27 @@ class Reservation_model extends CI_Model
         return $result;
     }
  
+    function ListingDashboard($id,$condominium)
+    {  
+        $this->db->select("r.id, r.apartment, r.commonarea, r.quantity_persons, r.start_time, r.ending_time, r.reservation_date, r.status, r.created_at
+        , a.code as 'apartment_code',c.max_person ,r.observations");
+        $this->db->from('reservation r');       
+        $this->db->join('commonarea as c', 'c.id = r.commonarea  AND c.condominium = r.condominium'); 
+        $this->db->join('apartment as a', 'a.id = r.apartment  AND a.condominium = r.condominium');  
+        if(!empty($id)){
+            $this->db->join('assigning_apartment as asi', 'asi.apartment = r.apartment  AND asi.condominium = r.condominium'); 
+            $this->db->where("asi.tenant", $id);
+        }
+        $this->db->where('r.condominium',$condominium);
+        $this->db->where('r.status = 0');
+        $this->db->order_by('r.status, r.id', 'DESC'); 
+        $this->db->group_by('r.id');
+        $this->db->limit(4);
+        $query = $this->db->get(); 
+        $result = $query->result();        
+        return $result;
+    }
+
     /**
      * This function is used to check whether email id is already exist or not
      * @param {string} $email : This is email id

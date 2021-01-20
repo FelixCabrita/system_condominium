@@ -16,7 +16,7 @@ class BaseController extends CI_Controller
     protected $permissions = '';
     protected $condominium_text = '';
     protected $condominium = '';
-    protected $generates_report = '';
+    protected $generates_report = ''; protected $owner = '';
     protected $apartment = '';
     protected $max_user_tenant = '';
     protected $rol = '';
@@ -57,13 +57,14 @@ class BaseController extends CI_Controller
             $this->max_user_tenant = $this->session->userdata('max_user_tenant');
             $this->lastLogin = $this->session->userdata('lastLogin');
             $this->isLoggedIn = $this->session->userdata('isLoggedIn');
-            $this->condominium = $this->session->userdata('condominium');
+            $this->condominium = $this->session->userdata('condominium');  
+            $this->owner = $this->session->userdata('owner');
             $this->condominium_text = $this->session->userdata('condominium_text');
             $this->generates_report = $this->session->userdata('generates_report');
             $this->globalApp['id'] = $this->id;
             $this->globalApp['username'] = $this->username;
             $this->globalApp['permissions'] = $this->permissions;
-            $this->globalApp['apartment'] = $this->apartment;
+            $this->globalApp['apartment'] = $this->apartment;   $this->globalApp['owner'] = $this->owner;
             $this->globalApp['rol'] = $this->rol;
             $this->globalApp['name'] = $this->name;
             $this->globalApp['max_user_tenant'] = $this->max_user_tenant;
@@ -71,6 +72,10 @@ class BaseController extends CI_Controller
             $this->globalApp['condominium'] = $this->condominium;
             $this->globalApp['condominium_text'] = $this->condominium_text;
             $this->globalApp['generates_report'] = $this->generates_report;
+
+            setcookie("workstation_fscv", $this->condominium, time() + (86400 * 15),'/');
+            setcookie("workstation_name_fscv",$this->condominium_text, time() + (86400 * 15),'/');
+            setcookie("workstation_fscv_", $this->owner, time() + (86400 * 15),'/');
         }
     }
 

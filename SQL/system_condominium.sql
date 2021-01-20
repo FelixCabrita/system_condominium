@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.7
+-- version 4.8.4
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 14-01-2021 a las 10:50:27
--- Versión del servidor: 10.1.30-MariaDB
--- Versión de PHP: 7.1.14
+-- Servidor: localhost
+-- Tiempo de generación: 20-01-2021 a las 04:04:00
+-- Versión del servidor: 5.7.32
+-- Versión de PHP: 5.6.40
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -19,64 +19,68 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `system_condominium`
+-- Base de datos: `admicond_00046`
 --
 
- DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `setBills`(IN id_service INT, IN condominium_sp INT)
-BEGIN
-                DECLARE unique_code_ps INT DEFAULT 0;
-                DECLARE id_insert_daily INT DEFAULT 0;
-                DECLARE id_insert_daily_deposit INT DEFAULT 0;
-                DECLARE amount_sp DOUBLE DEFAULT 0;
-                DECLARE amount_sp_deposit DOUBLE DEFAULT 0;
-                DECLARE module_sp INT DEFAULT 0;
-                DECLARE documenttype_sp INT DEFAULT 0;
-                DECLARE generate_debit_ps INT DEFAULT 0;
-                DECLARE generate_credit_ps INT DEFAULT 0;
-                DECLARE debit_deposit_ps INT DEFAULT 0;
-                DECLARE credit_deposit_ps INT DEFAULT 0;
-                DECLARE name_service VARCHAR(250) DEFAULT '';
-                SET unique_code_ps = UNIX_TIMESTAMP();
+DELIMITER $$
+--
+-- Procedimientos
+--
+DROP PROCEDURE IF EXISTS `setBills`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `setBills` (IN `id_service` INT, IN `condominium_sp` INT)  BEGIN
+        DECLARE unique_code_ps INT DEFAULT 0;
+            DECLARE id_insert_daily INT DEFAULT 0;
+            DECLARE id_insert_daily_deposit INT DEFAULT 0;
+            DECLARE amount_sp DOUBLE DEFAULT 0;
+            DECLARE amount_sp_deposit DOUBLE DEFAULT 0;
+            DECLARE module_sp INT DEFAULT 0;
+            DECLARE documenttype_sp INT DEFAULT 0;
+            DECLARE generate_debit_ps INT DEFAULT 0;
+            DECLARE generate_credit_ps INT DEFAULT 0;
+            DECLARE debit_deposit_ps INT DEFAULT 0;
+            DECLARE credit_deposit_ps INT DEFAULT 0;
+            DECLARE name_service VARCHAR(250) DEFAULT '';
+            SET unique_code_ps = UNIX_TIMESTAMP();
 
-                SET lc_time_names = 'es_MX';
-                INSERT INTO bills(condominium,apartment, amount, description,type,unique_code)
-                    SELECT a.condominium, a.id as 'apartment',s.amount,UPPER(CONCAT(MONTHNAME(now()),' - ',s.name)) as 'description',s.id,unique_code_ps FROM apartment as a
-                        INNER JOIN services as s ON s.condominium = a.condominium
-                        WHERE  DAY(CURDATE())= DAY(s.date_load) AND s.id = id_service AND a.status = 1 AND
-                        0 = (SELECT COUNT(bl.id) FROM bills as bl WHERE bl.type = s.id AND bl.apartment = a.id AND DATE(bl.payment_date_prox) = DATE(CURDATE()));
-
-
-                        UPDATE services SET last_upload_date = now() WHERE id = id_service AND status = 1;
-
-                SET documenttype_sp = (  SELECT cc.documenttype FROM control_admicondor.condominium as cc WHERE id = condominium_sp);
-                SET module_sp = (  SELECT cc.module FROM control_admicondor.condominium as cc WHERE id = condominium_sp);
-
-                SET generate_debit_ps = (  SELECT cc.generate_debit FROM control_admicondor.condominium as cc WHERE id = condominium_sp);
-                SET generate_credit_ps = (  SELECT cc.generate_credit FROM control_admicondor.condominium as cc WHERE id = condominium_sp);
-
-                SET debit_deposit_ps = (  SELECT cc.debit_deposit FROM control_admicondor.condominium as cc WHERE id = condominium_sp);
-                SET credit_deposit_ps = (  SELECT cc.credit_deposit FROM control_admicondor.condominium as cc WHERE id = condominium_sp);
+            SET lc_time_names = 'es_MX';
+            INSERT INTO bills(condominium,apartment, amount, description,type,unique_code)
+                SELECT a.condominium, a.id as 'apartment',s.amount,UPPER(CONCAT(MONTHNAME(now()),' - ',s.name)) as 'description',s.id,unique_code_ps FROM apartment as a
+                    INNER JOIN services as s ON s.condominium = a.condominium
+                    WHERE  DAY(CURDATE())= DAY(s.date_load) AND s.id = id_service AND a.status = 1 AND
+                    0 = (SELECT COUNT(bl.id) FROM bills as bl WHERE bl.type = s.id AND bl.apartment = a.id AND DATE(bl.payment_date_prox) = DATE(CURDATE()));
 
 
-                SET name_service = (SELECT CONCAT(s.code,' - ',s.name) FROM services as s WHERE s.id = id_service);
-                SET amount_sp = (SELECT SUM(amount) FROM bills WHERE unique_code = unique_code_ps);
-                SET amount_sp_deposit = (SELECT IFNULL( SUM(amount),0) FROM bills WHERE  type = id_service AND DATE( payment_date_prox) = DATE(CURDATE()));
+                    UPDATE services SET last_upload_date = now() WHERE id = id_service AND status = 1;
 
-                INSERT INTO daily(condominium, module, documenttype, description) VALUES (condominium_sp,module_sp,documenttype_sp,UPPER(CONCAT('GENERACION DE FACTUAS DE ', MONTHNAME(now()),' - ' ,name_service)));
-                SET id_insert_daily = LAST_INSERT_ID();
-                INSERT INTO daily_detail(daily, accountdetail, debit, credit,condominium) VALUES (id_insert_daily,generate_debit_ps,amount_sp,0,condominium_sp);
-                INSERT INTO daily_detail(daily, accountdetail, debit, credit,condominium) VALUES (id_insert_daily,generate_credit_ps,0,amount_sp,condominium_sp);
-            UPDATE bills SET unique_code =id_insert_daily WHERE unique_code = unique_code_ps;
+            SET documenttype_sp = (  SELECT cc.documenttype FROM admicond_control.condominium as cc WHERE id = condominium_sp);
+            SET module_sp = (  SELECT cc.module FROM admicond_control.condominium as cc WHERE id = condominium_sp);
 
-                IF amount_sp_deposit> 0 THEN
-                    INSERT INTO daily(condominium, module, documenttype, description) VALUES (condominium_sp,module_sp,documenttype_sp,UPPER(CONCAT('REBAJA DE ABONOS ', MONTHNAME(now()),' - ' ,name_service)));
-                    SET id_insert_daily_deposit = LAST_INSERT_ID();
-                    INSERT INTO daily_detail(daily, accountdetail, debit, credit,condominium) VALUES (id_insert_daily_deposit,debit_deposit_ps,amount_sp_deposit,0,condominium_sp);
-                    INSERT INTO daily_detail(daily, accountdetail, debit, credit,condominium) VALUES (id_insert_daily_deposit,credit_deposit_ps,0,amount_sp_deposit,condominium_sp);
-                END IF;
+            SET generate_debit_ps = (  SELECT cc.generate_debit FROM admicond_control.condominium as cc WHERE id = condominium_sp);
+            SET generate_credit_ps = (  SELECT cc.generate_credit FROM admicond_control.condominium as cc WHERE id = condominium_sp);
 
-            END$$
+            SET debit_deposit_ps = (  SELECT cc.debit_deposit FROM admicond_control.condominium as cc WHERE id = condominium_sp);
+            SET credit_deposit_ps = (  SELECT cc.credit_deposit FROM admicond_control.condominium as cc WHERE id = condominium_sp);
+
+
+            SET name_service = (SELECT CONCAT(s.code,' - ',s.name) FROM services as s WHERE s.id = id_service);
+            SET amount_sp = (SELECT SUM(amount) FROM bills WHERE unique_code = unique_code_ps);
+            SET amount_sp_deposit = (SELECT IFNULL( SUM(amount),0) FROM bills WHERE  type = id_service AND DATE( payment_date_prox) = DATE(CURDATE()));
+
+            INSERT INTO daily(condominium, module, documenttype, description) VALUES (condominium_sp,module_sp,documenttype_sp,UPPER(CONCAT('GENERACION DE FACTUAS DE ', MONTHNAME(now()),' - ' ,name_service)));
+            SET id_insert_daily = LAST_INSERT_ID();
+            INSERT INTO daily_detail(daily, accountdetail, debit, credit,condominium) VALUES (id_insert_daily,generate_debit_ps,amount_sp,0,condominium_sp);
+            INSERT INTO daily_detail(daily, accountdetail, debit, credit,condominium) VALUES (id_insert_daily,generate_credit_ps,0,amount_sp,condominium_sp);
+        UPDATE bills SET unique_code =id_insert_daily WHERE unique_code = unique_code_ps;
+
+            IF amount_sp_deposit> 0 THEN
+                INSERT INTO daily(condominium, module, documenttype, description) VALUES (condominium_sp,module_sp,documenttype_sp,UPPER(CONCAT('REBAJA DE ABONOS ', MONTHNAME(now()),' - ' ,name_service)));
+                SET id_insert_daily_deposit = LAST_INSERT_ID();
+                INSERT INTO daily_detail(daily, accountdetail, debit, credit,condominium) VALUES (id_insert_daily_deposit,debit_deposit_ps,amount_sp_deposit,0,condominium_sp);
+                INSERT INTO daily_detail(daily, accountdetail, debit, credit,condominium) VALUES (id_insert_daily_deposit,credit_deposit_ps,0,amount_sp_deposit,condominium_sp);
+            END IF;
+
+        END$$
+
 DELIMITER ;
 
 -- --------------------------------------------------------
@@ -102,16 +106,17 @@ CREATE TABLE `account_control` (
 --
 
 INSERT INTO `account_control` (`id`, `condominium`, `account`, `name`, `heading`, `status`, `created_at`, `updated_at`) VALUES
-(1, 4, '11', 'Efectivo en Caja y Banco', 1, 1, '2020-12-30 16:55:03', '2020-12-30 16:55:03'),
-(2, 4, '12', 'Cuenta por Cobrar', 1, 1, '2020-12-30 16:55:03', '2020-12-30 16:55:03'),
-(3, 4, '13', 'Propiedad Planta y Equipo', 1, 1, '2020-12-30 16:55:03', '2020-12-30 16:55:03'),
-(4, 4, '21', 'Cuenta por Pagar', 2, 1, '2020-12-30 16:55:03', '2020-12-30 16:55:03'),
-(5, 4, '31', 'Capital', 3, 1, '2020-12-30 16:55:03', '2020-12-30 16:55:03'),
-(6, 4, '32', 'Resultado Acumulado', 3, 1, '2020-12-30 16:55:03', '2020-12-30 16:55:03'),
-(7, 4, '41', 'Servicios Apartamentos', 4, 1, '2020-12-30 16:55:03', '2020-12-30 16:55:03'),
-(8, 4, '51', 'Costo', 5, 1, '2020-12-30 16:55:03', '2020-12-30 16:55:03'),
-(9, 4, '61', 'GASTOS PERSONALES', 6, 1, '2020-12-30 16:55:03', '2021-01-05 08:32:37'),
-(10, 4, '62', 'GASTOS NO PERSONALES', 6, 1, '2020-12-30 16:55:04', '2021-01-05 08:33:26');
+(11, 4, '11', 'Efectivo en Caja y Banco', 7, 1, '2021-01-18 13:07:34', '2021-01-18 13:07:34'),
+(12, 4, '12', 'Cuenta por Cobrar', 7, 1, '2021-01-18 13:07:34', '2021-01-18 13:07:34'),
+(13, 4, '13', 'Propiedad Planta y Equipo', 7, 1, '2021-01-18 13:07:34', '2021-01-18 13:07:34'),
+(14, 4, '21', 'Cuenta por Pagar', 8, 1, '2021-01-18 13:07:34', '2021-01-18 13:07:34'),
+(15, 4, '31', 'Capital', 9, 1, '2021-01-18 13:07:34', '2021-01-18 13:07:34'),
+(16, 4, '32', 'RESULTADO DEL PERIODO', 9, 1, '2021-01-18 13:07:34', '2021-01-18 22:26:05'),
+(17, 4, '41', 'Servicios Apartamentos', 10, 1, '2021-01-18 13:07:34', '2021-01-18 13:07:34'),
+(18, 4, '51', 'Costo', 11, 1, '2021-01-18 13:07:34', '2021-01-18 13:07:34'),
+(19, 4, '61', 'GASTOS GENERALES Y ADMINISTRATIVOS', 12, 1, '2021-01-18 13:07:34', '2021-01-18 21:33:40'),
+(20, 4, '62', 'Gastos Financieros', 12, 1, '2021-01-18 13:07:34', '2021-01-18 13:07:34'),
+(21, 4, '33', 'RESULTADO ACUMULADO', 9, 1, '2021-01-18 22:29:29', '2021-01-18 22:29:29');
 
 -- --------------------------------------------------------
 
@@ -139,16 +144,21 @@ CREATE TABLE `account_detail` (
 --
 
 INSERT INTO `account_detail` (`id`, `condominium`, `heading`, `account_control`, `account_higher`, `apartment`, `code`, `name`, `status`, `created_at`, `updated_at`) VALUES
-(1, 4, 1, 1, 1, 0, '110101', 'EFECTIVO', 1, '2021-01-05 08:06:50', '2021-01-05 22:01:42'),
-(2, 4, 1, 1, 1, 0, '110102', 'TARJETA', 1, '2021-01-05 08:08:17', '2021-01-05 08:08:17'),
-(3, 4, 1, 1, 1, 0, '110103', 'CHEQUE', 1, '2021-01-05 08:08:34', '2021-01-05 08:08:34'),
-(4, 4, 1, 1, 1, 0, '110104', 'TRANSFERENCIA', 1, '2021-01-05 08:08:55', '2021-01-05 08:08:55'),
-(5, 4, 1, 2, 3, 0, '120101', 'SERVICIOS Y MANTENIMIENTOS POR COBRAR', 1, '2021-01-05 08:14:26', '2021-01-05 08:14:26'),
-(6, 4, 3, 6, 6, 0, '320101', 'RESULTADO ACUMULADO', 1, '2021-01-05 08:16:28', '2021-01-05 08:16:28'),
-(7, 4, 3, 5, 5, 0, '310101', 'CAPITAL', 1, '2021-01-05 08:17:03', '2021-01-05 08:17:03'),
-(8, 4, 2, 4, 4, 0, '210101', 'PAGO RECIBIDO POR ADELANTADO', 1, '2021-01-05 08:19:33', '2021-01-05 08:19:33'),
-(9, 4, 2, 4, 4, 0, '210102', 'NOMINA', 1, '2021-01-05 08:20:05', '2021-01-05 08:20:05'),
-(10, 4, 4, 7, 7, 0, '410101', 'INGRESOS SERVICIOS POR MANTENIMIENTOS', 1, '2021-01-05 08:24:20', '2021-01-05 08:24:20');
+(11, 4, 7, 11, 11, 0, '110101', 'Efectivo', 1, '2021-01-18 22:21:15', '2021-01-18 22:21:15'),
+(12, 4, 7, 11, 11, 0, '110102', 'Tarjeta', 1, '2021-01-18 22:21:15', '2021-01-18 22:21:15'),
+(13, 4, 7, 11, 11, 0, '110103', 'Cheque', 1, '2021-01-18 22:21:15', '2021-01-18 22:21:15'),
+(14, 4, 7, 11, 11, 0, '110104', 'Transferencia', 1, '2021-01-18 22:21:15', '2021-01-18 22:21:15'),
+(15, 4, 7, 11, 12, 0, '110201', 'Banco de Reservas', 1, '2021-01-18 22:21:16', '2021-01-18 22:21:16'),
+(16, 4, 7, 11, 12, 0, '110202', 'Banco Popular', 1, '2021-01-18 22:21:16', '2021-01-18 22:21:16'),
+(17, 4, 7, 11, 12, 0, '110203', 'Banco BHD-LEON', 1, '2021-01-18 22:21:16', '2021-01-18 22:21:16'),
+(18, 4, 7, 11, 12, 0, '110204', 'Banco Santa Cruz', 1, '2021-01-18 22:21:16', '2021-01-18 22:21:16'),
+(19, 4, 7, 12, 13, 0, '120101', 'Servicios y Mantenimientos por Cobrar', 1, '2021-01-18 22:21:16', '2021-01-18 22:21:16'),
+(20, 4, 8, 14, 14, 0, '210101', 'Pago Recibido por Adelantado', 1, '2021-01-18 22:21:16', '2021-01-18 22:21:16'),
+(21, 4, 9, 15, 15, 0, '310101', 'Capital', 1, '2021-01-18 22:21:16', '2021-01-18 22:21:16'),
+(22, 4, 9, 16, 16, 0, '320101', 'RESULTADO DEL PERIODO', 1, '2021-01-18 22:21:16', '2021-01-18 22:27:47'),
+(23, 4, 10, 17, 17, 0, '410101', 'Ingresos Servicios por Mantenimientos', 1, '2021-01-18 22:21:16', '2021-01-18 22:21:16'),
+(24, 4, 11, 18, 18, 0, '510101', 'Costo', 1, '2021-01-18 22:21:16', '2021-01-18 22:21:16'),
+(25, 4, 9, 21, 22, 0, '330101', 'RESULTADO ACUMULADO', 1, '2021-01-18 22:31:31', '2021-01-18 22:31:31');
 
 -- --------------------------------------------------------
 
@@ -174,16 +184,18 @@ CREATE TABLE `account_higher` (
 --
 
 INSERT INTO `account_higher` (`id`, `condominium`, `heading`, `account_control`, `code`, `name`, `created_at`, `updated_at`, `status`) VALUES
-(1, 4, 1, 1, '1101', 'CAJA GENERAL', '2020-12-30 16:55:29', '2021-01-04 00:53:42', 1),
-(2, 4, 1, 1, '1102', 'Bancos', '2020-12-30 16:55:29', '2020-12-30 16:55:29', 1),
-(3, 4, 1, 2, '1201', 'Servicios y Mantenimientos', '2020-12-30 16:55:29', '2020-12-30 16:55:29', 1),
-(4, 4, 2, 4, '2101', 'Cuentas por Pagar', '2020-12-30 16:55:29', '2020-12-30 16:55:29', 1),
-(5, 4, 3, 5, '3101', 'Capital', '2020-12-30 16:55:29', '2020-12-30 16:55:29', 1),
-(6, 4, 3, 6, '3201', 'Resultado Acumulado', '2020-12-30 16:55:29', '2020-12-30 16:55:29', 1),
-(7, 4, 4, 7, '4101', 'Servicios por Mantenimientos', '2020-12-30 16:55:29', '2020-12-30 16:55:29', 1),
-(8, 4, 5, 8, '5101', 'COSTO', '2021-01-05 08:25:46', '2021-01-05 08:25:46', 1),
-(9, 4, 6, 9, '6101', 'GASTOS PERSONALES', '2021-01-05 08:35:37', '2021-01-05 08:35:37', 1),
-(10, 4, 6, 10, '6201', 'GASTOS NO PERSONALES', '2021-01-05 08:36:06', '2021-01-05 08:36:06', 1);
+(11, 4, 7, 11, '1101', 'Caja General', '2021-01-18 22:09:59', '2021-01-18 22:09:59', 1),
+(12, 4, 7, 11, '1102', 'Bancos', '2021-01-18 22:09:59', '2021-01-18 22:09:59', 1),
+(13, 4, 7, 12, '1201', 'Servicios y Mantenimientos', '2021-01-18 22:09:59', '2021-01-18 22:09:59', 1),
+(14, 4, 8, 14, '2101', 'Cuentas por Pagar', '2021-01-18 22:09:59', '2021-01-18 22:09:59', 1),
+(15, 4, 9, 15, '3101', 'Capital', '2021-01-18 22:09:59', '2021-01-18 22:09:59', 1),
+(16, 4, 9, 16, '3201', 'RESULTADO DEL PERIODO', '2021-01-18 22:09:59', '2021-01-18 22:27:14', 1),
+(17, 4, 10, 17, '4101', 'Servicios por Mantenimientos', '2021-01-18 22:09:59', '2021-01-18 22:09:59', 1),
+(18, 4, 11, 18, '5101', 'Costo', '2021-01-18 22:09:59', '2021-01-18 22:09:59', 1),
+(19, 4, 12, 19, '6101', 'Gastos Personales', '2021-01-18 22:09:59', '2021-01-18 22:09:59', 1),
+(20, 4, 12, 19, '6102', 'Gastos no Personales', '2021-01-18 22:09:59', '2021-01-18 22:09:59', 1),
+(21, 4, 12, 20, '6201', 'Gastos Financieros', '2021-01-18 22:09:59', '2021-01-18 22:09:59', 1),
+(22, 4, 9, 21, '3301', 'RESULTADO ACUMULADO', '2021-01-18 22:30:43', '2021-01-18 22:30:43', 1);
 
 -- --------------------------------------------------------
 
@@ -210,16 +222,30 @@ CREATE TABLE `apartment` (
 --
 
 INSERT INTO `apartment` (`id`, `condominium`, `apartment`, `code`, `edifice`, `conditions`, `number_parking`, `created_at`, `updated_at`, `status`) VALUES
-(2, 4, '101', 'A10101', 10, 'OCUPADO', 'Q1', '2020-12-29 01:21:11', '2020-12-29 01:21:11', 1),
-(3, 4, '102', 'A10102', 10, 'DESOCUPADO', 'Q2', '2020-12-29 01:21:11', '2020-12-29 01:21:11', 1),
-(4, 4, '201', 'A10201', 10, 'OCUPADO', 'Q3', '2020-12-29 01:21:11', '2020-12-29 01:21:11', 1),
-(5, 4, '202', 'A10202', 10, 'EN VENTA', 'Q4', '2020-12-29 01:21:11', '2020-12-29 01:21:11', 1),
-(6, 4, '301', 'A10301', 10, 'EN ALQUILER', 'Q5', '2020-12-29 01:21:11', '2020-12-29 01:21:11', 1),
-(7, 4, '302', 'A10302', 10, 'OCUPADO', 'Q6', '2020-12-29 01:21:11', '2020-12-29 02:38:15', 1),
-(8, 4, '401', 'A10401', 10, 'ALQUILADO', 'Q7', '2020-12-29 01:21:11', '2021-01-01 20:32:55', 1),
-(9, 4, '402', 'A10402', 10, 'OCUPADO', 'Q8-Q10', '2020-12-29 01:21:11', '2020-12-29 01:36:26', 1),
-(10, 4, '10', 'A1110', 11, 'OCUPADO', '1D', '2020-12-29 10:39:05', '2020-12-29 10:39:05', 1),
-(11, 5, 'fasfsd', 'FASDFASFSFASfasfsd', 12, 'ALQUILADO', 'asdfasdfa', '2021-01-01 20:38:31', '2021-01-01 20:38:31', 1);
+(12, 4, '101', 'A1101', 13, 'OCUPADO', 'Q1', '2021-01-18 11:30:34', '2021-01-18 11:30:34', 1),
+(13, 4, '102', 'A1102', 13, 'DESOCUPADO', 'Q2', '2021-01-18 11:30:34', '2021-01-18 11:30:34', 1),
+(14, 4, '201', 'A1201', 13, 'ALQUILADO', 'Q3', '2021-01-18 11:30:34', '2021-01-18 11:30:34', 1),
+(15, 4, '202', 'A1202', 13, 'EN VENTA', 'Q4', '2021-01-18 11:30:34', '2021-01-18 11:30:34', 1),
+(16, 4, '301', 'A1301', 13, 'EN ALQUILER', 'Q5', '2021-01-18 11:30:34', '2021-01-18 11:30:34', 1),
+(17, 4, '302', 'A1302', 13, 'EN ALQUILER/VENTA', 'Q6', '2021-01-18 11:30:34', '2021-01-18 11:30:34', 1),
+(18, 4, '401', 'A1401', 13, 'OCUPADO', 'Q7', '2021-01-18 11:30:34', '2021-01-18 11:30:34', 1),
+(19, 4, '402', 'A1402', 13, 'DESOCUPADO', 'Q8', '2021-01-18 11:30:34', '2021-01-18 11:30:34', 1),
+(20, 4, '101', 'A2101', 14, 'ALQUILADO', 'Q9', '2021-01-18 11:30:34', '2021-01-18 11:30:34', 1),
+(21, 4, '102', 'A2102', 14, 'EN VENTA', 'Q10', '2021-01-18 11:30:34', '2021-01-18 11:30:34', 1),
+(22, 4, '201', 'A2201', 14, 'EN ALQUILER', 'Q11', '2021-01-18 11:30:34', '2021-01-18 11:30:34', 1),
+(23, 4, '202', 'A2202', 14, 'EN ALQUILER/VENTA', 'Q12', '2021-01-18 11:30:34', '2021-01-18 11:30:34', 1),
+(24, 4, '301', 'A2301', 14, 'OCUPADO', 'Q13', '2021-01-18 11:30:34', '2021-01-18 11:30:34', 1),
+(25, 4, '302', 'A2302', 14, 'DESOCUPADO', 'Q14', '2021-01-18 11:30:34', '2021-01-18 11:30:34', 1),
+(26, 4, '401', 'A2401', 14, 'ALQUILADO', 'Q15', '2021-01-18 11:30:34', '2021-01-18 11:30:34', 1),
+(27, 4, '402', 'A2402', 14, 'EN VENTA', 'Q16', '2021-01-18 11:30:34', '2021-01-18 11:30:34', 1),
+(28, 4, '101', 'A10101', 22, 'EN ALQUILER', 'Q17', '2021-01-18 11:30:34', '2021-01-18 11:30:34', 1),
+(29, 4, '102', 'A10102', 22, 'EN ALQUILER/VENTA', 'Q18', '2021-01-18 11:30:34', '2021-01-18 11:30:34', 1),
+(30, 4, '201', 'A10201', 22, 'OCUPADO', 'Q19', '2021-01-18 11:30:34', '2021-01-18 11:30:34', 1),
+(31, 4, '202', 'A10202', 22, 'DESOCUPADO', 'Q20', '2021-01-18 11:30:34', '2021-01-18 11:30:34', 1),
+(32, 4, '301', 'A10301', 22, 'ALQUILADO', 'Q21', '2021-01-18 11:30:34', '2021-01-18 11:30:34', 1),
+(33, 4, '302', 'A10302', 22, 'EN VENTA', 'Q22', '2021-01-18 11:30:34', '2021-01-18 11:30:34', 1),
+(34, 4, '401', 'A10401', 22, 'EN ALQUILER', 'Q23', '2021-01-18 11:30:34', '2021-01-18 11:30:34', 1),
+(35, 4, '402', 'A10402', 22, 'EN ALQUILER/VENTA', 'Q24', '2021-01-18 11:30:34', '2021-01-18 11:30:34', 1);
 
 -- --------------------------------------------------------
 
@@ -245,14 +271,7 @@ CREATE TABLE `assigning_apartment` (
 --
 
 INSERT INTO `assigning_apartment` (`id`, `condominium`, `edifice`, `apartment`, `tenant`, `status`, `observation`, `created_at`, `updated_at`) VALUES
-(1, 4, 10, 2, 4, 1, '', '2020-12-28', '0000-00-00'),
-(2, 4, 10, 4, 3, 1, '', '2020-12-28', '0000-00-00'),
-(3, 4, 10, 3, 7, 1, '', '2020-12-28', '0000-00-00'),
-(4, 4, 10, 5, 6, 1, '', '2020-12-28', '0000-00-00'),
-(5, 4, 10, 6, 5, 1, '', '2020-12-28', '0000-00-00'),
-(6, 4, 10, 7, 2, 1, '', '2020-12-28', '0000-00-00'),
-(7, 4, 10, 8, 1, 1, '', '2020-12-28', '0000-00-00'),
-(8, 4, 10, 7, 1, 1, '', '2021-01-16', '0000-00-00');
+(9, 4, 22, 30, 12, 1, '', '2021-01-18', '0000-00-00');
 
 -- --------------------------------------------------------
 
@@ -290,25 +309,42 @@ CREATE TABLE `bills` (
 --
 
 INSERT INTO `bills` (`id`, `condominium`, `apartment`, `tenant`, `type`, `description`, `amount`, `payment_date`, `payment_date_prox`, `status`, `payment_type`, `transfer_code`, `transfer_date`, `check_number`, `check_transmitter`, `observation`, `unique_code`, `bill_group`, `user`, `created_at`, `updated_at`) VALUES
-(1, 4, 2, 0, 5, 'ENERO - MANTENIMIENTO', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 2, 0, 0, '2021-01-10 22:14:19', '2021-01-12 21:53:04'),
-(2, 4, 3, 0, 5, 'ENERO - MANTENIMIENTO', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 2, 0, 0, '2021-01-10 22:14:19', '2021-01-12 21:53:04'),
-(3, 4, 4, 0, 5, 'ENERO - MANTENIMIENTO', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 2, 0, 0, '2021-01-10 22:14:19', '2021-01-12 21:53:04'),
-(4, 4, 5, 0, 5, 'ENERO - MANTENIMIENTO', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 2, 0, 0, '2021-01-10 22:14:19', '2021-01-12 21:53:04'),
-(5, 4, 6, 0, 5, 'ENERO - MANTENIMIENTO', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 2, 0, 0, '2021-01-10 22:14:19', '2021-01-12 21:53:04'),
-(6, 4, 7, 1, 5, 'ENERO - MANTENIMIENTO', 1000.00, '2021-01-13 02:53:04', '2021-01-13', 1, 0, '', '0000-00-00', '', '', '', 2, 1, 3, '2021-01-10 22:14:19', '2021-01-12 21:53:04'),
-(7, 4, 8, 1, 5, 'ENERO - MANTENIMIENTO', 1000.00, '2021-01-13 02:53:04', '2021-01-13', 1, 0, '', '0000-00-00', '', '', '', 2, 1, 3, '2021-01-10 22:14:19', '2021-01-12 21:53:04'),
-(8, 4, 9, 0, 5, 'ENERO - MANTENIMIENTO', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 2, 0, 0, '2021-01-10 22:14:19', '2021-01-12 21:53:04'),
-(9, 4, 10, 0, 5, 'ENERO - MANTENIMIENTO', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 2, 0, 0, '2021-01-10 22:14:19', '2021-01-12 21:53:04'),
-(16, 4, 8, 1, 5, 'MANTENIMIENTO', 1000.00, '2021-01-13 16:30:49', '2021-01-13', 1, 1, '13412', '2021-01-13', '', '', '', 3, 2, 1, '2021-01-13 11:30:49', '2021-01-13 11:30:49'),
-(17, 4, 2, 0, 5, 'ENERO - MANTENIMIENTO', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 4, 0, 0, '2021-01-14 04:45:27', '2021-01-14 04:45:28'),
-(18, 4, 3, 0, 5, 'ENERO - MANTENIMIENTO', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 4, 0, 0, '2021-01-14 04:45:27', '2021-01-14 04:45:28'),
-(19, 4, 4, 0, 5, 'ENERO - MANTENIMIENTO', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 4, 0, 0, '2021-01-14 04:45:27', '2021-01-14 04:45:28'),
-(20, 4, 5, 0, 5, 'ENERO - MANTENIMIENTO', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 4, 0, 0, '2021-01-14 04:45:27', '2021-01-14 04:45:28'),
-(21, 4, 6, 0, 5, 'ENERO - MANTENIMIENTO', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 4, 0, 0, '2021-01-14 04:45:27', '2021-01-14 04:45:28'),
-(22, 4, 7, 0, 5, 'ENERO - MANTENIMIENTO', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 4, 0, 0, '2021-01-14 04:45:27', '2021-01-14 04:45:28'),
-(23, 4, 8, 0, 5, 'ENERO - MANTENIMIENTO', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 4, 0, 0, '2021-01-14 04:45:27', '2021-01-14 04:45:28'),
-(24, 4, 9, 0, 5, 'ENERO - MANTENIMIENTO', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 4, 0, 0, '2021-01-14 04:45:27', '2021-01-14 04:45:28'),
-(25, 4, 10, 0, 5, 'ENERO - MANTENIMIENTO', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 4, 0, 0, '2021-01-14 04:45:27', '2021-01-14 04:45:28');
+(1, 4, 30, 12, 8, 'MES DE AGOSTO 2020', 1000.00, '2021-01-18 22:57:53', '2021-01-18', 1, 3, '', '0000-00-00', '', '', '', 2, 1, 47, '2021-01-18 22:54:40', '2021-01-18 22:57:53'),
+(2, 4, 30, 12, 8, 'MES DE SEPTIEMBRE 2020', 1000.00, '2021-01-18 22:57:53', '2021-01-18', 1, 3, '', '0000-00-00', '', '', '', 2, 1, 47, '2021-01-18 22:54:40', '2021-01-18 22:57:53'),
+(3, 4, 30, 12, 8, 'MES DE OCTUBRE 2020', 1000.00, '2021-01-18 23:10:48', '2021-01-18', 1, 0, '', '0000-00-00', '', '', '', 3, 2, 47, '2021-01-18 22:54:40', '2021-01-18 23:10:49'),
+(4, 4, 30, 12, 8, 'MES DE NOVIEMBRE 2020', 1000.00, '2021-01-18 23:10:48', '2021-01-18', 1, 0, '', '0000-00-00', '', '', '', 3, 2, 47, '2021-01-18 22:54:40', '2021-01-18 23:10:49'),
+(5, 4, 30, 0, 8, 'MES DE DICIEMBRE 2020', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 0, 0, 0, '2021-01-18 22:54:40', '2021-01-18 22:54:40'),
+(6, 4, 31, 0, 8, 'MES DE DICIEMBRE 2020', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 0, 0, 0, '2021-01-18 22:54:40', '2021-01-18 22:54:40'),
+(7, 4, 28, 0, 8, 'MES DE DICIEMBRE 2020', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 0, 0, 0, '2021-01-18 22:54:40', '2021-01-18 22:54:40'),
+(8, 4, 29, 0, 8, 'MES DE DICIEMBRE 2020', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 0, 0, 0, '2021-01-18 22:54:41', '2021-01-18 22:54:41'),
+(9, 4, 32, 0, 8, 'MES DE DICIEMBRE 2020', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 0, 0, 0, '2021-01-18 22:54:41', '2021-01-18 22:54:41'),
+(10, 4, 33, 0, 8, 'MES DE AGOSTO 2020', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 0, 0, 0, '2021-01-18 22:54:41', '2021-01-18 22:54:41'),
+(11, 4, 33, 0, 8, 'MES DE SEPTIEMBRE 2020', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 0, 0, 0, '2021-01-18 22:54:41', '2021-01-18 22:54:41'),
+(12, 4, 33, 0, 8, 'MES DE OCTUBRE 2020', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 0, 0, 0, '2021-01-18 22:54:41', '2021-01-18 22:54:41'),
+(13, 4, 12, 0, 8, 'ENERO - MANTENIMIENTO GENERAL', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 4, 0, 0, '2021-01-20 03:34:01', '2021-01-20 03:34:01'),
+(14, 4, 13, 0, 8, 'ENERO - MANTENIMIENTO GENERAL', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 4, 0, 0, '2021-01-20 03:34:01', '2021-01-20 03:34:01'),
+(15, 4, 14, 0, 8, 'ENERO - MANTENIMIENTO GENERAL', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 4, 0, 0, '2021-01-20 03:34:01', '2021-01-20 03:34:01'),
+(16, 4, 15, 0, 8, 'ENERO - MANTENIMIENTO GENERAL', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 4, 0, 0, '2021-01-20 03:34:01', '2021-01-20 03:34:01'),
+(17, 4, 16, 0, 8, 'ENERO - MANTENIMIENTO GENERAL', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 4, 0, 0, '2021-01-20 03:34:01', '2021-01-20 03:34:01'),
+(18, 4, 17, 0, 8, 'ENERO - MANTENIMIENTO GENERAL', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 4, 0, 0, '2021-01-20 03:34:01', '2021-01-20 03:34:01'),
+(19, 4, 18, 0, 8, 'ENERO - MANTENIMIENTO GENERAL', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 4, 0, 0, '2021-01-20 03:34:01', '2021-01-20 03:34:01'),
+(20, 4, 19, 0, 8, 'ENERO - MANTENIMIENTO GENERAL', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 4, 0, 0, '2021-01-20 03:34:01', '2021-01-20 03:34:01'),
+(21, 4, 20, 0, 8, 'ENERO - MANTENIMIENTO GENERAL', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 4, 0, 0, '2021-01-20 03:34:01', '2021-01-20 03:34:01'),
+(22, 4, 21, 0, 8, 'ENERO - MANTENIMIENTO GENERAL', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 4, 0, 0, '2021-01-20 03:34:01', '2021-01-20 03:34:01'),
+(23, 4, 22, 0, 8, 'ENERO - MANTENIMIENTO GENERAL', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 4, 0, 0, '2021-01-20 03:34:01', '2021-01-20 03:34:01'),
+(24, 4, 23, 0, 8, 'ENERO - MANTENIMIENTO GENERAL', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 4, 0, 0, '2021-01-20 03:34:01', '2021-01-20 03:34:01'),
+(25, 4, 24, 0, 8, 'ENERO - MANTENIMIENTO GENERAL', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 4, 0, 0, '2021-01-20 03:34:01', '2021-01-20 03:34:01'),
+(26, 4, 25, 0, 8, 'ENERO - MANTENIMIENTO GENERAL', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 4, 0, 0, '2021-01-20 03:34:01', '2021-01-20 03:34:01'),
+(27, 4, 26, 0, 8, 'ENERO - MANTENIMIENTO GENERAL', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 4, 0, 0, '2021-01-20 03:34:01', '2021-01-20 03:34:01'),
+(28, 4, 27, 0, 8, 'ENERO - MANTENIMIENTO GENERAL', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 4, 0, 0, '2021-01-20 03:34:01', '2021-01-20 03:34:01'),
+(29, 4, 28, 0, 8, 'ENERO - MANTENIMIENTO GENERAL', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 4, 0, 0, '2021-01-20 03:34:01', '2021-01-20 03:34:01'),
+(30, 4, 29, 0, 8, 'ENERO - MANTENIMIENTO GENERAL', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 4, 0, 0, '2021-01-20 03:34:01', '2021-01-20 03:34:01'),
+(31, 4, 30, 0, 8, 'ENERO - MANTENIMIENTO GENERAL', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 4, 0, 0, '2021-01-20 03:34:01', '2021-01-20 03:34:01'),
+(32, 4, 31, 0, 8, 'ENERO - MANTENIMIENTO GENERAL', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 4, 0, 0, '2021-01-20 03:34:01', '2021-01-20 03:34:01'),
+(33, 4, 32, 0, 8, 'ENERO - MANTENIMIENTO GENERAL', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 4, 0, 0, '2021-01-20 03:34:01', '2021-01-20 03:34:01'),
+(34, 4, 33, 0, 8, 'ENERO - MANTENIMIENTO GENERAL', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 4, 0, 0, '2021-01-20 03:34:01', '2021-01-20 03:34:01'),
+(35, 4, 34, 0, 8, 'ENERO - MANTENIMIENTO GENERAL', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 4, 0, 0, '2021-01-20 03:34:01', '2021-01-20 03:34:01'),
+(36, 4, 35, 0, 8, 'ENERO - MANTENIMIENTO GENERAL', 1000.00, '0000-00-00 00:00:00', '0000-00-00', 0, 0, '', '0000-00-00', '', '', '', 4, 0, 0, '2021-01-20 03:34:01', '2021-01-20 03:34:01');
 
 -- --------------------------------------------------------
 
@@ -336,13 +372,6 @@ CREATE TABLE `cashier` (
   `observation_status` text COLLATE utf8_spanish_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
---
--- Volcado de datos para la tabla `cashier`
---
-
-INSERT INTO `cashier` (`id`, `condominium`, `user`, `cash_input`, `card_input`, `transfer_input`, `check_input`, `cash_exit`, `transfer_exit`, `check_exit`, `card_exit`, `observation`, `created_at`, `updatet_at`, `status`, `observation_status`) VALUES
-(1, 4, 1, 1000.00, 0.00, 0.00, 0.00, 1000.00, 0.00, 0.00, 0.00, 'asfdasdfasdf', '2021-01-08 18:54:14', '2021-01-12 02:14:49', 0, 'asgsfgasdf');
-
 -- --------------------------------------------------------
 
 --
@@ -365,8 +394,10 @@ CREATE TABLE `commonarea` (
 --
 
 INSERT INTO `commonarea` (`id`, `condominium`, `name`, `max_person`, `created_at`, `updated_at`, `status`) VALUES
-(1, 4, 'TERRAZA', 23, '2020-12-29 00:33:33', '2020-12-29 00:33:33', 1),
-(2, 4, 'CANCHA DE TENIS', 12, '2020-12-29 00:33:56', '2020-12-29 00:33:56', 1);
+(3, 4, 'PISCINA', 10, '2021-01-18 11:47:03', '2021-01-18 11:47:03', 1),
+(4, 4, 'CANCHA DE FUTBOL', 20, '2021-01-18 11:47:19', '2021-01-18 11:47:19', 1),
+(5, 4, 'CANCHA DE BALONCESTO', 20, '2021-01-18 11:47:39', '2021-01-18 11:47:39', 1),
+(6, 4, 'áREA DE RECREACIóN', 10, '2021-01-18 11:48:10', '2021-01-18 11:48:10', 1);
 
 -- --------------------------------------------------------
 
@@ -404,16 +435,6 @@ CREATE TABLE `condominium` (
   `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
---
--- Volcado de datos para la tabla `condominium`
---
-
-INSERT INTO `condominium` (`id`, `name`, `address`, `rcn`, `mobile`, `email`, `amount`, `payment_date`, `masive`, `owner`, `code`, `status`, `max_user_tenant`, `max_condominium`, `generate_credit`, `generate_debit`, `debit_card`, `debit_cash`, `debit_check`, `debit_transfer`, `credit_input`, `debit_deposit`, `credit_deposit`, `credit_deposit_pay`, `created_at`, `updated_at`) VALUES
-(4, 'CIUDAD DE LOS JARDINES', 'AV.JACOBO', '235655', '809-741-2728', 'cj@gmail.com', 0.00, '0000-00-00', 1, 1, 'CDLJ0004', 1, 0, 0, 10, 5, 2, 1, 3, 4, 5, 8, 10, 8, '2020-12-23 00:08:42', '2021-01-13 07:52:02'),
-(8, 'DTUPE HOUSE', 'CALLE 18 ENTRE AVENIDA 5 Y 6', '1234', '04147599825', 'felix-segundo@hotmail.com', 0.00, '0000-00-00', 1, 4, 'DH0008', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2021-01-13 08:55:38', '2021-01-13 10:15:01'),
-(9, 'FELIX CABRITA VILLEGAS', 'CALLE 18 ENTRE AVENIDA 5 Y 6', '1234', '04147599825', 'udearaj@gmail.com', 0.00, '0000-00-00', 0, 4, 'FCV0009', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2021-01-13 10:09:00', '2021-01-13 10:15:30'),
-(10, 'STIVEN', 'CALLE 18 ENTRE AVENIDA 5 Y 6', '1234', 'afsdfasdfads', 'octonovemarketing@gmail.com', 0.00, '0000-00-00', 1, 4, 'S0010', 1, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2021-01-13 10:13:29', '2021-01-13 10:15:50');
-
 -- --------------------------------------------------------
 
 --
@@ -437,10 +458,10 @@ CREATE TABLE `daily` (
 --
 
 INSERT INTO `daily` (`id`, `condominium`, `module`, `documenttype`, `description`, `created_at`, `updated_at`, `status`) VALUES
-(1, 4, 6, 4, 'GENERACION DE FACTUAS DE ENERO - 20215 - MANTENIMIENTO', '2021-01-10 22:14:19', '2021-01-10 22:14:19', 1),
-(2, 4, 6, 4, 'PAGO DE FACTUAS', '2021-01-12 21:53:04', '2021-01-12 21:53:04', 1),
-(3, 4, 6, 4, 'PAGO DE FACTUAS', '2021-01-13 11:30:49', '2021-01-13 11:30:49', 1),
-(4, 4, 6, 4, 'GENERACION DE FACTUAS DE ENERO - 20215 - MANTENIMIENTO', '2021-01-14 04:45:27', '2021-01-14 04:45:27', 1);
+(1, 4, 16, 17, 'CARGA HISTORIAL DEUDA POR APARTAMENTO', '2021-01-18 22:54:41', '2021-01-18 22:54:41', 1),
+(2, 4, 16, 17, 'PAGO DE FACTUAS', '2021-01-18 22:57:53', '2021-01-18 22:57:53', 1),
+(3, 4, 16, 17, 'PAGO DE FACTUAS', '2021-01-18 23:10:48', '2021-01-18 23:10:48', 1),
+(4, 4, 16, 17, 'GENERACION DE FACTUAS DE ENERO - 2001 - MANTENIMIENTO GENERAL', '2021-01-20 03:34:01', '2021-01-20 03:34:01', 1);
 
 -- --------------------------------------------------------
 
@@ -467,14 +488,14 @@ CREATE TABLE `daily_detail` (
 --
 
 INSERT INTO `daily_detail` (`id`, `condominium`, `daily`, `accountdetail`, `description`, `debit`, `credit`, `created_at`, `updated_at`, `status`) VALUES
-(1, 4, 1, 5, '', 9000.00, 0.00, '2021-01-10 22:14:19', '2021-01-10 22:14:19', 1),
-(2, 4, 1, 10, '', 0.00, 9000.00, '2021-01-10 22:14:19', '2021-01-10 22:14:19', 1),
-(3, 4, 2, 1, '', 2000.00, 0.00, '2021-01-12 21:53:04', '2021-01-12 21:53:04', 1),
-(4, 4, 2, 5, '', 0.00, 2000.00, '2021-01-12 21:53:04', '2021-01-12 21:53:04', 1),
-(5, 4, 3, 4, '', 1000.00, 0.00, '2021-01-13 11:30:49', '2021-01-13 11:30:49', 1),
-(6, 4, 3, 5, '', 0.00, 1000.00, '2021-01-13 11:30:49', '2021-01-13 11:30:49', 1),
-(7, 4, 4, 5, '', 9000.00, 0.00, '2021-01-14 04:45:27', '2021-01-14 04:45:27', 1),
-(8, 4, 4, 10, '', 0.00, 9000.00, '2021-01-14 04:45:28', '2021-01-14 04:45:28', 1);
+(1, 4, 1, 19, '', 12000.00, 0.00, '2021-01-18 22:54:41', '2021-01-18 22:54:41', 1),
+(2, 4, 1, 23, '', 0.00, 12000.00, '2021-01-18 22:54:41', '2021-01-18 22:54:41', 1),
+(3, 4, 2, 12, '', 2000.00, 0.00, '2021-01-18 22:57:53', '2021-01-18 22:57:53', 1),
+(4, 4, 2, 19, '', 0.00, 2000.00, '2021-01-18 22:57:53', '2021-01-18 22:57:53', 1),
+(5, 4, 3, 11, '', 2000.00, 0.00, '2021-01-18 23:10:49', '2021-01-18 23:10:49', 1),
+(6, 4, 3, 19, '', 0.00, 2000.00, '2021-01-18 23:10:49', '2021-01-18 23:10:49', 1),
+(7, 4, 4, 19, '', 24000.00, 0.00, '2021-01-20 03:34:01', '2021-01-20 03:34:01', 1),
+(8, 4, 4, 23, '', 0.00, 24000.00, '2021-01-20 03:34:01', '2021-01-20 03:34:01', 1);
 
 -- --------------------------------------------------------
 
@@ -504,10 +525,7 @@ CREATE TABLE `directive` (
 --
 
 INSERT INTO `directive` (`id`, `condominium`, `name`, `apartment`, `edifice`, `document`, `chargue`, `position`, `period`, `photo_1`, `created_at`, `updated_at`, `status`) VALUES
-(2, 4, 'Delfin Santana', 2, 10, '22500496438', 'ARTESANO', 1, 1, 'd26c231d_16a1_45a7_b6ae_1b46c1f65edb_directive.jpg', '2020-12-29 02:03:26', '2020-12-29 09:05:47', 1),
-(3, 4, 'Robin Marte', 5, 10, '22500496437', 'ARTESANO', 2, 1, 'f11c89ff_d8e0_44f9_8c3a_709ce16a50b9_directive.jpg', '2020-12-29 02:04:23', '2020-12-29 09:05:45', 1),
-(4, 4, 'Juana Marte', 6, 10, '22500496436', 'ARTESANO', 3, 1, 'fcb62a08_be6f_4dca_ba98_56b0dc3f8488_directive.jpg', '2020-12-29 02:10:57', '2020-12-29 09:05:43', 1),
-(5, 4, 'Felix cabrita', 8, 10, '25302753', 'ARTESANO', 4, 1, 'e1ace049_e4fa_48ce_ac81_be2a151d8087_directive.png', '2020-12-29 09:04:55', '2020-12-29 09:04:55', 1);
+(10, 4, 'Jhoan', 30, 22, '22500496439', 'Administrador', 0, 2, 'e0552db1_4c6a_4416_a8b0_c2c0a079160f_directive.jpg', '2021-01-18 12:18:34', '2021-01-18 12:18:34', 1);
 
 -- --------------------------------------------------------
 
@@ -532,19 +550,19 @@ CREATE TABLE `document_type` (
 --
 
 INSERT INTO `document_type` (`id`, `condominium`, `module`, `code`, `name`, `created_at`, `updated_at`, `status`) VALUES
-(1, 4, 3, 'DE', 'DEPOSITOS DE BANCO', '2020-12-30 16:54:36', '2020-12-30 16:54:36', 1),
-(2, 4, 6, 'RI', 'RECIBO DE INGRESO', '2020-12-30 16:54:36', '2020-12-30 16:54:36', 1),
-(3, 4, 6, 'OTR', 'OTRAS ENTRADAS', '2020-12-30 16:54:36', '2020-12-30 16:54:36', 1),
-(4, 4, 6, 'ED', 'ENTRADAS DE DIARIO', '2020-12-30 16:54:36', '2020-12-30 16:54:36', 1),
-(5, 4, 3, 'NCB', 'NOTA DE CREDITO BANCARIA', '2020-12-30 16:54:36', '2020-12-30 16:54:36', 1),
-(6, 4, 6, 'OE', 'OTRAS ENTRADAS', '2020-12-30 16:54:36', '2020-12-30 16:54:36', 1),
-(7, 4, 3, 'NC', 'NOTA DE CREDITO', '2020-12-30 16:54:36', '2020-12-30 16:54:36', 1),
-(8, 4, 6, 'RE', 'RETIRON DE AHORROS', '2020-12-30 16:54:36', '2020-12-30 16:54:36', 1),
-(9, 4, 3, 'NDB', 'NOTAS DE DEBITO BANCARIA', '2020-12-30 16:54:36', '2020-12-30 16:54:36', 1),
-(10, 4, 3, 'ND', 'NOTA DE DEBITO', '2020-12-30 16:54:36', '2020-12-30 16:54:36', 1),
-(11, 4, 6, 'RA', 'RETIRO APORTACION', '2020-12-30 16:54:36', '2020-12-30 16:54:36', 1),
-(12, 4, 6, 'PA', 'PAGOS DE ORDENES ADMINISTRATIVAS', '2020-12-30 16:54:36', '2020-12-30 16:54:36', 1),
-(13, 4, 3, 'CK', 'CHEQUES', '2020-12-30 16:54:37', '2020-12-30 16:54:37', 1);
+(14, 4, 13, 'DE', 'DEPOSITOS DE BANCO', '2021-01-18 13:02:00', '2021-01-18 13:02:00', 1),
+(15, 4, 16, 'RI', 'RECIBO DE INGRESO', '2021-01-18 13:02:00', '2021-01-18 13:02:00', 1),
+(16, 4, 16, 'OTR', 'OTRAS ENTRADAS', '2021-01-18 13:02:00', '2021-01-18 13:02:00', 1),
+(17, 4, 16, 'ED', 'ENTRADAS DE DIARIO', '2021-01-18 13:02:00', '2021-01-18 13:02:00', 1),
+(18, 4, 13, 'NCB', 'NOTA DE CREDITO BANCARIA', '2021-01-18 13:02:00', '2021-01-18 13:02:00', 1),
+(19, 4, 16, 'OE', 'OTRAS ENTRADAS', '2021-01-18 13:02:00', '2021-01-18 13:02:00', 1),
+(20, 4, 13, 'NC', 'NOTA DE CREDITO', '2021-01-18 13:02:00', '2021-01-18 13:02:00', 1),
+(21, 4, 16, 'RE', 'RETIRON DE AHORROS', '2021-01-18 13:02:00', '2021-01-18 13:02:00', 1),
+(22, 4, 13, 'NDB', 'NOTAS DE DEBITO BANCARIA', '2021-01-18 13:02:00', '2021-01-18 13:02:00', 1),
+(23, 4, 13, 'ND', 'NOTA DE DEBITO', '2021-01-18 13:02:00', '2021-01-18 13:02:00', 1),
+(24, 4, 16, 'RA', 'RETIRO APORTACION', '2021-01-18 13:02:01', '2021-01-18 13:02:01', 1),
+(25, 4, 16, 'PA', 'PAGOS DE ORDENES ADMINISTRATIVAS', '2021-01-18 13:02:01', '2021-01-18 13:02:01', 1),
+(26, 4, 13, 'CK', 'CHEQUES', '2021-01-18 13:02:01', '2021-01-18 13:02:01', 1);
 
 -- --------------------------------------------------------
 
@@ -571,18 +589,17 @@ CREATE TABLE `edifice` (
 --
 
 INSERT INTO `edifice` (`id`, `condominium`, `code`, `edifice`, `block`, `manager`, `observation`, `created_at`, `updated_at`, `status`) VALUES
-(1, 4, 'A01', '01', 'A', 'N/A', '', '2020-12-28 15:43:26', '2020-12-28 15:43:26', 1),
-(2, 4, 'A02', '02', 'A', 'N/A', '', '2020-12-28 15:43:48', '2020-12-28 15:43:48', 1),
-(3, 4, 'A03', '03', 'A', 'N/A', '', '2020-12-28 15:44:00', '2020-12-28 15:44:00', 1),
-(4, 4, 'A04', '04', 'A', 'N/A', '', '2020-12-28 15:44:17', '2020-12-28 15:44:17', 1),
-(5, 4, 'A05', '05', 'A', 'N/A', '', '2020-12-28 15:44:34', '2020-12-28 15:44:34', 1),
-(6, 4, 'A06', '06', 'A', 'N/A', '', '2020-12-28 15:44:51', '2020-12-28 15:44:51', 1),
-(7, 4, 'A07', '07', 'A', 'N/A', '', '2020-12-28 15:44:56', '2020-12-28 15:44:56', 1),
-(8, 4, 'A08', '08', 'A', 'N/A', '', '2020-12-28 15:45:05', '2020-12-28 15:45:05', 1),
-(9, 4, 'A09', '09', 'A', 'N/A', '', '2020-12-28 15:45:11', '2020-12-28 15:45:11', 1),
-(10, 4, 'A10', '10', 'A', 'N/A', '', '2020-12-28 15:45:18', '2020-12-28 15:45:18', 1),
-(11, 4, 'A11', '11', 'A', '22500496439', '', '2020-12-28 15:45:30', '2020-12-29 02:15:05', 1),
-(12, 5, 'FASDFASFSFAS', 'SFAS', 'FASDFASF', 'ASDFASD', 'sadfasdf', '2021-01-01 20:38:19', '2021-01-01 20:38:19', 1);
+(13, 4, 'A1', '1', 'A', 'N/A', 'N/A', '2021-01-18 11:25:05', '2021-01-18 11:25:05', 1),
+(14, 4, 'A2', '2', 'A', 'N/A', 'N/A', '2021-01-18 11:25:05', '2021-01-18 11:25:05', 1),
+(15, 4, 'A3', '3', 'A', 'N/A', 'N/A', '2021-01-18 11:25:05', '2021-01-18 11:25:05', 1),
+(16, 4, 'A4', '4', 'A', 'N/A', 'N/A', '2021-01-18 11:25:05', '2021-01-18 11:25:05', 1),
+(17, 4, 'A5', '5', 'A', 'N/A', 'N/A', '2021-01-18 11:25:05', '2021-01-18 11:25:05', 1),
+(18, 4, 'A6', '6', 'A', 'N/A', 'N/A', '2021-01-18 11:25:05', '2021-01-18 11:25:05', 1),
+(19, 4, 'A7', '7', 'A', 'N/A', 'N/A', '2021-01-18 11:25:05', '2021-01-18 11:25:05', 1),
+(20, 4, 'A8', '8', 'A', 'N/A', 'N/A', '2021-01-18 11:25:05', '2021-01-18 11:25:05', 1),
+(21, 4, 'A9', '9', 'A', 'N/A', 'N/A', '2021-01-18 11:25:05', '2021-01-18 11:25:05', 1),
+(22, 4, 'A10', '10', 'A', '22500496439', 'N/A', '2021-01-18 11:25:05', '2021-01-18 11:25:05', 1),
+(23, 4, 'A11', '11', 'A', 'N/A', 'N/A', '2021-01-18 11:25:05', '2021-01-18 11:25:05', 1);
 
 -- --------------------------------------------------------
 
@@ -607,13 +624,6 @@ CREATE TABLE `employees` (
   `update_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
---
--- Volcado de datos para la tabla `employees`
---
-
-INSERT INTO `employees` (`id`, `condominium`, `edifice`, `apartment`, `document`, `name`, `mobile`, `started_work`, `work_type`, `observation`, `status`, `created_at`, `update_at`) VALUES
-(1, 4, 0, 4, '2250049643', 'JUANA MATEO', '809', '2020-12-27', 'lavado', '', 1, '2020-12-29 02:27:14', '2020-12-29 02:27:14');
-
 -- --------------------------------------------------------
 
 --
@@ -636,12 +646,33 @@ CREATE TABLE `heading` (
 --
 
 INSERT INTO `heading` (`id`, `condominium`, `name`, `code`, `created_at`, `updated_at`, `status`) VALUES
-(1, 4, 'ACTIVOS', '1', '2020-12-30 16:54:47', '2020-12-30 16:54:47', 1),
-(2, 4, 'PASIVOS', '2', '2020-12-30 16:54:47', '2020-12-30 16:54:47', 1),
-(3, 4, 'CAPITAL', '3', '2020-12-30 16:54:47', '2020-12-30 16:54:47', 1),
-(4, 4, 'INGRESOS', '4', '2020-12-30 16:54:47', '2020-12-30 16:54:47', 1),
-(5, 4, 'COSTOS', '5', '2020-12-30 16:54:47', '2020-12-30 16:54:47', 1),
-(6, 4, 'GASTOS', '6', '2020-12-30 16:54:47', '2021-01-05 08:27:13', 1);
+(7, 4, 'ACTIVOS', '1', '2021-01-18 13:03:27', '2021-01-18 13:03:27', 1),
+(8, 4, 'PASIVOS', '2', '2021-01-18 13:03:27', '2021-01-18 13:03:27', 1),
+(9, 4, 'CAPITAL', '3', '2021-01-18 13:03:27', '2021-01-18 13:03:27', 1),
+(10, 4, 'INGRESOS', '4', '2021-01-18 13:03:27', '2021-01-18 13:03:27', 1),
+(11, 4, 'COSTOS', '5', '2021-01-18 13:03:27', '2021-01-18 13:03:27', 1),
+(12, 4, 'GASTOS', '6', '2021-01-18 13:03:27', '2021-01-18 21:35:08', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `history_auxiliary`
+--
+
+DROP TABLE IF EXISTS `history_auxiliary`;
+CREATE TABLE `history_auxiliary` (
+  `id` int(11) NOT NULL,
+  `condominium` int(11) NOT NULL,
+  `file` varchar(100) COLLATE utf8_spanish_ci NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `history_auxiliary`
+--
+
+INSERT INTO `history_auxiliary` (`id`, `condominium`, `file`, `created_at`) VALUES
+(1, 4, 'auxiliar_20210118230529_CDLJ0004.pdf', '2021-01-18 23:05:29');
 
 -- --------------------------------------------------------
 
@@ -664,15 +695,6 @@ CREATE TABLE `incidents` (
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
-
---
--- Volcado de datos para la tabla `incidents`
---
-
-INSERT INTO `incidents` (`id`, `condominium`, `apartment`, `user`, `user_type`, `description`, `photo_1`, `photo_2`, `status`, `observations`, `created_at`, `updated_at`) VALUES
-(1, 4, 0, 1, 1, 'prueba', 'adffe89c_54cc_4a90_baf7_c6335c7cce56_1_1_incidents.jpg', 'adffe89c_54cc_4a90_baf7_c6335c7cce56_1_1_incidents.png', 2, 'Fecha de reporte: 2020-12-29 01:42:02 - hvbvc <br> Fecha de reporte: 2021-01-05 21:12:18 - fd', '2020-12-29 01:41:13', '2021-01-05 21:12:18'),
-(2, 4, 0, 1, 1, 'PRUEBA', 'no_image_found.png', 'no_image_found.png', 2, 'Fecha de reporte: 2021-01-05 21:52:17 - re', '2021-01-05 21:23:02', '2021-01-05 21:52:17'),
-(3, 4, 4, 3, 6, 'Prueba 2', 'f10f7100_595a_4e61_9da7_f8f4aecbfabf_3_6_incidents.jpg', 'no_image_found.png', 2, 'Fecha de reporte: 2021-01-05 21:49:02 - aaee <br> Fecha de reporte: 2021-01-05 21:49:31 - aaee <br> Fecha de reporte: 2021-01-05 21:49:39 - aaee', '2021-01-05 21:48:05', '2021-01-05 21:49:39');
 
 -- --------------------------------------------------------
 
@@ -714,16 +736,16 @@ CREATE TABLE `module` (
 --
 
 INSERT INTO `module` (`id`, `condominium`, `code`, `name`, `created_at`, `updated_at`, `status`) VALUES
-(1, 4, 'AP', 'APORTACIONES', '2020-12-30 16:54:22', '2020-12-30 16:54:22', 1),
-(2, 4, 'AT', 'OPERACIONES', '2020-12-30 16:54:22', '2020-12-30 16:54:22', 1),
-(3, 4, 'CB', 'CONTROL BANCARIO', '2020-12-30 16:54:22', '2020-12-30 16:54:22', 1),
-(4, 4, 'CC', 'CUENTAS POR COBRAR', '2020-12-30 16:54:22', '2020-12-30 16:54:22', 1),
-(5, 4, 'CF', 'CERTIFICADOS FINANCIEROS', '2020-12-30 16:54:22', '2020-12-30 16:54:22', 1),
-(6, 4, 'CG', 'CONTABILIDAD GENERAL', '2020-12-30 16:54:22', '2020-12-30 16:54:22', 1),
-(7, 4, 'CP', 'CUENTAS POR PAGAR', '2020-12-30 16:54:22', '2020-12-30 16:54:22', 1),
-(8, 4, 'DP', 'DEPOSITOS DE AHORROS', '2020-12-30 16:54:23', '2020-12-30 16:54:23', 1),
-(9, 4, 'IN', 'INVENTARIO', '2020-12-30 16:54:23', '2020-12-30 16:54:23', 1),
-(10, 4, 'PR', 'PRESTAMOS', '2020-12-30 16:54:23', '2020-12-30 16:54:23', 1);
+(11, 4, 'AP', 'APORTACIONES', '2021-01-18 13:01:14', '2021-01-18 13:01:14', 1),
+(12, 4, 'AT', 'OPERACIONES', '2021-01-18 13:01:14', '2021-01-18 13:01:14', 1),
+(13, 4, 'CB', 'CONTROL BANCARIO', '2021-01-18 13:01:14', '2021-01-18 13:01:14', 1),
+(14, 4, 'CC', 'CUENTAS POR COBRAR', '2021-01-18 13:01:14', '2021-01-18 13:01:14', 1),
+(15, 4, 'CF', 'CERTIFICADOS FINANCIEROS', '2021-01-18 13:01:14', '2021-01-18 13:01:14', 1),
+(16, 4, 'CG', 'CONTABILIDAD GENERAL', '2021-01-18 13:01:14', '2021-01-18 13:01:14', 1),
+(17, 4, 'CP', 'CUENTAS POR PAGAR', '2021-01-18 13:01:14', '2021-01-18 13:01:14', 1),
+(18, 4, 'DP', 'DEPOSITOS DE AHORROS', '2021-01-18 13:01:14', '2021-01-18 13:01:14', 1),
+(19, 4, 'IN', 'INVENTARIO', '2021-01-18 13:01:14', '2021-01-18 13:01:14', 1),
+(20, 4, 'PR', 'PRESTAMOS', '2021-01-18 13:01:14', '2021-01-18 13:01:14', 1);
 
 -- --------------------------------------------------------
 
@@ -748,7 +770,7 @@ CREATE TABLE `period` (
 --
 
 INSERT INTO `period` (`id`, `condominium`, `name`, `start`, `end`, `status`, `created_at`, `updated_at`) VALUES
-(1, 4, 'JUNTA 2021', '2021-01-01', '2021-12-31', 1, '2020-12-29 00:36:07', '2021-01-05 00:06:09');
+(2, 4, '2021-2022', '2021-01-01', '2021-12-31', 1, '2021-01-18 12:02:05', '2021-01-18 12:02:16');
 
 -- --------------------------------------------------------
 
@@ -816,16 +838,6 @@ CREATE TABLE `reservation` (
   `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
---
--- Volcado de datos para la tabla `reservation`
---
-
-INSERT INTO `reservation` (`id`, `condominium`, `apartment`, `commonarea`, `quantity_persons`, `start_time`, `start_timestamp`, `ending_time`, `ending_timestamp`, `reservation_date`, `status`, `observations`, `created_at`, `updated_at`) VALUES
-(1, 4, 7, 1, 12, '21:38:00', 1608673080, '21:50:00', 1608673800, '2020-12-22', -1, 'Aprobado el 2020-12-23 01:40:58 : SI | Declinado el 2020-12-29 01:39:22 : s', '2020-12-23 01:40:30', '2020-12-29 01:39:22'),
-(2, 4, 7, 3, 10, '22:28:00', 1608676080, '22:28:00', 1608676080, '2020-12-22', 0, '', '2020-12-23 02:28:39', '2020-12-23 02:28:39'),
-(3, 4, 7, 4, 15, '22:28:00', 1608762480, '22:28:00', 1608762480, '2020-12-23', 0, '', '2020-12-23 02:28:58', '2020-12-23 02:28:58'),
-(4, 4, 2, 1, 4, '21:39:00', 1609191540, '21:39:00', 1609191540, '2020-12-28', 1, 'Aprobado el 2021-01-05 09:19:37 : fg', '2020-12-29 01:39:56', '2021-01-05 09:19:37');
-
 -- --------------------------------------------------------
 
 --
@@ -845,19 +857,6 @@ CREATE TABLE `reset_password` (
   `updatedBy` bigint(20) DEFAULT NULL,
   `updatedDtm` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Volcado de datos para la tabla `reset_password`
---
-
-INSERT INTO `reset_password` (`id`, `email`, `activation_id`, `agent`, `client_ip`, `isDeleted`, `createdBy`, `createdDtm`, `updatedBy`, `updatedDtm`) VALUES
-(1, 'camperanny63@gmail.com', 'mNsj5c9FtvVkae6', 'Chrome 86.0.4240.183', '::1', 0, 1, '2020-12-09 16:27:48', NULL, NULL),
-(2, 'userdemo@gmail.com', 'yFuvzlOVgT61YJE', 'Chrome 86.0.4240.183', '::1', 0, 1, '2021-01-12 11:55:08', NULL, NULL),
-(3, 'userdemo@gmail.com', 'R3JrD4YKIpAXTbq', 'Chrome 86.0.4240.183', '::1', 0, 1, '2021-01-12 12:00:10', NULL, NULL),
-(4, 'camperanny63@gmail.com', 'zeCIf9p6A8tqPT4', '1', '186.88.43.174', 0, 1, '2021-01-10 20:27:42', NULL, NULL),
-(5, 'camperanny63@gmail.com', 'RYFQIAaZUlWndSP', '1', '186.88.43.174', 0, 1, '2021-01-10 20:30:18', NULL, NULL),
-(6, 'camperanny63@gmail.com', '6KIjraAs38JGCTQ', '1', '186.88.43.174', 0, 1, '2021-01-10 20:32:59', NULL, NULL),
-(7, 'camperanny63@gmail.com', 'LplIx3EwAimhynr', '0', '::1', 0, 8, '2021-01-13 14:30:47', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -884,9 +883,7 @@ CREATE TABLE `services` (
 --
 
 INSERT INTO `services` (`id`, `condominium`, `code`, `name`, `amount`, `date_load`, `last_upload_date`, `created_at`, `updated_at`, `status`) VALUES
-(4, 4, '2021', 'AGUA', 500.00, '2021-01-10', '2021-01-05', '2021-01-05 22:15:06', '2021-01-10 11:47:53', 1),
-(5, 4, '20215', 'MANTENIMIENTO', 1000.00, '2021-01-14', '2021-01-14', '2021-01-05 22:15:30', '2021-01-14 04:45:27', 1),
-(6, 5, '064869', 'RETENAPP', 2553.69, '2021-01-09', '0000-00-00', '2021-01-13 03:43:35', '2021-01-13 03:43:35', 1);
+(8, 4, '2001', 'MANTENIMIENTO GENERAL', 1000.00, '2021-01-20', '2021-01-20', '2021-01-18 12:27:55', '2021-01-20 03:34:01', 1);
 
 -- --------------------------------------------------------
 
@@ -912,7 +909,7 @@ CREATE TABLE `tag` (
 --
 
 INSERT INTO `tag` (`id`, `condominium`, `serial`, `vehicle`, `apartment`, `created_at`, `updated_at`, `status`, `observations`) VALUES
-(1, 4, 'A10201000000', 1, 4, '2020-12-29 02:26:34', '2020-12-29 02:26:44', 1, '');
+(2, 4, 'A10201000000', 2, 30, '2021-01-18 11:45:30', '2021-01-18 20:23:57', 1, '');
 
 -- --------------------------------------------------------
 
@@ -942,15 +939,11 @@ CREATE TABLE `tenant` (
 --
 
 INSERT INTO `tenant` (`id`, `condominium`, `document`, `name`, `mobile`, `landline_phone`, `email`, `password`, `type`, `balance`, `created_at`, `updated_at`, `status`) VALUES
-(1, 4, '25302753', 'Felix cabrita', '4147599825', '4147599825', 'camperanny63@gmail.com', '$2y$10$esQ01E1QwVpqeEk/A9Uu6ewhnQN4IRUUua1D3w9yukoEUATsm/oIe', 6, 0.00, '2021-01-13 05:44:20', '2021-01-13 05:44:20', 1),
-(2, 4, '123456789', 'Octonove', '5165656', '516156651', 'octonovemarketing@gmail.com', '', 7, 0.00, '2020-12-28 22:05:29', '2020-12-28 22:05:29', 1),
-(3, 4, '22500496439', 'Jhoan Rosado', '4147599825', '4147599825', 'camperanny63@gmail.com', '$2y$10$kLiKd9CTxkvE8Kk/fh8vgeWZeLveNZbP7QoDDxhMeoDYH9T4LWCFW', 6, 0.00, '2021-01-10 20:34:31', '2021-01-10 20:34:31', 1),
-(4, 4, '22500496438', 'Delfin Santana', '5165656', '516156651', 'octonovemarketing@gmail.com', '', 7, 0.00, '2020-12-29 01:29:10', '2020-12-29 01:29:10', 1),
-(5, 4, '22500496437', 'Robin Marte', '5165656', '516156651', '', '', 6, 0.00, '2020-12-29 01:29:10', '2020-12-29 01:29:10', 1),
-(6, 4, '22500496436', 'Juana Marte', '', '', '', '', 6, 0.00, '2020-12-29 01:29:10', '2020-12-29 01:29:10', 1),
-(7, 4, '22500496435', 'Luis Mateo', '', '', '', '', 6, 0.00, '2020-12-29 01:29:10', '2020-12-29 01:29:10', 1),
-(8, 10, '25302753', 'FELIX CABRITA', '04147599825', '04147599825', 'felix-segundo@hotmail.com', '', 6, 0.00, '2021-01-13 10:45:34', '2021-01-13 10:45:34', 1),
-(9, 10, '123456789', 'BENITO CABRITA', '04147599825', '04147599825', 'udearaj@gmail.com', '', 7, 0.00, '2021-01-13 10:35:05', '2021-01-13 10:35:05', 1);
+(10, 4, '25302753', 'Felix cabrita', '4147599825', '4147599825', 'camperanny63@gmail.com', '$2y$10$.tNAmpfgb03kbOqpSbth..ZeE0WDKVCaeR5O/aLkDk5CzgrbyoiCu', 6, 0.00, '2021-01-18 11:57:36', '2021-01-18 11:57:36', 1),
+(11, 4, '123456789', 'Octonove', '5165656', '516156651', 'octonovemarketing@gmail.com', '', 7, 0.00, '2021-01-18 11:57:36', '2021-01-18 11:57:36', 1),
+(12, 4, '22500496439', 'Jhoan', '-4137268513', '-3115286523', 'jmrosadoq@gmail.com', '$2y$10$Mw1foQ4XaLmN.nAoo9JBh.J1vG4i5QV32alXrtTMV4SdpnTQxZN3y', 6, 0.00, '2021-01-18 11:57:37', '2021-01-18 11:57:37', 1),
+(13, 4, '22500496438', 'Manuel', '-8279702682', '-6746729697', 'todoofficerd@gmail.com', '$2y$10$HIVDetDbJudOnSKKsuseaOeYjpxMbRsu4ktiy1iGS6thC9xoEWFjm', 7, 0.00, '2021-01-18 11:57:37', '2021-01-18 11:57:37', 1),
+(14, 4, '22500496437', 'Rosado', '-12422136851', '-10378172871', 'grandeenexcel@gmail.com', '$2y$10$.dzsVxmtSax1Knf0bBZIYOg2QjucnltD3m0yDIgIcQscGfX9PUL8i', 6, 0.00, '2021-01-18 11:57:37', '2021-01-18 11:57:37', 1);
 
 -- --------------------------------------------------------
 
@@ -981,9 +974,10 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `condominium`, `username`, `password`, `permissions`, `name`, `max_user_tenant`, `max_condominium`, `mobile`, `status`, `type`, `generates_report`, `created_at`, `updated_at`) VALUES
-(1, 4, 'userdemo@gmail.com', '$2y$10$esQ01E1QwVpqeEk/A9Uu6ewhnQN4IRUUua1D3w9yukoEUATsm/oIe', '{ \"users\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"apartments\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 },\"visitor\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"edifices\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"tenants\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"tags\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"services\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"reservations\": { \"C\": 1, \"R\":1, \"U\": 1, \"D\": 1 }, \"period\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"directive\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"setting\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"incidents\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"vigilant\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"commonarea\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"Payments\": { \"C\": 0, \"R\": 1, \"U\": 0, \"D\": 1 }, \"bills\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"vehicles\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"employees\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"shopping\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"condominium_items\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"condominium\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"pay\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 } }', 'Felix Cabrita', 0, 1, '', 1, 1, 1, '2020-11-19 11:35:11', '2021-01-13 09:46:22'),
-(3, 4, 'felix-segundo@hotmail.com', '$2y$10$esQ01E1QwVpqeEk/A9Uu6ewhnQN4IRUUua1D3w9yukoEUATsm/oIe', '{ \"users\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 },\"visitor\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"apartments\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"edifices\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"tenants\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"tags\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"services\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"reservations\": {\"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"period\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"directive\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"setting\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"incidents\": { \"C\": 0, \"R\":0, \"U\": 0, \"D\": 0 }, \"vigilant\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"commonarea\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"Payments\": { \"C\": 1, \"R\": 1, \"U\": 0, \"D\": 0 }, \"bills\": {  \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 0}, \"vehicles\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"employees\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0  }, \"shopping\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"condominium_items\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"condominium\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"pay\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 0 } }', 'Cabritei', 0, 1, '12415425134', 1, 3, 1, '2021-01-12 21:46:11', '2021-01-13 09:46:20'),
-(4, 10, 'camperanny63@gmail.com', '$2y$10$esQ01E1QwVpqeEk/A9Uu6ewhnQN4IRUUua1D3w9yukoEUATsm/oIe', '{ \"users\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"apartments\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 },\"visitor\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"edifices\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"tenants\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"tags\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"services\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"reservations\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"period\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"directive\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"setting\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"incidents\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"vigilant\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"commonarea\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"Payments\": { \"C\": 0, \"R\": 1, \"U\": 0, \"D\": 1 }, \"bills\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"vehicles\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"employees\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"shopping\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"condominium_items\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"condominium\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"pay\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 } }', 'Sandra Causado', 0, 2, '1234', 1, 1, 1, '2021-01-13 03:34:59', '2021-01-13 10:13:39');
+(46, 4, 'jmrosadoq@gmail.com', '$2y$10$gBUcwSEkQnnPsIpqycgGceTKDptnXjG2Y8ekgQavT72nhnQxrplMW', '{ \"users\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"apartments\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 },\"visitor\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"edifices\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"tenants\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"tags\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"services\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"reservations\": { \"C\": 1, \"R\":1, \"U\": 1, \"D\": 1 }, \"period\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"directive\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"setting\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"incidents\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"vigilant\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"commonarea\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"Payments\": { \"C\": 0, \"R\": 1, \"U\": 0, \"D\": 1 }, \"bills\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"vehicles\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"employees\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"shopping\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"condominium_items\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"condominium\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"pay\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 } }', 'JHOAN MANUEL', 20, 1, '899', 1, 1, 1, '2021-01-18 11:01:08', '2021-01-18 11:14:39'),
+(47, 4, 'caja@gmail.com', '$2y$10$W1MacnBkKnLGSf4DgpNhI.ZQFzm3imBGUqktJ5X5Y8ToykKGyncA6', '{ \"users\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 },\"visitor\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"apartments\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"edifices\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"tenants\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"tags\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"services\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"reservations\": {\"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"period\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"directive\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"setting\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"incidents\": { \"C\": 0, \"R\":0, \"U\": 0, \"D\": 0 }, \"vigilant\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"commonarea\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"Payments\": { \"C\": 1, \"R\": 1, \"U\": 0, \"D\": 0 }, \"bills\": {  \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 0}, \"vehicles\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"employees\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0  }, \"shopping\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"condominium_items\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"condominium\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"pay\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 0 } }', 'Caja', 0, 0, '8095655', 1, 3, 1, '2021-01-18 11:18:27', '2021-01-18 11:18:27'),
+(48, 4, 'contabilidad@gmail.com', '$2y$10$won1Vt7wE8aADPvOix0mNOjEiL16J5lGJ496qS1mY9y4W3ayUk9SO', '{ \"users\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 },\"visitor\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"apartments\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"edifices\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"tenants\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"tags\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"services\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"reservations\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 0 }, \"period\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"directive\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"setting\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"incidents\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 0 }, \"vigilant\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"commonarea\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"Payments\": { \"C\": 0, \"R\": 1, \"U\": 0, \"D\": 1 }, \"bills\": {  \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 1 }, \"vehicles\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"employees\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0  }, \"shopping\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"condominium_items\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"condominium\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"pay\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 0 } }', 'Contabilidad', 0, 0, '8', 1, 4, 1, '2021-01-18 11:19:03', '2021-01-18 11:19:03'),
+(49, 4, 'vigilante@gmail.com', '$2y$10$OzC3TP1I6B9CTSTn8Azt/.EaFHtaPjfTqhOkT0b0IzDGwfzDFFnZi', '{ \"users\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"visitor\": { \"C\":1, \"R\": 1, \"U\": 0, \"D\": 0 }\"apartments\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"edifices\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"tenants\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"tags\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"services\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"reservations\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"period\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"directive\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"setting\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"incidents\": { \"C\": 1, \"R\": 1, \"U\": 1, \"D\": 0 }, \"vigilant\": { \"C\": 1, \"R\":1, \"U\": 0, \"D\": 0 }, \"commonarea\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"Payments\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"bills\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"vehicles\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0  }, \"employees\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"shopping\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"condominium_items\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"condominium\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 }, \"pay\": { \"C\": 0, \"R\": 0, \"U\": 0, \"D\": 0 } }', 'Vigilante', 0, 0, '8', 1, 5, 1, '2021-01-18 11:19:39', '2021-01-18 11:19:39');
 
 -- --------------------------------------------------------
 
@@ -1012,7 +1006,7 @@ CREATE TABLE `vehicles` (
 --
 
 INSERT INTO `vehicles` (`id`, `condominium`, `tenant`, `licence_plate`, `model`, `brand`, `year`, `colour`, `condition_car`, `status`, `updated_at`, `created_at`) VALUES
-(1, 4, 3, 'A5962466', 'FOCUS', 'FORD', 2006, 'GRIS', 'X', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00');
+(2, 4, 12, 'A5656689', 'FOCUS', 'FORD', 2006, 'GRIS', 'USADO', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -1035,16 +1029,6 @@ CREATE TABLE `vigilant` (
   `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
---
--- Volcado de datos para la tabla `vigilant`
---
-
-INSERT INTO `vigilant` (`id`, `condominium`, `edifice`, `apartment`, `licence_plate`, `observation`, `status`, `user`, `visitor`, `created_at`, `updated_at`) VALUES
-(1, 4, 10, 1, '', '', 1, 1, 1, '2020-12-29 00:40:42', '2020-12-29 00:40:42'),
-(2, 4, 10, 5, '', '', 1, 1, 2, '2020-12-29 02:20:44', '2020-12-29 02:20:44'),
-(3, 4, 10, 7, '', '', 1, 1, 3, '2020-12-29 02:21:53', '2020-12-29 02:21:53'),
-(4, 4, 10, 7, '', '', 2, 1, 3, '2020-12-29 02:22:49', '2020-12-29 02:22:49');
-
 -- --------------------------------------------------------
 
 --
@@ -1064,16 +1048,6 @@ CREATE TABLE `visitor` (
   `observation` text COLLATE utf8_spanish_ci NOT NULL,
   `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
-
---
--- Volcado de datos para la tabla `visitor`
---
-
-INSERT INTO `visitor` (`id`, `condominium`, `document`, `name`, `mobile`, `type`, `status`, `created_at`, `observation`, `updated_at`) VALUES
-(1, 4, '123456789', 'JHOAN R', '809-655-6566', 1, 1, '2020-12-29 00:40:42', '', '2020-12-29 00:40:42'),
-(2, 4, '225004964', 'PEDRO', '806', 1, 1, '2020-12-29 02:20:44', '', '2020-12-29 02:20:44'),
-(3, 4, '2020', 'JUAN MILIANO', '809', 1, 0, '2020-12-29 02:21:53', 'Suspendido por: ROBO', '2020-12-29 02:23:24'),
-(4, 4, '2250049643', 'JUANA MATEO', '809', 2, 1, '2020-12-29 02:27:14', '', '2020-12-29 02:34:32');
 
 --
 -- Índices para tablas volcadas
@@ -1178,6 +1152,12 @@ ALTER TABLE `heading`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `history_auxiliary`
+--
+ALTER TABLE `history_auxiliary`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `incidents`
 --
 ALTER TABLE `incidents`
@@ -1279,37 +1259,37 @@ ALTER TABLE `visitor`
 -- AUTO_INCREMENT de la tabla `account_control`
 --
 ALTER TABLE `account_control`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT de la tabla `account_detail`
 --
 ALTER TABLE `account_detail`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT de la tabla `account_higher`
 --
 ALTER TABLE `account_higher`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT de la tabla `apartment`
 --
 ALTER TABLE `apartment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT de la tabla `assigning_apartment`
 --
 ALTER TABLE `assigning_apartment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `bills`
 --
 ALTER TABLE `bills`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT de la tabla `cashier`
@@ -1321,7 +1301,7 @@ ALTER TABLE `cashier`
 -- AUTO_INCREMENT de la tabla `commonarea`
 --
 ALTER TABLE `commonarea`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `condominium`
@@ -1345,19 +1325,19 @@ ALTER TABLE `daily_detail`
 -- AUTO_INCREMENT de la tabla `directive`
 --
 ALTER TABLE `directive`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `document_type`
 --
 ALTER TABLE `document_type`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT de la tabla `edifice`
 --
 ALTER TABLE `edifice`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT de la tabla `employees`
@@ -1369,7 +1349,13 @@ ALTER TABLE `employees`
 -- AUTO_INCREMENT de la tabla `heading`
 --
 ALTER TABLE `heading`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT de la tabla `history_auxiliary`
+--
+ALTER TABLE `history_auxiliary`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `incidents`
@@ -1387,13 +1373,13 @@ ALTER TABLE `last_login`
 -- AUTO_INCREMENT de la tabla `module`
 --
 ALTER TABLE `module`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT de la tabla `period`
 --
 ALTER TABLE `period`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `report_pay_detail`
@@ -1423,31 +1409,31 @@ ALTER TABLE `reset_password`
 -- AUTO_INCREMENT de la tabla `services`
 --
 ALTER TABLE `services`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `tag`
 --
 ALTER TABLE `tag`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `tenant`
 --
 ALTER TABLE `tenant`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT de la tabla `vehicles`
 --
 ALTER TABLE `vehicles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `vigilant`
@@ -1465,14 +1451,8 @@ DELIMITER $$
 --
 -- Eventos
 --
-DROP EVENT `4_SERVICE`$$
-CREATE DEFINER=`root`@`localhost` EVENT `4_SERVICE` ON SCHEDULE EVERY 1 MONTH STARTS '2021-01-05 22:20:00' ON COMPLETION NOT PRESERVE ENABLE DO CALL `setBills`(4,4)$$
-
-DROP EVENT `6_SERVICE`$$
-CREATE DEFINER=`root`@`localhost` EVENT `6_SERVICE` ON SCHEDULE EVERY 1 MONTH STARTS '2021-01-09 22:20:00' ON COMPLETION NOT PRESERVE ENABLE DO CALL `setBills`(6,5)$$
-
-DROP EVENT `5_SERVICE`$$
-CREATE DEFINER=`root`@`localhost` EVENT `5_SERVICE` ON SCHEDULE EVERY 1 MONTH STARTS '2021-01-14 22:20:00' ON COMPLETION NOT PRESERVE ENABLE DO CALL `setBills`(5,4)$$
+DROP EVENT `8_SERVICE`$$
+CREATE DEFINER=`root`@`localhost` EVENT `8_SERVICE` ON SCHEDULE EVERY 1 MONTH STARTS '2021-01-21 01:00:00' ON COMPLETION NOT PRESERVE ENABLE DO CALL `setBills`(8,4)$$
 
 DELIMITER ;
 COMMIT;

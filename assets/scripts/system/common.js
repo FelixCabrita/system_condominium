@@ -45,22 +45,22 @@ function report_balance_verification() {
     document.forms["report_balance_verification"].submit();
 }
 jQuery(document).ready(function() {
+    if (condominios != "0") {
+        $.ajax({
+            url: baseURL + 'obtener_rubros',
+            type: "GET",
+            dataType: "json",
+            success: function(data) {
 
-    $.ajax({
-        url: baseURL + 'obtener_rubros',
-        type: "GET",
-        dataType: "json",
-        success: function(data) {
-
-            $('select[name="heading_2_ra"]').empty();
-            $('select[name="heading_1_ra"]').empty();
-            $.each(data, function(key, value) {
-                $('select[name="heading_1_ra"]').append('<option value="' + value.id + '" ' + (value.code == 4 ? 'selected' : '') + '>' + value.code + " - " + value.name + '</option>');
-                $('select[name="heading_2_ra"]').append('<option value="' + value.id + '" ' + (value.code == 6 ? 'selected' : '') + '>' + value.code + " - " + value.name + '</option>');
-            });
-        }
-    });
-
+                $('select[name="heading_2_ra"]').empty();
+                $('select[name="heading_1_ra"]').empty();
+                $.each(data, function(key, value) {
+                    $('select[name="heading_1_ra"]').append('<option value="' + value.id + '" ' + (value.code == 4 ? 'selected' : '') + '>' + value.code + " - " + value.name + '</option>');
+                    $('select[name="heading_2_ra"]').append('<option value="' + value.id + '" ' + (value.code == 6 ? 'selected' : '') + '>' + value.code + " - " + value.name + '</option>');
+                });
+            }
+        });
+    }
     jQuery(document).on("click", ".activ", function() {
         var userId = $(this).data("userid"),
             isactive = $(this).data("isactive"),
@@ -2381,6 +2381,60 @@ jQuery(document).ready(function() {
             showLoaderOnConfirm: true,
             preConfirm: () => {
                 document.forms["sndParameter"].submit();
+            }
+        }])
+    });
+
+    jQuery(document).on("click", ".deleteAuxiliary", function() {
+        var userId = $(this).data("userid"),
+            name = $(this).data("name"),
+            file = $(this).data("file"),
+            hitURL = baseURL + "eliminar_auxiliar";
+
+        const data = new FormData();
+        data.append('id', userId);
+        data.append('file', file);
+
+        Swal.queue([{
+            title: "¿Desea a eliminar este pdf de auxiliar?",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'SI!',
+            cancelButtonText: 'No, cancelar!',
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return fetch(hitURL, {
+                        method: 'POST',
+                        body: data
+                    })
+                    .then(response => response.json())
+                    .then(data => (data.status ?
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: "Reporte eliminado con exito",
+                            showConfirmButton: false,
+                            timer: 2000
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+
+                            window.location = baseURL + "historial_auxiliar"
+
+                        }) :
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: "Por alguna razon no podemos eliminar este pdf",
+                            showConfirmButton: false,
+                            timer: 2000
+                        })))
+                    .catch(() => {
+                        Swal.insertQueueStep({
+                            icon: 'error',
+                            title: 'acceso denegado..!'
+                        })
+                    })
             }
         }])
     });

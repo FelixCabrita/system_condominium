@@ -59,7 +59,7 @@ $route['logUser'] = 'login/loguser';
 $route['validar_condominio'] = 'login/valid_condominium';
 $route['entrar_propietario'] = 'login/condominium_owner';
 $route['logcondominium'] = 'login/logcondominium';
-$route['dashboard'] = 'user';
+$route['tablero'] = 'dashboard';
 $route['logout'] = 'user/logout'; 
 $route['usuarios'] = "user/userListing";
 $route['addNew'] = "user/addNew";
@@ -410,13 +410,14 @@ $route["reporte_factura_asiento/(:any)"] = 'generate_pdf/bill_daily/$1';
 $route["reporte_balance_comprobacion"] = 'generate_pdf/balance_verification'; 
 $route["reporte_resultado_acumulado"] = 'generate_pdf/accumulated_result'; 
 $route["reporte_cierre_caja"] = 'generate_pdf/cashier_closing'; 
-$route["reporte_cierre_caja/(:any)"] = 'generate_pdf/cashier_closing/$1'; 
-
+$route["reporte_cierre_caja/(:any)"] = 'generate_pdf/cashier_closing/$1';  
 $route["imprimir_etiqueta"] = 'generate_pdf/print_tag';
-$route["imprimir_etiqueta/(:any)"] = 'generate_pdf/print_tag/$1'; 
-
+$route["imprimir_etiqueta/(:any)"] = 'generate_pdf/print_tag/$1';  
 $route["imprimir_condominio"] = 'generate_pdf/print_condominium';
-$route["imprimir_condominio/(:any)"] = 'generate_pdf/print_condominium/$1'; 
+$route["imprimir_condominio/(:any)"] = 'generate_pdf/print_condominium/$1';  
+$route["auxiliar"] = 'generate_pdf/auxiliary'; 
+$route["historial_auxiliar"] = 'generate_pdf/history_auxiliary'; 
+$route["eliminar_auxiliar"] = 'generate_pdf/deleteAuxiliary'; 
 /* SEND EMAIL */
 $route["send_bill"] = 'send_email/send_bill';  
 /* End of file routes.php */

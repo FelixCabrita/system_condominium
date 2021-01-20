@@ -214,8 +214,6 @@ class CI_DB_mysqli_driver extends CI_DB {
 			}
 
 			return $this->_mysqli;
-		}else{
-			redirect("validar_condominio");
 		}
 
 		return FALSE;

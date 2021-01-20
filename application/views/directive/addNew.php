@@ -82,7 +82,7 @@
                     </div>  
                     <div class="form-group col-sm-6">
                         <label for="file1" class="">Foto 1 (opcional)</label>
-                        <input name="file1" id="file1" type="file" class="form-control-file"  accept="image/png, image/jpeg, image/jpg" aria-describedby="image">
+                        <input name="file1" id="file1" type="file" class="form-control-file"  accept="image/jpeg, image/jpg" aria-describedby="image">
                         <small class="form-text text-muted">Por favor sea lo mas explicito en la foto y evite cargar fotos borrosas.</small>
                     </div>   
                 </div> 

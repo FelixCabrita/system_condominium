@@ -15,7 +15,11 @@
     <script src="<?php echo base_url(); ?>assets/scripts/jquery-3.5.1.min.js"></script>  
     <script> var baseURL = "<?php echo base_url(); ?>",c= "<?php echo  $condominium; ?>"; </script>   
 </head>
-
+<style>
+.metismenu-icon{
+    color:#000 !important;
+    opacity: 1 !important;
+}</style>
 <body>
     <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
         <div class="app-header header-shadow"> 
@@ -62,6 +66,7 @@
                                         <option value ="<?php echo $record->id ?>" <?php echo $record->id==$condominium?"selected":"" ?>><?php echo $record->name ?></option>
                                         <?php  }  }  ?>
                                     </select> 
+                                    <script> var condominios = "<?php echo COUNT($condominiumRecords) ?>";</script>
                                 </a>
                                 
                             </li> 
@@ -76,6 +81,7 @@
                     </li> 
                         </ul>
                     </div>
+                    <script> var condominios = 1;</script>
                 <?php  } ?>
                 <div class="app-header-right">
                     <div class="header-btn-lg pr-0">
@@ -580,7 +586,7 @@
                             <li class="app-sidebar__heading">INICIO</li>
                             <li><!--class="mm-active"-->
                                 <a href="<?php echo base_url(); ?>" >
-                                    <i class="metismenu-icon pe-7s-graph3"></i> Dashboard
+                                    <i class="metismenu-icon pe-7s-graph3"></i> TABLERO
                                 </a>
                             </li>
                             <?php  if($rol==ROLE_ADMIN){ ?>
@@ -744,6 +750,16 @@
                                         <li> 
                                             <a   href="#" data-toggle="modal" data-target="#report_ra">
                                                 <i class="metismenu-icon pe-7s-user"></i> RESULTADO ACOMULADO
+                                            </a>
+                                        </li> 
+                                        <li> 
+                                            <a   href="<?php echo base_url(); ?>auxiliar" target="_blank">
+                                                <i class="metismenu-icon pe-7s-user"></i> AUXILIAR
+                                            </a>
+                                        </li>
+                                        <li> 
+                                            <a   href="<?php echo base_url(); ?>historial_auxiliar">
+                                                <i class="metismenu-icon pe-7s-user"></i> HISTORIAL DE AUXILIAR
                                             </a>
                                         </li>
                                     </ul> 

@@ -55,7 +55,7 @@ class Directive extends BaseController
     public function index()
     {
         $this->globalApp['pageTitle'] = NAME_SYSTEM . ' Escritorio';
-        $this->loadViews("dashboard", $this->globalApp, null, null);
+        $this->loadViews("tablero", $this->globalApp, null, null);
     }
 
     /**
@@ -319,7 +319,7 @@ class Directive extends BaseController
         $this->load->helper(array('form', 'url'));
         $this->load->helper('file');
         $config['upload_path'] = PHOTO_PATH_D;
-        $config['allowed_types'] = 'png|jpg|jpeg';
+        $config['allowed_types'] = 'jpg|jpeg';
         $config['file_name'] = $this->UUIDv4() . "_directive";
         $this->load->library('upload', $config);
 

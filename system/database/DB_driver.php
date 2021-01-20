@@ -429,12 +429,12 @@ abstract class CI_DB_driver {
 			// We still don't have a connection?
 			if ( ! $this->conn_id)
 			{
-				redirect("validar_condominio");
-				//log_message('error', 'Unable to connect to the database');
+				
+				log_message('error', 'Unable to connect to the database');
 
 				if ($this->db_debug)
 				{
-					redirect("validar_condominio");
+					
 					$this->display_error('db_unable_to_connect');
 				}
 

@@ -38,7 +38,7 @@ class condominium extends BaseController
     public function index()
     {
         $this->globalApp['pageTitle'] = NAME_SYSTEM . ' : Escritorio';
-        $this->loadViews("dashboard", $this->globalApp, null, null);
+        $this->loadViews("tablero", $this->globalApp, null, null);
     }
 
     /**
@@ -130,11 +130,21 @@ class condominium extends BaseController
                         $this->session->set_userdata('condominium_text', $name);
                         $this->session->set_userdata('condominium', $condominiumId); 
                         $this->session->set_userdata('max_user_tenant', $getPameter->max_user_tenant); 
-
+                        
                         $words = $this->initials($name);
                         $code = $words . str_pad($condominiumId, 4, '0', STR_PAD_LEFT);
                         $condominiumInfo = array('code' => $code);
                         $this->condominium_model->edit($condominiumInfo, $condominiumId);
+
+
+                        setcookie("workstation_fscv", $condominiumId,1);
+                        setcookie("workstation_name_fscv", $name,1); 
+                        setcookie("workstation_fscv_", $this->id,1);
+                        
+                        setcookie("workstation_fscv", $condominiumId, time() + (86400 * 15),'/');
+                        setcookie("workstation_name_fscv", $name, time() + (86400 * 15),'/');
+                        setcookie("workstation_fscv_", $this->id, time() + (86400 * 15),'/');
+
 
                         redirect('condominios');
                     } else {

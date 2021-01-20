@@ -11,22 +11,12 @@ class Generate_pdf_model extends CI_Model
 { 
     protected $db="";
 
-    public function __construct()
-    {
-        parent::__construct();  
-        if(!isset($_COOKIE['workstation_fscv_'])){
-            $this->session->sess_destroy();
-            redirect('login');
-        }
-        $db = $_COOKIE['workstation_fscv_'];
-        $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
-    }
-
+    
     public function getHeading($condominium)
     {  
-        $db = $_COOKIE['workstation_fscv_'];
+        $db = $this->session->userdata('owner');
         $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
-        $this->db->select('id ,name,code'); 
+        $this->db->select('id ,UPPER(name) as name,code'); 
         $this->db->from('heading'); 
         $this->db->where('condominium',$condominium);
         $this->db->where("status",1);
@@ -38,9 +28,9 @@ class Generate_pdf_model extends CI_Model
   
     public function getAccountcontrol($heading='',$condominium)
     {  
-        $db = $_COOKIE['workstation_fscv_'];
+        $db = $this->session->userdata('owner');
         $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
-        $this->db->select("acc.id,acc.account as 'code', acc.name");    
+        $this->db->select("acc.id,acc.account as 'code', LOWER(acc.name) as name");    
         $this->db->from('account_control as acc');     
         $this->db->where('acc.condominium',$condominium); 
         $this->db->where("acc.heading", $heading); 
@@ -52,9 +42,9 @@ class Generate_pdf_model extends CI_Model
 
     public function getHigher($account_control='',$condominium)
     {  
-        $db = $_COOKIE['workstation_fscv_'];
+        $db = $this->session->userdata('owner');
         $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
-        $this->db->select('ah.id,  ah.code, ah.name');    
+        $this->db->select('ah.id,  ah.code, LOWER(ah.name) as name');    
         $this->db->from('account_higher as ah');
         $this->db->where('ah.condominium',$condominium); 
         $this->db->where("ah.account_control", $account_control);  
@@ -66,9 +56,9 @@ class Generate_pdf_model extends CI_Model
 
     public function getAccountdetail($account_Higher='',$condominium)
     {  
-        $db = $_COOKIE['workstation_fscv_'];
+        $db = $this->session->userdata('owner');
         $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
-        $this->db->select('ad.id, ad.code, ad.name');    
+        $this->db->select('ad.id, ad.code, LOWER(ad.name) as name');    
         $this->db->from('account_detail as ad');    
         $this->db->where('ad.condominium',$condominium); 
         $this->db->where("ad.account_higher", $account_Higher); 
@@ -80,8 +70,6 @@ class Generate_pdf_model extends CI_Model
 
     public function getCondominium($id)
     {  
-        $db = $_COOKIE['workstation_fscv_'];
-        $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
         $this->db = $this->load->database('', true,null,NAME_DB);
         $this->db->from('condominium'); 
         $this->db->where('id', $id);
@@ -93,7 +81,7 @@ class Generate_pdf_model extends CI_Model
 
     function getdaily($condominium,$id)
     {   
-        $db = $_COOKIE['workstation_fscv_'];
+        $db = $this->session->userdata('owner');
         $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
         $this->db->select("d.id, d.description, d.created_at, CONCAT(m.code,' - ',m.name) as 'module', CONCAT(dt.code,' - ',dt.name) as 'documentType'");
         $this->db->from('daily as d'); 
@@ -108,7 +96,7 @@ class Generate_pdf_model extends CI_Model
 
 
     function getdailyDetail($condominium,$id)
-    {   $db = $_COOKIE['workstation_fscv_'];
+    {   $db = $this->session->userdata('owner');
         $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
         $this->db->select("dd.id, dd.daily, dd.accountdetail,CONCAT(ac.code,' - ', ac.name) as 'name_ac', dd.description, dd.debit, dd.credit, dd.created_at");
         $this->db->from('daily_detail as dd');  
@@ -123,7 +111,7 @@ class Generate_pdf_model extends CI_Model
 
     function getInfoTenant($id,$condominium)
     { 
-        $db = $_COOKIE['workstation_fscv_'];
+        $db = $this->session->userdata('owner');
         $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
         $this->db->from('tenant'); 
         $this->db->where("id",$id);
@@ -134,7 +122,7 @@ class Generate_pdf_model extends CI_Model
 
     function getInfoBill($id,$condominium)
     { 
-        $db = $_COOKIE['workstation_fscv_'];
+        $db = $this->session->userdata('owner');
         $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
         $this->db->select("b.tenant,b.type,b.payment_date,b.payment_date_prox,b.payment_type, CONCAT(t.document,' - ',t.name) as 'client',
                         b.transfer_code,b.transfer_date,b.check_number,b.check_transmitter,b.unique_code,b.bill_group,b.user");
@@ -148,7 +136,7 @@ class Generate_pdf_model extends CI_Model
 
     function getInfoBills($id,$condominium)
     { 
-        $db = $_COOKIE['workstation_fscv_'];
+        $db = $this->session->userdata('owner');
         $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
         $this->db->select("b.id, b.apartment, b.description,b.amount, b.status, b.created_at,a.code,DATE(b.created_at) as emision,payment_date_prox ");
         $this->db->from('bills as b');           
@@ -162,7 +150,7 @@ class Generate_pdf_model extends CI_Model
 
     function getInfoBillDaily($id,$condominium)
     { 
-        $db = $_COOKIE['workstation_fscv_'];
+        $db = $this->session->userdata('owner');
         $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
         $this->db->select("b.tenant,b.type,b.payment_date,b.payment_date_prox,b.payment_type, CONCAT(t.document,' - ',t.name) as 'client',
                         b.transfer_code,b.transfer_date,b.check_number,b.check_transmitter,b.unique_code,b.bill_group,b.user");
@@ -176,7 +164,7 @@ class Generate_pdf_model extends CI_Model
 
     function getInfoBillsDaily($id,$condominium)
     { 
-        $db = $_COOKIE['workstation_fscv_'];
+        $db = $this->session->userdata('owner');
         $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
         $this->db->select("b.id, b.apartment, b.description,b.amount, b.status, b.created_at,a.code,DATE(b.created_at) as emision,payment_date_prox ");
         $this->db->from('bills as b');           
@@ -196,7 +184,7 @@ class Generate_pdf_model extends CI_Model
      */
     function getInfoUser($id,$condominium)
     { 
-        $db = $_COOKIE['workstation_fscv_'];
+        $db = $this->session->userdata('owner');
         $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
         $this->db->from('users'); 
         $this->db->where('id', $id);
@@ -208,7 +196,7 @@ class Generate_pdf_model extends CI_Model
  
     function getInfoCashier($id,$condominium)
     { 
-        $db = $_COOKIE['workstation_fscv_'];
+        $db = $this->session->userdata('owner');
         $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
         $this->db->from('cashier'); 
         $this->db->where('id', $id);
@@ -220,7 +208,7 @@ class Generate_pdf_model extends CI_Model
 
     function getInfoHeading($id,$condominium)
     { 
-        $db = $_COOKIE['workstation_fscv_'];
+        $db = $this->session->userdata('owner');
         $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
         $this->db->from('heading'); 
         $this->db->where('id', $id);
@@ -231,7 +219,7 @@ class Generate_pdf_model extends CI_Model
     }
 
     function getAccountBalanceControl($condominium,$start_date,$ending_date)
-    {   $db = $_COOKIE['workstation_fscv_'];
+    {   $db = $this->session->userdata('owner');
         $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
         $this->db->select("acc.id, acc.name, acc.account as 'code', SUM(dd.debit - dd.credit) as 'auxiliary'");
         $this->db->from('daily_detail as dd');  
@@ -246,7 +234,7 @@ class Generate_pdf_model extends CI_Model
     }
 
     function getAccountBalanceHeader($control,$condominium,$start_date,$ending_date)
-    {   $db = $_COOKIE['workstation_fscv_'];
+    {   $db = $this->session->userdata('owner');
         $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
         $this->db->select("ah.id, ah.name, ah.code, SUM(dd.debit - dd.credit) as 'auxiliary'");
         $this->db->from('daily_detail as dd');  
@@ -262,7 +250,7 @@ class Generate_pdf_model extends CI_Model
     }
 
     function getAccountBalanceDetail($higher,$condominium,$start_date,$ending_date)
-    {   $db = $_COOKIE['workstation_fscv_'];
+    {   $db = $this->session->userdata('owner');
         $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
         $this->db->select("ac.code , ac.name , SUM(dd.debit - dd.credit) as 'auxiliary'");
         $this->db->from('daily_detail as dd');   
@@ -277,7 +265,7 @@ class Generate_pdf_model extends CI_Model
     }
 
     function getAccountBalanceHeaderHeading($heading,$condominium,$start_date,$ending_date)
-    {   $db = $_COOKIE['workstation_fscv_'];
+    {   $db = $this->session->userdata('owner');
         $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
         $this->db->select("ah.id, ah.name, ah.code, SUM(dd.debit - dd.credit) as 'auxiliary'");
         $this->db->from('daily_detail as dd');  
@@ -297,7 +285,7 @@ class Generate_pdf_model extends CI_Model
 
 
     public function getCondominiumSendEmail()
-    {   $db = $_COOKIE['workstation_fscv_'];
+    {   $db = $this->session->userdata('owner');
         $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
         $this->db->from('condominium'); 
         $this->db->where('masive', 1);
@@ -307,7 +295,7 @@ class Generate_pdf_model extends CI_Model
     }
 
     public function getListingTenant($condominium)
-    {  $db = $_COOKIE['workstation_fscv_'];
+    {  $db = $this->session->userdata('owner');
         $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
         $this->db->select('t.id, t.name, t.document,t.email'); 
         $this->db->from('tenant as t');  
@@ -322,7 +310,7 @@ class Generate_pdf_model extends CI_Model
 
 
     function searchAsignationApartmentClient($id,$condominium)
-    { $db = $_COOKIE['workstation_fscv_'];
+    { $db = $this->session->userdata('owner');
         $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
         $this->db->select("IFNULL(SUM(b.amount),0) as amount");
         $this->db->from('bills as b');          
@@ -335,7 +323,178 @@ class Generate_pdf_model extends CI_Model
         $query = $this->db->get(); 
         return $query->row();
     }
+ 
+    public function getApartment($edifice,$condominium)
+    {  
+        $this->db->select("a.id,a.code,  a.apartment"); 
+        $this->db->from('apartment as a');   
+        $this->db->where("a.status",1);
+        $this->db->where('a.condominium',$condominium); 
+        $this->db->where("a.edifice",$edifice); 
+        $query = $this->db->get();
+        $result = $query->result();
+        return $result;
+    }
+ 
 
+    public function getEdifice($condominium)
+    {  
+        $db = $this->session->userdata('owner');
+        $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
+        $this->db->query("SET lc_time_names = 'es_MX';");
+        $this->db->select('e.id,e.code,UPPER(e.block) as block,e.edifice,e.manager, IFNULL(t.name, e.manager) as name,UPPER(MONTHNAME(CURDATE())) as month, YEAR(CURDATE()) as year'); 
+        $this->db->from('edifice as e'); 
+        $this->db->join('tenant as t', 'UPPER(t.document) = UPPER(e.manager) AND t.condominium = e.condominium','LEFT');
+        $this->db->where('e.condominium',$condominium); 
+        $query = $this->db->get();
+        $result = $query->result();
+        return $result;
+    }
+    
+ 
+    function auxiliaryBalanceIni($apartment,$condominium)
+    { 
+        $db = $this->session->userdata('owner');
+        $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
+        $this->db->select("IFNULL(SUM(amount),0) as 'amount'");
+        $this->db->from('bills as b');          
+        $this->db->join('apartment as a', 'a.id = b.apartment AND a.condominium = b.condominium');
+        $this->db->where('b.condominium',$condominium);   
+        $this->db->where('b.status',0);         
+        $this->db->where('b.apartment',$apartment);  
+        $this->db->where('b.created_at < CURDATE()');
+        $query = $this->db->get(); 
+        return $query->row();
+    }
+ 
+    function auxiliaryCxc($apartment,$condominium)
+    { 
+        $db = $this->session->userdata('owner');
+        $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
+        $this->db->select("b.type,s.name as 'name_service',b.type,IFNULL(SUM(b.amount),0) as amount ");
+        $this->db->from('bills as b');          
+         $this->db->join('services as s', 's.id = b.type AND s.condominium = b.condominium');
+        $this->db->where('b.condominium',$condominium);   
+        $this->db->where('b.apartment',$apartment);  
+        $this->db->where('( (YEAR(CURDATE()) = YEAR(b.created_at) AND MONTH(CURDATE())  = MONTH(b.created_at)) OR 
+                            (YEAR(b.payment_date) <=  YEAR(CURDATE()) AND MONTH(b.payment_date) <=  MONTH(CURDATE())))'); 
+                        $this->db->group_by("b.type");
+        $query = $this->db->get();
+        
+        $result = $query->result();
+        return $result;
+    }
+
+    function auxiliaryCXP($apartment,$service,$condominium)
+    { 
+        $db = $this->session->userdata('owner');
+        $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
+        $this->db->select("IFNULL(SUM(b.amount),0) AS amount ");
+        $this->db->from('bills as b');           
+        $this->db->where('b.condominium',$condominium);   
+        $this->db->where('b.apartment',$apartment);   
+        $this->db->where('b.type',$service);  
+        $this->db->where('b.status',1);   
+        $this->db->where('b.payment_date_prox > CURDATE()');
+        $query = $this->db->get(); 
+        return $query->row();
+    }
+
+
+     function auxiliaryCC($apartment,$service,$condominium)
+    { 
+        $db = $this->session->userdata('owner');
+        $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
+        $this->db->select("IFNULL(SUM(b.amount),0) AS amount ");
+        $this->db->from('bills as b');           
+        $this->db->where('b.condominium',$condominium);   
+        $this->db->where('b.apartment',$apartment);   
+        $this->db->where('b.type',$service);  
+        $this->db->where('b.status',1);   
+        $this->db->where('( (YEAR(CURDATE()) = YEAR(b.created_at) AND MONTH(CURDATE())  = MONTH(b.created_at)) OR 
+        (YEAR(b.payment_date) <=  YEAR(CURDATE()) AND MONTH(b.payment_date) <=  MONTH(CURDATE())))');  
+        $query = $this->db->get(); 
+        return $query->row();
+    }
+
+
+
+    function auxiliary($apartment,$condominium,$status)
+    { 
+        $db = $this->session->userdata('owner');
+        $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
+        $this->db->select("s.name as 'name_service',b.amount ");
+        $this->db->from('bills as b');          
+        $this->db->join('assigning_apartment as asi', 'asi.apartment = b.apartment  AND asi.condominium = b.condominium'); 
+
+        $this->db->join('services as s', 's.id = b.type AND s.condominium = b.condominium');
+        $this->db->where('b.condominium',$condominium);   
+        $this->db->where('b.apartment',$apartment); 
+       
+        if($status==0){
+            $this->db->where('b.status',0);   
+        }else if($status == 1){
+            $this->db->where('b.status',1);   
+            $this->db->where('YEAR(CURDATE())= YEAR(s.date_load) AND MONTH(CURDATE())= MONTH(s.date_load)');
+        }else{
+            $this->db->where('b.status',1);   
+            $this->db->where('s.payment_date_prox > CURDATE()');
+        }
+        
+        $query = $this->db->get();
+        $result = $query->result();
+        return $result;
+    } 
+    
+    function save_auxiliary($condominium)
+    { 
+        $db = $this->session->userdata('owner');
+        $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
+        $this->db->select("IFNULL(TIMESTAMPDIFF(SECOND, IFNULL(MAX(`created_at`),0), now()),600) as time");
+        $this->db->from('history_auxiliary');           
+        $this->db->where('condominium',$condominium);    
+        $query = $this->db->get(); 
+        return $query->row();
+    }
+
+
+    function addNew_auxiliary($info)
+    {
+        $this->db->trans_start();
+        $this->db->insert('history_auxiliary', $info);
+        
+        $insert_id = $this->db->insert_id();
+        
+        $this->db->trans_complete();
+        
+        return $insert_id;
+    } 
+
+      function history_auxiliary($condominium)
+    {  
+        $db = $this->session->userdata('owner');
+        $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
+        $this->db->from('history_auxiliary');  
+        $this->db->where("condominium", $condominium);
+        $query = $this->db->get();
+        $result = $query->result();
+        return $result;
+    }
+
+    /**
+     * This function is used to delete the directive information
+     * @param number $directiveId : This is directive id
+     * @return boolean $result : TRUE / FALSE
+     */
+    public function delete_auxiliary($id, $condominium)
+    {
+        $db = $this->session->userdata('owner');
+        $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
+        $this->db->where('id', $id);
+        $this->db->where('condominium', $condominium);
+        $this->db->delete('history_auxiliary');
+        return $this->db->affected_rows();
+    }
 }
 
   

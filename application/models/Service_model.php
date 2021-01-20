@@ -14,11 +14,7 @@ class Service_model extends CI_Model
     public function __construct()
     {
         parent::__construct();  
-        if(!isset($_COOKIE['workstation_fscv_'])){
-            $this->session->sess_destroy();
-            redirect('login');
-        }
-        $db = $_COOKIE['workstation_fscv_'];
+        $db = $this->session->userdata('owner');
         $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
     }
     
@@ -141,7 +137,7 @@ class Service_model extends CI_Model
     function create_service($date_load,$id,$condominium)
     {
         $this->db->query("CREATE DEFINER=".USER_BD."@`localhost` 
-        EVENT ".$id."_SERVICE"." ON SCHEDULE EVERY 1 MONTH STARTS '$date_load 22:20:00' ON COMPLETION NOT PRESERVE ENABLE DO 
+        EVENT ".$id."_SERVICE"." ON SCHEDULE EVERY 1 MONTH STARTS '$date_load 01:00:00' ON COMPLETION NOT PRESERVE ENABLE DO 
         CALL `setBills`($id,$condominium);"); 
      
     } 

@@ -14,11 +14,7 @@ class Edifice_model extends CI_Model
     public function __construct()
     {
         parent::__construct();  
-        if(!isset($_COOKIE['workstation_fscv_'])){
-            $this->session->sess_destroy();
-            redirect('login');
-        }
-        $db = $_COOKIE['workstation_fscv_'];
+        $db = $this->session->userdata('owner');
         $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
     }
     /**
@@ -34,7 +30,7 @@ class Edifice_model extends CI_Model
         $this->db->from('edifice as e');     
         $this->db->join('tenant as t', 'UPPER(t.document) = UPPER(e.manager)  AND t.condominium = e.condominium','left');
         $this->db->where('e.condominium',$condominium);
-        $this->db->order_by('e.id', 'DESC'); 
+        $this->db->order_by(' cast(e.edifice as unsigned) ', 'ASC'); 
         $query = $this->db->get(); 
         $result = $query->result();        
         return $result;

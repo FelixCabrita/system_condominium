@@ -98,7 +98,7 @@ defined('STATUS_ACTIVE') or define('STATUS_ACTIVE', '1');
 defined('STATUS_INACTIVE') or define('STATUS_INACTIVE', '0');
 
 defined('NAME_SYSTEM') or define('NAME_SYSTEM', 'ADMINCONDOR');
-defined('ALIAS_ADMIN') or define('ALIAS_ADMIN', "admicond_");
+defined('ALIAS_ADMIN') or define('ALIAS_ADMIN', "admicond_"); 
 defined('NAME_DB') or define('NAME_DB', "admicond_control");
 defined('SEGMENT') or define('SEGMENT', 2);
 
@@ -149,6 +149,8 @@ defined('VISITOR_EMPLOYEES') or define('VISITOR_EMPLOYEES', 2);
 defined('CONDOMINIUM_MASIVE') or define('CONDOMINIUM_MASIVE', 1); 
 
 defined('USER_BD') or define('USER_BD', "root"); 
+
+define('PDF_PATH', 'assets/pdf/');
 
 defined('CONDITIONS') or define('CONDITIONS', ["OCUPADO","ALQUILADO","DESOCUPADO","EN VENTA","EN ALQUILER","EN ALQUILER/VENTA"]);
 defined('USER_TYPE') or define('USER_TYPE', ["ADMINISTRADOR","CAJA","CONTABILIDAD","VIGILANTE"]);

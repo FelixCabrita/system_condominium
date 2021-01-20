@@ -14,11 +14,7 @@ class Bills_model extends CI_Model
     public function __construct()
     {
         parent::__construct();  
-        if(!isset($_COOKIE['workstation_fscv_'])){
-            $this->session->sess_destroy();
-            redirect('login');
-        }
-        $db = $_COOKIE['workstation_fscv_'];
+        $db = $this->session->userdata('owner');
         $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
     }
 
@@ -271,7 +267,25 @@ class Bills_model extends CI_Model
         return $result; 
     }
  
+    function bill_month($id,$status, $condominium) 
+    { 
+        $this->db->select("COUNT(b.id) as count,SUM(b.amount) as amount");
+        $this->db->from('bills as b');
+        if(!empty($id)){
+            $this->db->join('assigning_apartment as asi', 'asi.apartment = b.apartment  AND asi.condominium = b.condominium');
+            $this->db->join('apartment as a', 'a.id = b.apartment AND a.condominium = b.condominium');
+            $this->db->where('asi.tenant',$id);   
+        }
+        $this->db->where('b.condominium',$condominium);
+        if($status>=0){
+            $this->db->where('b.status',$status);  
+        }
+        $this->db->where('((YEAR(CURDATE()) = YEAR(b.created_at) AND MONTH(CURDATE())  = MONTH(b.created_at)) OR 
+        (YEAR(b.payment_date) <=  YEAR(CURDATE()) AND MONTH(b.payment_date) <=  MONTH(CURDATE())))'); 
 
+        $query = $this->db->get(); 
+        return $query->row(); 
+    }
 }
 
   

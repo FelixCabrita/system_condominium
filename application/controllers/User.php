@@ -32,14 +32,7 @@ class User extends BaseController
         }
     }
 
-    /**
-     * This function used to load the first screen of the user
-     */
-    public function index()
-    {
-        $this->globalApp['pageTitle'] = NAME_SYSTEM . ' Escritorio';
-        $this->loadViews("dashboard", $this->globalApp, null, null);
-    }
+  
 
     /**
      * This function is used to load the user list

@@ -66,7 +66,7 @@ class Bills extends BaseController
     public function index()
     {
         $this->globalApp['pageTitle'] = NAME_SYSTEM . ' Escritorio';
-        $this->loadViews("dashboard", $this->globalApp, null, null);
+        $this->loadViews("tablero", $this->globalApp, null, null);
     }
 
     public function searchClient()
@@ -315,7 +315,7 @@ class Bills extends BaseController
             $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');
             //Hacemos una salida al navegador con el archivo Excel.
             $objWriter->save('php://output');
-            redirect('dashboard');
+            redirect('tablero');
 
         }
     }
