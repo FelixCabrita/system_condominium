@@ -286,6 +286,56 @@ class Bills_model extends CI_Model
         $query = $this->db->get(); 
         return $query->row(); 
     }
+
+
+    function bill_month_cashier($status, $condominium) 
+    { 
+        $this->db->select("COUNT(b.bill_group) as count,SUM(b.amount) as amount");
+        $this->db->from('bills as b'); 
+        $this->db->where('b.condominium',$condominium);
+        if($status>0){
+            $this->db->where('CURDATE() = DATE(b.payment_date)'); 
+        }else {
+            $this->db->where('CURDATE() = DATE(b.payment_date) AND DATE(b.payment_date_prox) > CURDATE()'); 
+        } 
+        
+
+        $query = $this->db->get(); 
+        return $query->row(); 
+    }
+
+    function bill_month_cashieraaa($condominium) 
+    { 
+        $this->db->select("COUNT(b.bill_group) as count");
+        $this->db->from('bills as b'); 
+        $this->db->where('b.condominium',$condominium); 
+        $this->db->where('CURDATE() = DATE(b.payment_date)'); 
+        $this->db->group_by("b.bill_group");
+
+        $query = $this->db->get();
+        
+        return $query->num_rows();
+    }
+
+
+
+    function bill_month_cashier_type($type, $condominium) 
+    { 
+        $this->db->select("COUNT(b.id) as count,SUM(b.amount) as amount");
+        $this->db->from('bills as b');
+        if(!empty($id)){
+            $this->db->join('assigning_apartment as asi', 'asi.apartment = b.apartment  AND asi.condominium = b.condominium');
+            $this->db->join('apartment as a', 'a.id = b.apartment AND a.condominium = b.condominium');
+            $this->db->where('asi.tenant',$id);   
+        }
+        $this->db->where('b.condominium',$condominium); 
+        $this->db->where('CURDATE() = DATE(b.payment_date)'); 
+        $this->db->where('b.payment_type',$type); 
+       
+
+        $query = $this->db->get(); 
+        return $query->row(); 
+    }
 }
 
   

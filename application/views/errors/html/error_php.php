@@ -1,9 +1,16 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 /**/
-setcookie("workstation_fscv",  '', time() - (86400 * 15),'/'); 
-setcookie("workstation_name_fscv", '', time() - (86400 * 15),'/');
-setcookie("workstation_fscv_", '', time() - (86400 * 15),'/');
+$msg = "Lo sentimos su cuenta al parecer tiene problemas, si persiste el error por favor pongase en contacto con nosotros.";
+
+if(!isset( $_COOKIE['workstation_fscv_'])){
+  setcookie("workstation_fscv",  '', time() - (86400 * 15),'/'); 
+  setcookie("workstation_name_fscv", '', time() - (86400 * 15),'/');
+  setcookie("workstation_fscv_", '', time() - (86400 * 15),'/');
+}else{
+  $msg = "Sesion caducada, por favor vuelve a inciar sesion.";
+}
+
 ?> 
 
 <!--<div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
@@ -184,7 +191,7 @@ body {
                 <div></div>
             </div>
             <h1>oops!</h1>
-            <h3>Lo sentimos su cuenta al parecer tiene problemas, si persiste el error por favor pongase en contacto con nosotros.</h3>
+            <h3><?php echo $msg ?></h3>
             <a href="<?php echo base_url() ?>">VOLVER</a> 
         </div>
     </div>

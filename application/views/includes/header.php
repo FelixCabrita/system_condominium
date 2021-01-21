@@ -55,7 +55,7 @@
                 </span>
             </div>
             <div class="app-header__content">
-                <?php  if($rol==ROLE_ADMIN) { ?>
+                <?php  $count_condominium = 0; if($rol==ROLE_ADMIN) { ?>
                     <div class="app-header-left">
                 
                         <ul class="header-menu nav">
@@ -63,7 +63,9 @@
                                 <a href="javascript:void(0);" class="nav-link">
                                     <i class="nav-link-icon fa fa-database"> </i> Condominio&nbsp;&nbsp; 
                                     <select  name="selectCondominium" id="selectCondominium" class="form-control">
-                                        <?php   if(!empty($condominiumRecords))  {  foreach($condominiumRecords as $record)  { ?>
+                                        <?php   if(!empty($condominiumRecords))  {
+                                             $count_condominium =COUNT($condominiumRecords);
+                                            foreach($condominiumRecords as $record)  { ?>
                                         <option value ="<?php echo $record->id ?>" <?php echo $record->id==$condominium?"selected":"" ?>><?php echo $record->name ?></option>
                                         <?php  }  }  ?>
                                     </select> 
@@ -73,7 +75,9 @@
                             </li> 
                         </ul>
                     </div>
-                <?php }else{?>
+                <?php }else{
+                     $count_condominium =1;
+                    ?>
                     <div class="app-header-left">
                 
                         <ul class="header-menu nav">

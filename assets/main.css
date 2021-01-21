@@ -15662,7 +15662,8 @@ legend {
 
 .widget-content .widget-content-left .widget-heading {
     opacity: .8;
-    font-weight: 700
+    font-weight: 700;
+    font-size: 11px;
 }
 
 .widget-content .widget-content-left .widget-subheading {
@@ -15675,7 +15676,7 @@ legend {
 
 .widget-content .widget-numbers {
     font-weight: 700;
-    font-size: 1.8rem;
+    font-size: 18px;
     display: block
 }
 
@@ -24232,7 +24233,7 @@ a.fc-more:hover {
         margin: 0 auto
     }
     .widget-content .widget-numbers {
-        font-size: 1.6rem;
+        font-size: 16px;
         line-height: 1
     }
     .slick-slider-sm .slick-slider {

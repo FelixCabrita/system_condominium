@@ -61,17 +61,65 @@ class Dashboard extends BaseController
             return $this->bills_model->bill_month(($this->rol < ROLE_OWNER ? "" : $this->id),$status, $this->condominium);
         }
     }
+
+    public function getBillCashierType($type)
+    {
+        if (checkForPermissions('bills', PERMISSION_READ) != true) {
+            return "";
+        } else {
+            $this->load->model('bills_model');
+            return $this->bills_model->bill_month_cashier_type($type, $this->condominium);
+        }
+    }
+
+    public function getBillCashier($status)
+    {
+        if (checkForPermissions('bills', PERMISSION_READ) != true) {
+            return "";
+        } else {
+            $this->load->model('bills_model');
+            return $this->bills_model->bill_month_cashier($status, $this->condominium);
+        }
+    }
+public function getBillCashieraaa($status)
+    {
+        if (checkForPermissions('bills', PERMISSION_READ) != true) {
+            return "";
+        } else {
+            $this->load->model('bills_model');
+            return $this->bills_model->bill_month_cashieraaa($this->condominium);
+        }
+    }
     /**
      * This function used to load the first screen of the user
      */
     public function index()
     {
-        $this->globalApp['pageTitle'] = NAME_SYSTEM . ' Escritorio';
+        $this->globalApp['pageTitle'] = NAME_SYSTEM . ' Escritorio';  
+        
         $data["reservation"] = $this->getReservationListing();
         $data["incidents"] = $this->getIncidentsListing();
-        $data["total_bill"] = $this->getBill(-1);
-        $data["pay"] = $this->getBill(1);
-        $data["pending"] = $this->getBill(0); 
+
+        if ($this->rol==ROLE_ACCOUNTING || $this->rol ==ROLE_ADMIN || $this->rol ==ROLE_MANAGER ) {
+            $data["total_bill"] = $this->getBill(-1);
+            $data["pay"] = $this->getBill(1);
+            $data["pending"] = $this->getBill(0); 
+        }
+        if ($this->rol==ROLE_VENDOR) {
+            $data["payment_date"] = $this->getBillCashier(-1);
+            $data["payment"] = $this->getBillCashier(1);      
+             $data["paymentaa"] = $this->getBillCashieraaa(1);
+            $data["cash"] = $this->getBillCashierType(0);
+            $data["transfer"]= $this->getBillCashierType(1);
+            $data["check"]= $this->getBillCashierType(2);
+            $data["card"]= $this->getBillCashierType(3);
+        }
+
+        if ($this->rol>=ROLE_OWNER) {
+            $data["total_bill"] = $this->getBill(-1);
+            $data["pay"] = $this->getBill(1);
+          
+        }
         $this->loadViews("tablero", $this->globalApp, $data, null); 
 
     }

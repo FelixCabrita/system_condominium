@@ -276,7 +276,7 @@ class Generate_pdf extends BaseController
         '<tr><td class="account"><b>' . $heading->name . '</b></td>
         <td  class="amount"></td>  </tr>';
 
-        $accounthigher = $this->generate_pdf_model->getAccountBalanceHeaderHeading($heading->id, $this->condominium, $data["date_start"], $data["date_ending"]);
+        $accounthigher = $this->generate_pdf_model->getAccountAcHeaderHeading($heading->id, $this->condominium, $data["date_start"], $data["date_ending"],"credit");
 
         $total = 0;
         foreach ($accounthigher as $record_acc) {
@@ -299,7 +299,7 @@ class Generate_pdf extends BaseController
         '<tr><td class="account"><b>' . $heading->name . '</b></td>
         <td  class="amount"></td>  </tr>';
 
-        $accounthigher = $this->generate_pdf_model->getAccountBalanceHeaderHeading($heading->id, $this->condominium, $data["date_start"], $data["date_ending"]);
+        $accounthigher = $this->generate_pdf_model->getAccountAcHeaderHeading($heading->id, $this->condominium, $data["date_start"], $data["date_ending"],"debit");
 
         $total = 0;
         foreach ($accounthigher as $record_acc) {

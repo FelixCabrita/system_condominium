@@ -95,7 +95,7 @@ class Login extends BaseController
                 $UserValidCode = $this->validPanelUser($UserData);
                
                 $log = !empty($UserData);
-                if ($UserValidCode == STATUS_ACTIVE && $log) {
+                 if ($UserValidCode == STATUS_ACTIVE && $log) {
 
                     $iar = $this->login_model->gettInfoAIDC($UserData->condominium);
 
@@ -127,7 +127,8 @@ class Login extends BaseController
  
                 
                 $this->displayLoginFormError($UserValidCode);
-                $this->index();
+                $this->index(); 
+               
             } else {
               
                 $TenantData = $this->login_model->LoginTenant($email, $password, $this->workstation);

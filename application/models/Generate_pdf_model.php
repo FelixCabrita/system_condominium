@@ -280,6 +280,22 @@ class Generate_pdf_model extends CI_Model
         return $result;
     }
 
+    function getAccountAcHeaderHeading($heading,$condominium,$start_date,$ending_date,$colum)
+    {   $db = $this->session->userdata('owner');
+        $this->db = $this->load->database('', true,null,ALIAS_ADMIN.str_pad($db, 5, '0', STR_PAD_LEFT));
+        $this->db->select("ah.id, ah.name, ah.code, SUM(dd.$colum) as 'auxiliary'");
+        $this->db->from('daily_detail as dd');  
+        $this->db->join('account_detail as ac', 'ac.id = dd.accountdetail AND ac.condominium = dd.condominium');
+        $this->db->join('account_higher as ah', 'ah.id = ac.account_higher AND ah.condominium = ac.condominium'); 
+        $this->db->where('dd.condominium',$condominium); 
+        $this->db->where('ac.heading',$heading); 
+        $this->db->where("dd.created_at >= '$start_date 00:00:00'  AND dd.created_at <= '$ending_date 23:59:59' "); 
+        $this->db->group_by("ac.account_higher");
+        $query = $this->db->get(); 
+        $result = $query->result();        
+        return $result;
+    }
+
 
     /* EMAIL */
 
